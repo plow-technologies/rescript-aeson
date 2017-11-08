@@ -1,0 +1,34 @@
+{
+  "name": "bs-aeson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "test": "npm run build && jest && npm run test:examples",
+    "test:examples": "npm run build && ./run_examples.sh",
+    "watch:bsb": "bsb -make-world -w",
+    "watch:jest": "jest --watchAll",
+    "watch:screen": "screen -c .screenrc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plow-technologies/bs-aeson.git"
+  },
+  "keywords": [
+    "bucklescript",
+    "json",
+    "aeson"
+  ],
+  "author": "mchaver",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/plow-technologies/bs-aeson/issues"
+  },
+  "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
+  "devDependencies": {
+    "bs-platform": "^1.9.0",
+    "bs-jest": "reasonml-community/bs-jest"
+  }
+}

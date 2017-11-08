@@ -1,0 +1,16 @@
+{
+  "name": "bs-aeson",
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "sources": [
+    "src",
+    {
+      "dir": "examples",
+      "type": "dev"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ],
+  "bs-dev-dependencies": ["bs-jest"]
+}
