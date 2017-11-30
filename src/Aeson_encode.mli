@@ -61,6 +61,9 @@ val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
 
+val singleEnumerator : 'a encoder
+(** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)
+  
 external stringArray : string array -> Js.Json.t = "%identity"
 (** [stringArray a] makes a JSON array of the [string array] [a] *) 
 

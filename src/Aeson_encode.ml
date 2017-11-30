@@ -59,6 +59,8 @@ let tuple6 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 tuple =
   let (t0, t1, t2, t3, t4, t5) = tuple in
   array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 |]
 
+let singleEnumerator _x =  array [| |]
+
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 external booleanArray : Js.boolean array -> Js.Json.t = "%identity"

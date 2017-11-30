@@ -138,6 +138,18 @@ let tuple6 first second third fourth fifth sixth json =
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
 
+let singleEnumerator a json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 0 then
+      a
+    else
+      raise @@ DecodeError ({j|Expected array of length 0, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
 let dict decode json = 
   if Js.typeof json = "object" && 
       not (Js.Array.isArray json) && 
