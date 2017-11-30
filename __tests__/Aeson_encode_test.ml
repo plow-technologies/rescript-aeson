@@ -39,6 +39,9 @@ test "array int" (fun () ->
 test "list int" (fun () ->
   expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
 
+test "singleEnumerator typeParameterRef0" (fun () ->
+  expect @@ singleEnumerator Aeson.Helper.TypeParameterRef0 |> toEqual @@ Obj.magic [||]);
+
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
 
