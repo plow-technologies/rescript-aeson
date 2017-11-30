@@ -438,3 +438,5 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 *)
 
 val unwrapResult : ('a, string) Js_result.t -> 'a
+
+val wrapResult : 'a decoder -> Js.Json.t -> ('a, string) Js_result.t

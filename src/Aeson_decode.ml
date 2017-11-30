@@ -209,3 +209,8 @@ let unwrapResult r =
   match r with
   | Js_result.Ok v -> v
   | Js_result.Error message -> raise @@ DecodeError message
+
+let wrapResult decoder json =
+  match (decoder json) with
+  | v -> Js_result.Ok v
+  | exception DecodeError message -> Js_result.Error message
