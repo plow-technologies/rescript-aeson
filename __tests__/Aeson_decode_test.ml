@@ -400,16 +400,16 @@ describe "oneOf" (fun () ->
   Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 );
 
-describe "either" (fun () ->
+describe "tryEither" (fun () ->
   let open Aeson in
   let open! Decode in
 
   test "object with field" (fun () ->
-    expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+    expect @@ (tryEither int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
   test "int" (fun () ->
-    expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
+    expect @@ (tryEither int (field "x" int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (tryEither int (field "x" int)) [Bool; Float; String; Null; Array; Object];
 );
 
 describe "withDefault" (fun () ->

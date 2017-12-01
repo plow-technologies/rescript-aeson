@@ -224,8 +224,6 @@ val tuple4 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> ('a * 'b * 
 val tuple5 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> ('a * 'b * 'c * 'd * 'e) decoder
 
 val tuple6 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> ('a * 'b * 'c * 'd * 'e * 'f) decoder
-
-val either : 'l decoder -> 'r decoder -> Js.Json.t -> (('l, 'r) Aeson_compatibility.Either.t) decoder
   
 val singleEnumerator : 'a -> Js.Json.t -> 'a
   
@@ -324,6 +322,8 @@ a composite decoder, and is useful to decode optional JSON object fields.
 ]}
 *)
 
+val either : 'l decoder -> 'r decoder -> ('l, 'r) Aeson_compatibility.Either.t decoder
+  
 val oneOf : 'a decoder list -> 'a decoder
 (** Tries each [decoder] in order, retunring the result of the first that succeeds
 
@@ -342,8 +342,10 @@ val oneOf : 'a decoder list -> 'a decoder
 ]}
 *)
 
-val either : 'a decoder -> 'a decoder -> 'a decoder
-(** Tries each [decoder] in order, retunring the result of the first that succeeds
+  
+val tryEither : 'a decoder -> 'a decoder -> 'a decoder
+
+(** Tries each [decoder] in order, returning the result of the first that succeeds
 
 {b Returns} an ['a] if one of the decoders succeed.
 
@@ -352,11 +354,11 @@ val either : 'a decoder -> 'a decoder -> 'a decoder
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn "23" |> Decode.(either int (field "x" int))
+  let _ = Js.Json.parseExn "23" |> Decode.(tryEither int (field "x" int))
   (* returns 42 *)
-  let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(either int (field "x" int))
+  let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(tryEither int (field "x" int))
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.(either int (field "x" int))
+  let _ = Js.Json.parseExn "null" |> Decode.(tryEither int (field "x" int))
 ]}
 *)
 

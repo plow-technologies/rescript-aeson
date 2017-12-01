@@ -137,19 +137,6 @@ let tuple6 first second third fourth fifth sixth json =
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
-
-let either decodeL decodeR json =
-  match Js.Json.decodeObject json with
-  | Some o -> (
-    match Js_dict.get o "Left" with
-    | Some l -> decodeL l
-    | None -> (
-      match Js_dict.get o "Right" with
-      | Some r -> decodeR r
-      | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
-    )
-  )
-  | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
   
 let singleEnumerator a json =
   if Js.Array.isArray json then begin
@@ -205,7 +192,21 @@ let optional decode json =
   match decode json with
   | exception DecodeError _ -> None
   | v -> Some v
+  
+let either decodeL decodeR json =
+  match Js.Json.decodeObject json with
+  | Some o -> (
+    match Js_dict.get o "Left" with
+    | Some l -> Aeson_compatibility.Either.Left (decodeL l)
+    | None -> (
+      match Js_dict.get o "Right" with
+      | Some r -> Aeson_compatibility.Either.Right (decodeR r)
+      | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
+    )
+  )
+  | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
 
+       
 let rec oneOf decoders json =
   match decoders with
   | [] ->
@@ -215,8 +216,8 @@ let rec oneOf decoders json =
     match decode json with
     | v -> v
     | exception _ -> oneOf rest json
-
-let either a b =
+                   
+let tryEither a b =
   oneOf [a;b]
 
 let withDefault default decode json =
