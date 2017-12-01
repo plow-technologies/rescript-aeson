@@ -59,6 +59,11 @@ let tuple6 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 tuple =
   let (t0, t1, t2, t3, t4, t5) = tuple in
   array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 |]
 
+let either encodeL encodeR e =
+  match e with
+  | Aeson_compatibility.Either.Left l -> object_ [("Left", encodeL l)]
+  | Aeson_compatibility.Either.Right r -> object_ [("Right", encodeR r)]
+
 let singleEnumerator _x =  array [| |]
 
 external stringArray : string array -> Js.Json.t = "%identity"

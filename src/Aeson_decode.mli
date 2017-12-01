@@ -225,6 +225,8 @@ val tuple5 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder 
 
 val tuple6 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> ('a * 'b * 'c * 'd * 'e * 'f) decoder
 
+val either : 'l decoder -> 'r decoder -> Js.Json.t -> (('l, 'r) Aeson_compatibility.Either.t) decoder
+  
 val singleEnumerator : 'a -> Js.Json.t -> 'a
   
 val dict : 'a decoder -> 'a Js.Dict.t decoder
