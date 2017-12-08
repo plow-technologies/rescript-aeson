@@ -19,8 +19,9 @@ let optional encode optionalValue =
   match optionalValue with
   | Some value -> encode value
   | None -> null
-          
-let date d: Js.Json.t = string (Js_date.toISOString d)
+
+(* Haskell aeson renders .000Z as Z *)          
+let date d: Js.Json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
 
 let bool b =
   b |> Js.Boolean.to_js_boolean

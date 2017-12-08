@@ -10,8 +10,13 @@ test "null" (fun () ->
 test "string" (fun () ->
   expect @@ string "foo" |> toEqual @@ Obj.magic "foo");
 
-test "date" (fun () ->
+test "date - non-float time" (fun () ->
   let nowString = "2017-12-08T06:03:22Z" in
+  let now = Js_date.fromString nowString in
+  expect @@ date now |> toEqual @@ Obj.magic nowString);
+
+test "date - float time" (fun () ->
+  let nowString = "2017-12-08T06:03:22.123Z" in
   let now = Js_date.fromString nowString in
   expect @@ date now |> toEqual @@ Obj.magic nowString);
 
