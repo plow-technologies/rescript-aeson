@@ -98,6 +98,15 @@ describe "string" (fun () ->
   Test.throws string [Bool; Float; Int; Null; Array; Object];
 );
 
+describe "date" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  let nowFloat = Js_date.now (); in
+  let now = Js_date.fromFloat nowFloat in
+  test "date" (fun () ->
+    expect @@ date (Encode.date now) |> toEqual now )
+);
+
 describe "nullable" (fun () ->
   let open Aeson in
   let open! Decode in
