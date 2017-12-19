@@ -101,8 +101,11 @@ describe "string" (fun () ->
 describe "date" (fun () ->
   let open Aeson in
   let open! Decode in
-  let nowFloat = Js_date.now (); in
-  let now = Js_date.fromFloat nowFloat in
+  let nowString = "2017-12-08T06:03:22Z" in
+  let now = Js_date.fromString nowString in
+
+  (*let nowFloat = Js_date.now (); in
+  let now = Js_date.fromFloat nowFloat in*)
   test "date" (fun () ->
     expect @@ date (Encode.date now) |> toEqual now )
 );
