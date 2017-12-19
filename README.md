@@ -74,7 +74,6 @@ let line = data |> Js.Json.parseExn
                 |> Decode.line;
 ```
 
-See [examples](https://github.com/reasonml-community/bs-json/blob/master/examples/) for more.
 
 ## Installation
 
@@ -91,6 +90,14 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 ```
 
 ## Changes
+
+### 1.1.0
+
+* Add `Aeson.Encode.singleEnumerator` and `Aeson.Decode.singleEnumerator` to support Haskell aeson style of serializing a enumeration type with only a single enumerator (as an empty JSON list `[]`).
+
+* Add `Aeson.Compatibility.Either` and serialization functions.
+
+* Fix `Aeson.Encode.date` and `Aeson.Decode.int`.
 
 ### 1.0.0
 
