@@ -2,6 +2,11 @@ open Jest
 open Expect
 open! Aeson.Encode
 
+module Test = struct
+  type singleEnumerator =
+    | SingleEnumerator
+end
+  
 let _ =
 
 test "null" (fun () ->
@@ -50,7 +55,7 @@ test "list int" (fun () ->
   expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "singleEnumerator typeParameterRef0" (fun () ->
-  expect @@ singleEnumerator Aeson.Helper.TypeParameterRef0 |> toEqual @@ Obj.magic [||]);
+  expect @@ singleEnumerator Test.SingleEnumerator |> toEqual @@ Obj.magic [||]);
 
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);

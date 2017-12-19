@@ -10,7 +10,10 @@ module Test = struct
     | Array
     | Object
     | Bool
-  
+
+  type singleEnumerator =
+    | SingleEnumerator
+    
   (* TODO: tests for this function *)
   let test decoder prefix = 
     let open Aeson in function
@@ -104,8 +107,6 @@ describe "date" (fun () ->
   let nowString = "2017-12-08T06:03:22Z" in
   let now = Js_date.fromString nowString in
 
-  (*let nowFloat = Js_date.now (); in
-  let now = Js_date.fromFloat nowFloat in*)
   test "date" (fun () ->
     expect @@ date (Encode.date now) |> toEqual now )
 );
@@ -245,12 +246,12 @@ describe "pair" (fun () ->
 
 describe "singleEnumerator" (fun () ->
   let open Aeson in
-  let open! Decode in          
+  let open! Decode in
 
   test "singleEnumerator" (fun () ->
     expect @@
-      singleEnumerator Helper.TypeParameterRef0 (Encode.array [||])
-      |> toEqual Helper.TypeParameterRef0);
+      singleEnumerator Test.SingleEnumerator (Encode.array [||])
+      |> toEqual Test.SingleEnumerator);
 );
 
 describe "dict" (fun () ->
