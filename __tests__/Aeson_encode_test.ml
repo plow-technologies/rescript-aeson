@@ -2,6 +2,11 @@ open Jest
 open Expect
 open! Aeson.Encode
 
+module Test = struct
+  type singleEnumerator =
+    | SingleEnumerator
+end
+  
 let _ =
 
 test "null" (fun () ->
@@ -9,6 +14,16 @@ test "null" (fun () ->
 
 test "string" (fun () ->
   expect @@ string "foo" |> toEqual @@ Obj.magic "foo");
+
+test "date - non-float time" (fun () ->
+  let nowString = "2017-12-08T06:03:22Z" in
+  let now = Js_date.fromString nowString in
+  expect @@ date now |> toEqual @@ Obj.magic nowString);
+
+test "date - float time" (fun () ->
+  let nowString = "2017-12-08T06:03:22.123Z" in
+  let now = Js_date.fromString nowString in
+  expect @@ date now |> toEqual @@ Obj.magic nowString);
 
 test "float" (fun () ->
   expect @@ float 1.23 |> toEqual @@ Obj.magic 1.23);
@@ -38,6 +53,9 @@ test "array int" (fun () ->
 
 test "list int" (fun () ->
   expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
+
+test "singleEnumerator typeParameterRef0" (fun () ->
+  expect @@ singleEnumerator Test.SingleEnumerator |> toEqual @@ Obj.magic [||]);
 
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);

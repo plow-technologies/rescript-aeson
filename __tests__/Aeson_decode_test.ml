@@ -10,7 +10,10 @@ module Test = struct
     | Array
     | Object
     | Bool
-  
+
+  type singleEnumerator =
+    | SingleEnumerator
+    
   (* TODO: tests for this function *)
   let test decoder prefix = 
     let open Aeson in function
@@ -79,6 +82,11 @@ describe "int" (fun () ->
 
   test "int" (fun () ->
     expect @@ int (Encode.int 23) |> toEqual 23);
+
+  test "int > 32-bit" (fun () ->
+    (* Use %raw since integer literals > Int32.max_int overflow without warning *)
+    let big_int = [%raw "2147483648"] in
+      expect @@ int (Encode.int big_int) |> toEqual big_int);
   
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );
@@ -91,6 +99,16 @@ describe "string" (fun () ->
     expect @@ string (Encode.string "test") |> toEqual "test");
 
   Test.throws string [Bool; Float; Int; Null; Array; Object];
+);
+
+describe "date" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  let nowString = "2017-12-08T06:03:22Z" in
+  let now = Js_date.fromString nowString in
+
+  test "date" (fun () ->
+    expect @@ date (Encode.date now) |> toEqual now )
 );
 
 describe "nullable" (fun () ->
@@ -224,6 +242,16 @@ describe "pair" (fun () ->
   test "pair bad right type" (fun () ->
     expectFn (pair string string) (Js.Json.parseExn {| ["3", 4] |})
     |> toThrow);
+);
+
+describe "singleEnumerator" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "singleEnumerator" (fun () ->
+    expect @@
+      singleEnumerator Test.SingleEnumerator (Encode.array [||])
+      |> toEqual Test.SingleEnumerator);
 );
 
 describe "dict" (fun () ->
@@ -385,16 +413,16 @@ describe "oneOf" (fun () ->
   Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 );
 
-describe "either" (fun () ->
+describe "tryEither" (fun () ->
   let open Aeson in
   let open! Decode in
 
   test "object with field" (fun () ->
-    expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+    expect @@ (tryEither int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
   test "int" (fun () ->
-    expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
+    expect @@ (tryEither int (field "x" int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (tryEither int (field "x" int)) [Bool; Float; String; Null; Array; Object];
 );
 
 describe "withDefault" (fun () ->
