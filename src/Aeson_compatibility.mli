@@ -261,16 +261,13 @@ module Rational : sig
 
   val (asr): t -> int -> t
   (** Division by a power of two [shift_right]. *)
-(*
+
   val (~$): int -> t 
   (** Conversion from [int]. *)
 
   val (//): int -> int -> t
   (** Creates a rational from two [int]s. *)
 
-  val (~$$): int -> t 
-  (** Conversion from [Z.t]. *)
-                    *)
   val (///): int -> int -> t
   (** Creates a rational from two [Z.t]. *)
 end

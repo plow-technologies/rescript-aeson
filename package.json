@@ -19,7 +19,8 @@
   "keywords": [
     "bucklescript",
     "json",
-    "aeson"
+    "aeson",
+    "haskell"
   ],
   "author": "mchaver",
   "license": "BSD-3-Clause",

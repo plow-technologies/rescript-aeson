@@ -1,5 +1,7 @@
 # bs-aeson
 
+bs-aeson is a fork of [https://github.com/glennsl/bs-json](bs-json). It provides a set of serialization functions (Aeson.Encode and Aeson.Decode) and missing types (Aeson.Compatibility) to help interface BuckleScript front-end code to a Haskell back-end that is using the [http://hackage.haskell.org/package/aeson](aeson) library to serialize data.
+
 ## Example
 
 ```ml
@@ -89,13 +91,30 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 }
 ```
 
+## Documentation
+
+### API
+
+Please see the interface files:
+
+* [Aeson](https://github.com/plow-technologies/bs-aeson/blob/master/src/Aeson.mli)
+* [Aeson.Encode](https://github.com/plow-technologies/bs-aeson/blob/master/src/Aeson_encode.mli)
+* [Aeson.Compatibility](https://github.com/plow-technologies/bs-aeson/blob/master/src/Aeson_compatibility.mli)
+* [Aeson.Decode](https://github.com/plow-technologies/bs-aeson/blob/master/src/Aeson_decode.mli)
+
 ## Changes
+
+### 1.2.0
+
+* Add `Aeson.Compatibility.Rational`, `Aeson.Decode.rational` and `Aeson.Encode.rational`.
+
+* Add tests for `Aeson.Compatibility.Either` and `Aeson.Compatibility.Rational`.
 
 ### 1.1.0
 
 * Add `Aeson.Encode.singleEnumerator` and `Aeson.Decode.singleEnumerator` to support Haskell aeson style of serializing a enumeration type with only a single enumerator (as an empty JSON list `[]`).
 
-* Add `Aeson.Compatibility.Either` and serialization functions.
+* Add `Aeson.Compatibility.Either`, `Aeson.Decode.either` and `Aeson.Encode.either`.
 
 * Fix `Aeson.Encode.date` and `Aeson.Decode.int`.
 

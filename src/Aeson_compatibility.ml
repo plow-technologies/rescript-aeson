@@ -328,27 +328,9 @@ module Rational = struct
   let (-) = sub
   let ( * ) = mul
   let (/) = div
-
   let (lsl) = mul_2exp
   let (asr) = div_2exp
-(*
   let (~$) = of_int
   let (//) = of_ints
-  let (~$$) = of_bigint
- *)
   let (///) = make
-
-(*
-  let of_string s =
-    try
-      let i  = String.index s '/' in
-      make
-        (of_substring s ~pos:0 ~len:i)
-        (of_substring s ~pos:(i+1) ~len:(String.length s-i-1))
-    with Not_found ->
-      if s = "inf" || s = "+inf" then inf
-      else if s = "-inf" then minus_inf
-      else if s = "undef" then undef
-      else of_bigint (Z.of_string s)
- *)
 end

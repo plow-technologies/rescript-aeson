@@ -3,6 +3,24 @@ open Expect
 
 let () =
 
+describe "either" (fun () ->
+  let open Aeson in
+  let open Compatibility in
+  let open Either in
+  
+  test "left" (fun () ->
+    expect @@ left 1 |> toEqual (Left 1) );
+
+  test "right" (fun () ->
+    expect @@ right 1 |> toEqual (Right 1) );
+
+  test "left" (fun () ->
+    expect @@ to_string string_of_int string_of_int (left 1) |> toEqual "Left (1)" );
+  
+  test "right" (fun () ->
+    expect @@ to_string string_of_int string_of_int (right 1) |> toEqual "Right (1)" );
+);  
+  
 describe "rational" (fun () ->
   let open Aeson in
   let open Compatibility in
@@ -27,5 +45,4 @@ describe "rational" (fun () ->
 
   test "rational" (fun () ->
     expect @@ (Rational.(-) (Rational.make 5 7) (Rational.make 2 7)) |> toEqual (Rational.make 3 7) );
-
 );  

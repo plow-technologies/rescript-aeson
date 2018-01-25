@@ -37,6 +37,18 @@ test "boolean" (fun () ->
 test "rational" (fun () ->
   expect @@ rational (Aeson.Compatibility.Rational.make 1 2) |> toEqual @@ Obj.magic (Js.Dict.fromList [("numerator", 1); ("denominator", 2)]));
 
+test "either - left int" (fun () ->
+  expect @@ either int string (Aeson.Compatibility.Either.left 1) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 1)]));
+
+test "either - left string" (fun () ->
+  expect @@ either string int (Aeson.Compatibility.Either.left "hello") |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", "hello")]));
+
+test "either - right int" (fun () ->
+  expect @@ either string int (Aeson.Compatibility.Either.right 1) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", 1)]));
+
+test "either - right string" (fun () ->
+  expect @@ either int string (Aeson.Compatibility.Either.right "hello") |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "hello")]));
+
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 

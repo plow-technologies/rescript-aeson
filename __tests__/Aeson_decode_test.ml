@@ -111,12 +111,30 @@ describe "date" (fun () ->
     expect @@ date (Encode.date now) |> toEqual now )
 );
 
+describe "either" (fun () ->
+  let open Aeson in
+  let open Decode in
+  let open Compatibility in
+
+  test "either - left int" (fun () ->
+    expect @@ either int string (Encode.either Encode.int Encode.string (Either.left 1)) |> toEqual (Either.left 1));
+
+  test "either - left string" (fun () ->
+    expect @@ either string int (Encode.either Encode.string Encode.int (Either.left "hello")) |> toEqual (Either.left "hello"));
+
+  test "either - right int" (fun () ->
+    expect @@ either string int (Encode.either Encode.string Encode.int (Either.right 1)) |> toEqual (Either.right 1));
+
+  test "either - right string" (fun () ->
+    expect @@ either int string (Encode.either Encode.int Encode.string (Either.right "hello")) |> toEqual (Either.right "hello"));
+);
+
 describe "rational" (fun () ->
   let open Aeson in
   let open Decode in
   let open Compatibility in
 
-  test "int -> int" (fun () ->
+  test "rational" (fun () ->
     expect @@ rational (Encode.rational (Rational.make 3 4)) |> toEqual (Rational.make 3 4));
 );
 
