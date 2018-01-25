@@ -1,6 +1,6 @@
 {
   "name": "bs-aeson",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "BuckleScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
@@ -22,13 +22,15 @@
     "aeson"
   ],
   "author": "mchaver",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/plow-technologies/bs-aeson/issues"
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
+  "dependencies": {
+    "bs-platform": "^2.1.0"
+  },
   "devDependencies": {
-    "bs-platform": "^1.9.0",
-    "bs-jest": "reasonml-community/bs-jest"
+    "@glennsl/bs-jest": "^0.3.2"
   }
 }
