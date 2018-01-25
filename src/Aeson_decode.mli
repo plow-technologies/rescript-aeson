@@ -322,7 +322,15 @@ a composite decoder, and is useful to decode optional JSON object fields.
 ]}
 *)
 
+val rational : Aeson_compatibility.Rational.t decoder
+(** Try to decode and object with a "numerator" and a "denominator" key and int values .
+*)
+  
 val either : 'l decoder -> 'r decoder -> ('l, 'r) Aeson_compatibility.Either.t decoder
+(** Try to decode an object, then look for a "Left" key, if it exists use the left decoder,
+otherwise look for the "Right" key, if it exists use the right decoder, otherwise it throws
+an error
+*)
   
 val oneOf : 'a decoder list -> 'a decoder
 (** Tries each [decoder] in order, retunring the result of the first that succeeds

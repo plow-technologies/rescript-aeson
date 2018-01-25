@@ -34,6 +34,9 @@ test "int" (fun () ->
 test "boolean" (fun () ->
   expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
 
+test "rational" (fun () ->
+  expect @@ rational (Aeson.Compatibility.Rational.make 1 2) |> toEqual @@ Obj.magic (Js.Dict.fromList [("numerator", 1); ("denominator", 2)]));
+
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 

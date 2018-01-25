@@ -111,6 +111,15 @@ describe "date" (fun () ->
     expect @@ date (Encode.date now) |> toEqual now )
 );
 
+describe "rational" (fun () ->
+  let open Aeson in
+  let open Decode in
+  let open Compatibility in
+
+  test "int -> int" (fun () ->
+    expect @@ rational (Encode.rational (Rational.make 3 4)) |> toEqual (Rational.make 3 4));
+);
+
 describe "nullable" (fun () ->
   let open Aeson in
   let open! Decode in

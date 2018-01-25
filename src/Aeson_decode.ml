@@ -192,7 +192,20 @@ let optional decode json =
   match decode json with
   | exception DecodeError _ -> None
   | v -> Some v
-  
+
+let rational json =
+  match Js.Json.decodeObject json with
+  | Some o -> (
+    match Js_dict.get o "numerator" with
+    | Some n -> (
+      match Js_dict.get o "denominator" with
+      | Some d -> Aeson_compatibility.Rational.make (int n) (int d)
+      | None -> raise @@ DecodeError ("Expected object with \"numerator\" key and int value and \"denominator\" key and int value, got " ^ Js.Json.stringify json)
+    )
+    | None -> raise @@ DecodeError ("Expected object with \"numerator\" key and int value and \"denominator\" key and int value, got " ^ Js.Json.stringify json)
+  )
+  | None -> raise @@ DecodeError ("Expected object with \"numerator\" key and int value and \"denominator\" key and int value, got " ^ Js.Json.stringify json)
+       
 let either decodeL decodeR json =
   match Js.Json.decodeObject json with
   | Some o -> (

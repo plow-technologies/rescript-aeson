@@ -6,7 +6,7 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-
+                                                 
 let nullable encode = function
   | None -> null
   | Some v -> encode v
@@ -30,6 +30,12 @@ let bool b =
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
         |> dict
+
+let rational (r: Aeson_compatibility.Rational.t) =
+  object_
+    [ ("numerator", int r.numerator)
+    ; ("denominator", int r.denominator)
+    ]
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 

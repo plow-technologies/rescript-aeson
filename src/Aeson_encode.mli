@@ -17,7 +17,7 @@ external int : int -> Js.Json.t = "%identity"
 
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 (** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
-
+                                           
 val bool : bool -> Js.Json.t
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
@@ -33,6 +33,9 @@ external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON objet of the [props] list of properties *)
 
+val rational : Aeson_compatibility.Rational.t -> Js.Json.t
+(** [rational n] makes an object of [Aeson.Compatibility.Rational.t n] [n] *)
+  
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 (** [array a] makes a JSON array of the [Js.Json.t array] [a] *)
 
@@ -62,6 +65,7 @@ val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
 
 val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t
+(** [either n] makes an object of [Aeson.Compatibility.Either.t n] [n] *)
 
 val singleEnumerator : 'a encoder
 (** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)
