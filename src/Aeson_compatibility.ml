@@ -57,6 +57,275 @@ module Either = struct
 
   (** Catamorphism *)
   let fold f z = either (const z) (fun v -> f v z)
+
+  let lefts xs =
+    List.fold_left(fun acc x ->
+        match x with
+        | Left l -> List.append acc [l]
+        | Right r -> acc
+      ) [] xs
+
+  let rights xs =
+    List.fold_left(fun acc x ->
+        match x with
+        | Left l -> acc
+        | Right r -> List.append acc [r]
+      ) [] xs
+
+  let array_lefts xs =
+    Array.fold_left(fun acc x ->
+        match x with
+        | Left l -> Array.append acc [|l|]
+        | Right r -> acc
+      ) [||] xs
+
+  let array_rights xs =
+    Array.fold_left(fun acc x ->
+        match x with
+        | Left l -> acc
+        | Right r -> Array.append acc [|r|]
+      ) [||] xs
+end
+
+(*
+module Z = struct
+  type t
+end
+ *)
+              
+module type Z = sig
+  type t
+  val zero: t
+  (** The number 0. *)
+
+  val one: t
+  (** The number 1. *)
+
+  val minus_one: t
+  (** The number -1. *)
+
+  val of_int: int -> t
+  (** Converts from a base integer. *)
+
+  val of_int32: int32 -> t
+  (** Converts from a 32-bit integer. *)
+
+  val of_int64: int64 -> t
+  (** Converts from a 64-bit integer. *)
+
+  val of_nativeint: nativeint -> t
+  (** Converts from a native integer. *)
+
+  val of_float: float -> t
+  (** Converts from a floating-point value. 
+    The value is truncated (rounded towards zero).
+    Raises [Overflow] on infinity and NaN arguments.
+  *)
+
+  val of_string: string -> t
+  (** Converts a string to an integer.
+    An optional [-] prefix indicates a negative number, while a [+]
+    prefix is ignored.
+    An optional prefix [0x], [0o], or [0b] (following the optional [-]
+    or [+] prefix) indicates that the number is,
+    represented, in hexadecimal, octal, or binary, respectively.
+    Otherwise, base 10 is assumed.
+    (Unlike C, a lone [0] prefix does not denote octal.)
+    Raises an [Invalid_argument] exception if the string is not a
+    syntactically correct representation of an integer.
+  *)
+
+  val of_substring : string -> pos:int -> len:int -> t
+  (** [of_substring s ~pos ~len] is the same as [of_string (String.sub s
+    pos len)]
+  *)
+
+  val of_string_base: int -> string -> t 
+  (** Parses a number represented as a string in the specified base,
+    with optional [-] or [+] prefix.
+    The base must be between 2 and 16.
+  *)
+
+  val of_substring_base: int -> string -> pos:int -> len:int -> t
+  (** [of_substring_base base s ~pos ~len] is the same as [of_string_base
+    base (String.sub s pos len)]
+  *)
+
+  (** {1 Basic arithmetic operations} *)
+
+  val succ: t -> t
+  (** Returns its argument plus one. *)
+
+  val pred: t -> t
+  (** Returns its argument minus one. *)
+
+  val abs: t -> t
+  (** Absolute value. *)
+
+  val neg: t -> t
+  (** Unary negation. *)
+
+  val add: t -> t -> t
+  (** Addition. *)
+
+  val sub: t -> t -> t
+  (** Subtraction. *)
+
+  val mul: t -> t -> t
+  (** Multiplication. *)
+
+  val div: t -> t -> t
+  (** Integer division. The result is truncated towards zero
+    and obeys the rule of signs.
+    Raises [Division_by_zero] if the divisor (second argument) is 0.
+   *)
+
+  val gcd: t -> t -> t
+
+  val divexact: t -> t -> t
+
+  val equal: t -> t -> bool
+  (** Equality test. *)
+
+  val leq: t -> t -> bool
+  (** Less than or equal. *)
+
+  val geq: t -> t -> bool
+  (** Greater than or equal. *)
+
+  val lt: t -> t -> bool
+  (** Less than (and not equal). *)
+
+  val gt: t -> t -> bool
+  (** Greater than (and not equal). *)    
+
+  val sign: t -> int
+  (** Returns -1, 0, or 1 when the argument is respectively negative, null, or
+      positive.
+  *)
+
+  val shift_left: t -> int -> t
+  (** Shifts to the left. 
+      Equivalent to a multiplication by a power of 2.
+      The second argument must be non-negative.
+   *)
+end
+
+module Ratio(Z: Z) = struct
+  type t =
+    { numerator : Z.t
+    ; denominator : Z.t
+    }
+
+  (* make *)
+  let mk n d =
+    { numerator = n
+    ; denominator = d
+    }
+
+  (* make and normalize n/d, assuming d > 0 *)
+  let make_real n d =
+    if n == Z.zero || d == Z.one then mk n Z.one
+    else
+      let g = Z.gcd n d in
+      if g == Z.one
+      then mk n d
+      else mk (Z.divexact n g) (Z.divexact d g)
+
+  (* make and normalize any fraction *)
+  let make n d =
+    let sd = Z.sign d in
+    if sd = 0 then mk (Z.of_int (Z.sign n)) Z.zero else
+    if sd > 0 then make_real n d else
+      make_real (Z.neg n) (Z.neg d)
+
+  let of_bigint n = mk n Z.one
+  (* n/1 *)
+
+  let of_int n = of_bigint (Z.of_int n)
+
+  let of_int32 n = of_bigint (Z.of_int32 n)
+
+  let of_int64 n = of_bigint (Z.of_int64 n)
+
+  let of_nativeint n = of_bigint (Z.of_nativeint n)
+
+  let of_ints n d = make (Z.of_int n) (Z.of_int d)
+
+                  
+  let zero = of_bigint Z.zero
+  (* 0/1 *)
+
+  let one = of_bigint Z.one
+  (* 1/1 *)
+
+  let minus_one = of_bigint Z.minus_one
+  (* -1/1 *)
+
+  let inf = mk Z.one Z.zero
+  (* 1/0 *)
+
+  let minus_inf = mk Z.minus_one Z.zero
+  (* -1/0 *)
+
+  let undef = mk Z.zero Z.zero
+  (* 0/0 *)
+
+  let of_float d =
+    if d = infinity then inf else
+    if d = neg_infinity then minus_inf else
+    if classify_float d = FP_nan then undef else
+    let m,e = frexp d in
+    (* put into the form m * 2^e, where m is an integer *)
+    let m,e = Z.of_float (ldexp m 53), e-53 in
+    if e >= 0 then of_bigint (Z.shift_left m e)
+    else make_real m (Z.shift_left Z.one (-e))
+
+  let of_string s =
+    try
+      let i  = String.index s '/' in
+      make
+        (Z.of_substring s ~pos:0 ~len:i)
+        (Z.of_substring s ~pos:(i+1) ~len:(String.length s-i-1))
+    with Not_found ->
+      if s = "inf" || s = "+inf" then inf
+      else if s = "-inf" then minus_inf
+      else if s = "undef" then undef
+      else of_bigint (Z.of_string s)
+
+  (* queries *)
+  (* ------- *)
+
+  type kind =
+    | ZERO   (* 0 *)
+    | INF    (* 1/0 *)
+    | MINF   (* -1/0 *)
+    | UNDEF  (* 0/0 *)
+    | NZERO  (* non-special, non-0 *)
+
+  let classify n =
+    if n.denominator == Z.zero then
+      match Z.sign n.numerator with
+      | 1  -> INF
+      | -1 -> MINF
+      | _ -> UNDEF
+    else
+      if n.numerator == Z.zero
+      then ZERO
+      else NZERO
+
+  let is_real n = (n.denominator != Z.zero)
+
+  let num x = x.numerator
+
+  let den x = x.denominator
+
+  let sign x = Z.sign x.numerator
+  (* sign undef = 0
+     sign inf = 1
+     sign -inf = -1
+    *)
+
 end
 
 (* https://github.com/ocaml/Zarith/blob/master/q.ml *)

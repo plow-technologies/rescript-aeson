@@ -130,7 +130,7 @@ let tuple6 first second third fourth fifth sixth json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
-    if length = 5 then
+    if length = 6 then
       (first (Array.unsafe_get source 0), second (Array.unsafe_get source 1), third (Array.unsafe_get source 2), fourth (Array.unsafe_get source 3), fifth (Array.unsafe_get source 4), sixth (Array.unsafe_get source 5))
     else
       raise @@ DecodeError ({j|Expected array of length 6, got array of length $length|j})

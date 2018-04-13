@@ -35,6 +35,11 @@ module Either : sig
   val note : 'a -> 'b option -> ('a, 'b) t
 
   val fold : ('b -> 'c -> 'c) -> 'c -> ('a, 'b) t -> 'c
+
+  val lefts: (('a, 'b) t) list -> 'a list
+  val rights: (('a, 'b) t) list -> 'b list
+  val array_lefts: (('a, 'b) t) array -> 'a array
+  val array_rights: (('a, 'b) t) array -> 'b array
 end
 
 module Rational : sig

@@ -45,4 +45,18 @@ describe "rational" (fun () ->
 
   test "rational" (fun () ->
     expect @@ (Rational.(-) (Rational.make 5 7) (Rational.make 2 7)) |> toEqual (Rational.make 3 7) );
+
+  test "rational" (fun () ->
+    expect @@ (Rational.to_string (Rational.make 1 3)) |> toEqual "1/3" );
+
+  test "rational" (fun () ->
+    expect @@ (Rational.to_string (Rational.make (-1) 3)) |> toEqual "-1/3" );
+
+  test "rational" (fun () ->
+    expect @@ (Rational.to_string (Rational.make 108583231403255 695053048136)) |> toEqual "108583231403255/695053048136" );
 );  
+
+(*
+
+    expect @@ rational (Encode.rational (Rational.make (-108583231403255) 695053048136)) |> toEqual (Rational.make (-108583231403255) 695053048136));
+*)

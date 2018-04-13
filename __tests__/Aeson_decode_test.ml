@@ -136,6 +136,17 @@ describe "rational" (fun () ->
 
   test "rational" (fun () ->
     expect @@ rational (Encode.rational (Rational.make 3 4)) |> toEqual (Rational.make 3 4));
+
+  test "rational" (fun () ->
+    expect @@ rational (Encode.rational (Rational.make (-3) 4)) |> toEqual (Rational.make 3 (-4)));
+
+  test "rational" (fun () ->
+    expect @@ rational (Encode.rational (Rational.make (-3) (-4))) |> toEqual (Rational.make 3 4));
+
+  test "rational" (fun () ->
+    expect @@ rational (Encode.rational (Rational.make (-108583231403255) 695053048136)) |> toEqual (Rational.make (-108583231403255) 695053048136));
+
+
 );
 
 describe "nullable" (fun () ->
