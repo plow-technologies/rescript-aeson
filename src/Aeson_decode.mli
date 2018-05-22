@@ -15,26 +15,6 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-val boolean : Js.boolean decoder
-(** Decodes a JSON value into a [Js.boolean]
-    
-{b Returns} a [Js.boolean] if the JSON value is a number.
-
-@raise [DecodeError] if unsuccessful 
-
-@example {[
-  open Json
-  (* returns Js.true_ *)
-  let _ = Js.Json.parseExn "true" |> Decode.boolean
-  (* returns Js.false_ *)
-  let _ = Js.Json.parseExn "false" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.boolean
-]}
-*)
-
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     
@@ -44,9 +24,9 @@ val bool : bool decoder
 
 @example {[
   open Json
-  (* returns true *)
+  (* returns Js.true_ *)
   let _ = Js.Json.parseExn "true" |> Decode.bool
-  (* returns false *)
+  (* returns Js.false_ *)
   let _ = Js.Json.parseExn "false" |> Decode.bool
   (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.bool

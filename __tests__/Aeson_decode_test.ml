@@ -29,8 +29,8 @@ module Test = struct
       expectFn decoder (Encode.array [||]) |> toThrow);
     | Object -> test (prefix ^ "object") (fun () ->
       expectFn decoder (Encode.object_ []) |> toThrow);
-    | Bool -> test (prefix ^ "boolean") (fun () ->
-      expectFn decoder (Encode.boolean Js.true_) |> toThrow);
+    | Bool -> test (prefix ^ "bool") (fun () ->
+      expectFn decoder (Encode.bool true) |> toThrow);
   ;;
 
   let rec throws ?(prefix = "") decoder = function
@@ -42,25 +42,15 @@ end
 
 let () = 
 
-describe "boolean" (fun () ->
-  let open Aeson in
-  let open Decode in
-
-  test "boolean" (fun () ->
-    expect @@ boolean (Encode.boolean Js.true_) |> toEqual Js.true_);
-
-  Test.throws boolean [Float; Int; String; Null; Array; Object];
-);
-
 describe "bool" (fun () ->
   let open Aeson in
   let open Decode in
 
   test "bool" (fun () ->
-    expect @@ bool (Encode.boolean Js.true_) |> toEqual true);
+    expect @@ bool (Encode.bool true) |> toEqual true);
+
   test "bool - false" (fun () ->
-    expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
-    
+    expect @@ bool (Encode.bool false) |> toEqual false);
   Test.throws bool [Float; Int; String; Null; Array; Object];
 );
 
@@ -120,8 +110,8 @@ describe "nullable" (fun () ->
   test "null -> int" (fun () ->
     expect @@ (nullable int) Encode.null |> toEqual Js.null);
 
-  test "boolean -> boolean " (fun () ->
-    expect @@ nullable boolean (Encode.boolean Js.true_) |> toEqual (Js.Null.return Js.true_));
+  test "bool -> bool" (fun () ->
+    expect @@ nullable bool (Encode.bool true) |> toEqual (Js.Null.return true));
   test "float -> float" (fun () ->
     expect @@ nullable float (Encode.float 1.23) |> toEqual (Js.Null.return 1.23));
   test "string -> string" (fun () ->
@@ -130,7 +120,7 @@ describe "nullable" (fun () ->
     expect @@ nullable (nullAs Js.null) Encode.null |> toEqual Js.null);
 
   Test.throws (nullable int) [Bool; Float; String; Array; Object];
-  Test.throws (nullable boolean) [Int];
+  Test.throws (nullable bool) [Int];
 );
 
 describe "nullAs" (fun () ->
@@ -157,10 +147,10 @@ describe "array" (fun () ->
   test "array" (fun () ->
     expect @@ (array int) (Encode.array [||]) |> toEqual [||]);
 
-  test "array boolean" (fun () ->
+  test "array bool" (fun () ->
     expect @@
-      array boolean (Js.Json.parseExn {| [true, false, true] |})
-      |> toEqual [| Js.true_; Js.false_; Js.true_ |]);
+      array bool (Js.Json.parseExn {| [true, false, true] |})
+      |> toEqual [| true; false; true |]);
   test "array float" (fun () ->
     expect @@
       array float (Js.Json.parseExn {| [1, 2, 3] |})
@@ -177,9 +167,9 @@ describe "array" (fun () ->
     expect @@
       array (nullAs Js.null) (Js.Json.parseExn {| [null, null, null] |})
       |> toEqual [| Js.null; Js.null; Js.null |]);
-  test "array int -> array boolean" (fun () ->
+  test "array int -> array bool" (fun () ->
     expectFn
-      (array boolean) (Js.Json.parseExn {| [1, 2, 3] |})
+      (array bool) (Js.Json.parseExn {| [1, 2, 3] |})
       |> toThrow);
 
   Test.throws (array int) [Bool; Float; Int; String; Null; Object];
@@ -192,10 +182,10 @@ describe "list" (fun () ->
   test "array" (fun () ->
     expect @@ (list int) (Encode.array [||]) |> toEqual []);
 
-  test "list boolean" (fun () ->
+  test "list bool" (fun () ->
     expect @@
-      list boolean (Js.Json.parseExn {| [true, false, true] |})
-      |> toEqual [Js.true_; Js.false_; Js.true_]);
+      list bool (Js.Json.parseExn {| [true, false, true] |})
+      |> toEqual [true; false; true]);
   test "list float" (fun () ->
     expect @@
       list float (Js.Json.parseExn {| [1, 2, 3] |})
@@ -212,9 +202,9 @@ describe "list" (fun () ->
     expect @@
       list (nullAs Js.null) (Js.Json.parseExn {| [null, null, null] |})
       |> toEqual [Js.null; Js.null; Js.null]);
-  test "array int -> list boolean" (fun () ->
+  test "array int -> list bool" (fun () ->
     expectFn
-      (list boolean) (Js.Json.parseExn {| [1, 2, 3] |})
+      (list bool) (Js.Json.parseExn {| [1, 2, 3] |})
       |> toThrow);
 
   Test.throws (list int) [Bool; Float; Int; String; Null; Object];
@@ -263,10 +253,10 @@ describe "dict" (fun () ->
       dict int (Encode.object_ [])
       |> toEqual (Js.Dict.empty ()));
 
-  test "dict boolean" (fun () ->
+  test "dict bool" (fun () ->
     expect @@
-      dict boolean (Js.Json.parseExn {| { "a": true, "b": false } |})
-      |> toEqual (Obj.magic [%obj { a = Js.true_; b = Js.false_ }]));
+      dict bool (Js.Json.parseExn {| { "a": true, "b": false } |})
+      |> toEqual (Obj.magic [%obj { a = true; b = false }]));
   test "dict float" (fun () ->
     expect @@
       dict float (Js.Json.parseExn {| { "a": 1.2, "b": 2.3 } |})
@@ -295,10 +285,10 @@ describe "field" (fun () ->
   let open Aeson in
   let open! Decode in
 
-  test "field boolean" (fun () ->
+  test "field bool" (fun () ->
     expect @@
-      field "b" boolean (Js.Json.parseExn {| { "a": true, "b": false } |})
-      |> toEqual Js.false_);
+      field "b" bool (Js.Json.parseExn {| { "a": true, "b": false } |})
+      |> toEqual false);
   test "field float" (fun () ->
     expect @@
       field "b" float (Js.Json.parseExn {| { "a": 1.2, "b": 2.3 } |})
@@ -327,13 +317,13 @@ describe "at" (fun () ->
   let open Aeson in
   let open! Decode in
 
-  test "at boolean" (fun () ->
+  test "at bool" (fun () ->
     expect @@
-      at ["a"; "x"; "y"] boolean (Js.Json.parseExn {| {
+      at ["a"; "x"; "y"] bool (Js.Json.parseExn {| {
         "a": { "x" : { "y" : false } }, 
         "b": false 
       } |})
-      |> toEqual Js.false_);
+      |> toEqual false);
   test "field nullAs" (fun () ->
     expect @@
       at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| {
@@ -349,8 +339,8 @@ describe "optional" (fun () ->
   let open Aeson in
   let open! Decode in
 
-  test "boolean -> int" (fun () ->
-    expect @@ (optional int) (Encode.boolean Js.true_) |> toEqual None);
+  test "bool -> int" (fun () ->
+    expect @@ (optional int) (Encode.bool true) |> toEqual None);
   test "float -> int" (fun () ->
     expect @@ (optional int) (Encode.float 1.23) |> toEqual None);
   test "int -> int" (fun () ->
@@ -364,16 +354,16 @@ describe "optional" (fun () ->
   test "object -> int" (fun () ->
     expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
-  test "boolean -> boolean " (fun () ->
-    expect @@ optional boolean (Encode.boolean Js.true_) |> toEqual (Some Js.true_));
+  test "bool -> bool " (fun () ->
+    expect @@ optional bool (Encode.bool true) |> toEqual (Some true));
   test "float -> float" (fun () ->
     expect @@ optional float (Encode.float 1.23) |> toEqual (Some 1.23));
   test "string -> string" (fun () ->
     expect @@ optional string (Encode.string "test") |> toEqual (Some "test"));
   test "null -> null" (fun () ->
     expect @@ optional (nullAs Js.null) Encode.null |> toEqual (Some Js.null));
-  test "int -> boolean" (fun () ->
-    expect @@ (optional boolean) (Encode.int 1) |> toEqual None);
+  test "int -> bool" (fun () ->
+    expect @@ (optional bool) (Encode.int 1) |> toEqual None);
 
   test "optional field" (fun () ->
     expect @@
@@ -429,8 +419,8 @@ describe "withDefault" (fun () ->
   let open Aeson in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expect @@ (withDefault 0 int) (Encode.boolean Js.true_) |> toEqual 0);
+  test "bool" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.bool true) |> toEqual 0);
   test "float" (fun () ->
     expect @@ (withDefault 0 int) (Encode.float 1.23) |> toEqual 0);
   test "int" (fun () ->

@@ -4,7 +4,7 @@ external null : Js.Json.t = "" [@@bs.val]
 external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
+external bool : bool -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 
 let nullable encode = function
@@ -22,10 +22,6 @@ let optional encode optionalValue =
 
 (* Haskell aeson renders .000Z as Z *)          
 let date d: Js.Json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
-
-let bool b =
-  b |> Js.Boolean.to_js_boolean
-    |> boolean
   
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
@@ -69,4 +65,4 @@ let singleEnumerator _x =  array [| |]
 
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+external boolArray : bool array -> Js.Json.t = "%identity"

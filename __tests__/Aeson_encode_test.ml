@@ -31,8 +31,8 @@ test "float" (fun () ->
 test "int" (fun () ->
   expect @@ int 23 |> toEqual @@ Obj.magic 23);
 
-test "boolean" (fun () ->
-  expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
+test "bool" (fun () ->
+  expect @@ bool true |> toEqual @@ Obj.magic true);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
@@ -63,5 +63,5 @@ test "stringArray" (fun () ->
 test "nubmerArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
-test "booleanArray" (fun () ->
-  expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+test "boolArray" (fun () ->
+  expect @@ boolArray [|true ; false|] |> toEqual @@ Obj.magic [|true; false|]);
