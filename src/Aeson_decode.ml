@@ -33,13 +33,6 @@ let int32 json =
   else
     raise @@ DecodeError ("Expected int32, got " ^ Js.Json.stringify json)
 
-let int64 json = 
-  let f = float json in
-  if _isInteger f then
-    (Obj.magic (f : float) : int64)
-  else
-    raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
-
 let nativeint json = 
   let f = float json in
   if _isInteger f then
@@ -258,3 +251,19 @@ let wrapResult decoder json =
   match (decoder json) with
   | v -> Belt.Result.Ok v
   | exception DecodeError message -> Belt.Result.Error message
+
+
+
+let int64 json = 
+  let fs = array float json in
+  if Array.length fs = 2 then
+    if (_isInteger (Array.get fs 0) && _isInteger (Array.get fs 1)) then
+      let left = (Obj.magic ((Array.get fs 0) : float) : int32) in
+      let right = (Obj.magic ((Array.get fs 1) : float) : int32) in
+      let res = Int64.of_int32 left in
+      let res = Int64.shift_left res 32 in
+      Int64.logor res (Int64.of_int32 right)
+    else
+      raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
+  else
+    raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)

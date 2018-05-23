@@ -81,6 +81,42 @@ describe "int" (fun () ->
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );
 
+describe "int32" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "int32" (fun () ->
+    expect @@ int32 (Encode.int32 (Int32.of_int 23)) |> toEqual (Int32.of_int 23));
+
+  test "int32" (fun () ->
+    expect @@ int32 (Encode.int32 (Int32.of_int (-23223))) |> toEqual (Int32.of_int (-23223)));
+);
+
+describe "int64" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "int64" (fun () ->
+    expect @@ int64 (Encode.int64 (Int64.of_int 23)) |> toEqual (Int64.of_int 23));
+
+  test "int64" (fun () ->
+    expect @@ int64 (Encode.int64 (Int64.of_string "9223372036854775807")) |> toEqual (Int64.of_string "9223372036854775807"));
+
+  test "int64" (fun () ->
+    expect @@ int64 (Encode.int64 (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
+);
+
+describe "nativeint" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "nativeint" (fun () ->
+    expect @@ nativeint (Encode.nativeint (Nativeint.of_int 23)) |> toEqual (Nativeint.of_int 23));
+
+  test "nativeint" (fun () ->
+    expect @@ nativeint (Encode.nativeint (Nativeint.of_int (-23223))) |> toEqual (Nativeint.of_int (-23223)));
+);
+
 describe "string" (fun () ->
   let open Aeson in
   let open! Decode in
@@ -345,6 +381,8 @@ describe "optional" (fun () ->
     expect @@ (optional int) (Encode.float 1.23) |> toEqual None);
   test "int -> int" (fun () ->
     expect @@ (optional int) (Encode.int 23) |> toEqual (Some 23));
+  test "int32 -> int32" (fun () ->
+    expect @@ (optional int32) (Encode.int32 (Int32.of_int 23)) |> toEqual (Some (Int32.of_int 23)));
   test "string -> int" (fun () ->
     expect @@ (optional int) (Encode.string "test") |> toEqual None);
   test "null -> int" (fun () ->
