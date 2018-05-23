@@ -94,7 +94,7 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 ### 2.0.0
 
 * Remove support for `Js.boolean`. Remove `Aeson.Decode.boolean`, `Aeson.Decode.booleanArray`, `Aeson.Encode.boolean` and `Aeson.Encode.boolean`.
-* Add `Aeson.Decode.boolArray` and `Aeson.Encode.boolArray`.
+* Add `Aeson.Decode.boolArray`, `Aeson.Encode.boolArray`, `Aeson.Decode.int32`, `Aeson.Encode.int32`, `Aeson.Decode.int64`, `Aeson.Encode.int64`, `Aeson.Decode.nativeint`, `Aeson.Encode.nativeint`.
 * Require BuckleScript >= 3.0.0.
 
 ### 1.1.0
