@@ -203,15 +203,28 @@ let optional decode json =
   match decode json with
   | exception DecodeError _ -> None
   | v -> Some v
+
+let result decodeA decodeB json =
+  match Js.Json.decodeObject json with
+  | Some o -> (
+    match Js_dict.get o "Ok" with
+    | Some l -> Belt.Result.Ok (decodeA l)
+    | None -> (
+      match Js_dict.get o "Error" with
+      | Some r -> Belt.Result.Error (decodeB r)
+      | None -> raise @@ DecodeError ("Expected object with a \"Ok\" key or \"Error\" key, got " ^ Js.Json.stringify json)
+    )
+  )
+  | None -> raise @@ DecodeError ("Expected object with a \"Ok\" key or \"Error\" key, got " ^ Js.Json.stringify json)
   
 let either decodeL decodeR json =
   match Js.Json.decodeObject json with
   | Some o -> (
     match Js_dict.get o "Left" with
-    | Some l -> Aeson_compatibility.Either.Left (decodeL l)
+    | Some l -> Belt.Result.Error (decodeL l)
     | None -> (
       match Js_dict.get o "Right" with
-      | Some r -> Aeson_compatibility.Either.Right (decodeR r)
+      | Some r -> Belt.Result.Ok (decodeR r)
       | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
     )
   )
@@ -251,8 +264,6 @@ let wrapResult decoder json =
   match (decoder json) with
   | v -> Belt.Result.Ok v
   | exception DecodeError message -> Belt.Result.Error message
-
-
 
 let int64 json = 
   let fs = array float json in

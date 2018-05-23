@@ -443,6 +443,28 @@ describe "oneOf" (fun () ->
   Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 );
 
+describe "result" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "Ok" (fun () ->
+    expect @@ (result int string) (Js.Json.parseExn {| {"Error": "hello"} |}) |> toEqual (Belt.Result.Error "hello"));
+  
+  test "Error" (fun () ->
+    expect @@ (result int string) (Js.Json.parseExn {| {"Ok": 2} |}) |> toEqual (Belt.Result.Ok 2));
+);
+  
+describe "either" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "Right" (fun () ->
+    expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Belt.Result.Ok "hello"));
+  
+  test "Left" (fun () ->
+    expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Belt.Result.Error 2));
+);
+  
 describe "tryEither" (fun () ->
   let open Aeson in
   let open! Decode in

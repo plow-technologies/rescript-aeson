@@ -21,9 +21,6 @@ external int32 : int32 -> Js.Json.t = "%identity"
 external int64 : int64 -> Js.Json.t = "%identity"
 (** [int64 n] makes a JSON number of the [int64] [n] *)
 
-(* val int642 : int64 -> Js.Json.t *)
-(** [int642 n] makes a JSON number of the [int64] [n] *)
-
 external nativeint : nativeint -> Js.Json.t = "%identity"
 (** [nativeint n] makes a JSON number of the [nativeint] [n] *)
 
@@ -70,7 +67,9 @@ val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
 
-val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t
+val result : 'a encoder -> 'b encoder -> ('a, 'b) Belt.Result.t -> Js.Json.t
+
+val either : 'l encoder -> 'r encoder -> ('r, 'l) Belt.Result.t -> Js.Json.t
 
 val singleEnumerator : 'a encoder
 (** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)

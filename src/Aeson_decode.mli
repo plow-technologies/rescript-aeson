@@ -311,7 +311,9 @@ a composite decoder, and is useful to decode optional JSON object fields.
 ]}
 *)
 
-val either : 'l decoder -> 'r decoder -> ('l, 'r) Aeson_compatibility.Either.t decoder
+val result : 'a decoder -> 'b decoder -> ('a, 'b) Belt.Result.t decoder
+
+val either : 'l decoder -> 'r decoder -> ('r, 'l) Belt.Result.t decoder
   
 val oneOf : 'a decoder list -> 'a decoder
 (** Tries each [decoder] in order, retunring the result of the first that succeeds
