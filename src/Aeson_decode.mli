@@ -75,6 +75,15 @@ val int : int decoder
 ]}
 *)
 
+val int32 : int32 decoder
+(** Decodes a JSON value into an [int32] *)
+
+val int64 : int64 decoder
+(** Decodes a JSON value into an [int64] *)
+
+val nativeint : nativeint decoder
+(** Decodes a JSON value into an [nativeint] *)
+
 val string : string decoder
 (** Decodes a JSON value into a [string]
     
@@ -423,6 +432,6 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 ]}
 *)
 
-val unwrapResult : ('a, string) Js_result.t -> 'a
+val unwrapResult : ('a, string) Belt.Result.t -> 'a
 
-val wrapResult : 'a decoder -> Js.Json.t -> ('a, string) Js_result.t
+val wrapResult : 'a decoder -> Js.Json.t -> ('a, string) Belt.Result.t

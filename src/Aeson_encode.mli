@@ -15,6 +15,15 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
+external int32 : int32 -> Js.Json.t = "%identity"
+(** [int32 n] makes a JSON number of the [int32] [n] *)
+
+external int64 : int64 -> Js.Json.t = "%identity"
+(** [int64 n] makes a JSON number of the [int64] [n] *)
+
+external nativeint : nativeint -> Js.Json.t = "%identity"
+(** [nativeint n] makes a JSON number of the [nativeint] [n] *)
+
 external bool : bool -> Js.Json.t = "%identity" 
 (** [bool b] makes a JSON boolean of the [Js.bool] [b] *)
 

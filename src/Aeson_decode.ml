@@ -24,7 +24,28 @@ let int json =
   if _isInteger f then
     (Obj.magic (f : float) : int)
   else
-    raise @@ DecodeError ("Expected integer, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)
+
+let int32 json = 
+  let f = float json in
+  if _isInteger f then
+    (Obj.magic (f : float) : int32)
+  else
+    raise @@ DecodeError ("Expected int32, got " ^ Js.Json.stringify json)
+
+let int64 json = 
+  let f = float json in
+  if _isInteger f then
+    (Obj.magic (f : float) : int64)
+  else
+    raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
+
+let nativeint json = 
+  let f = float json in
+  if _isInteger f then
+    (Obj.magic (f : float) : nativeint)
+  else
+    raise @@ DecodeError ("Expected nativeint, got " ^ Js.Json.stringify json)
 
 let string json = 
   if Js.typeof json = "string" then
@@ -230,10 +251,10 @@ let andThen b a json=
 
 let unwrapResult r =
   match r with
-  | Js_result.Ok v -> v
-  | Js_result.Error message -> raise @@ DecodeError message
+  | Belt.Result.Ok v -> v
+  | Belt.Result.Error message -> raise @@ DecodeError message
 
 let wrapResult decoder json =
   match (decoder json) with
-  | v -> Js_result.Ok v
-  | exception DecodeError message -> Js_result.Error message
+  | v -> Belt.Result.Ok v
+  | exception DecodeError message -> Belt.Result.Error message
