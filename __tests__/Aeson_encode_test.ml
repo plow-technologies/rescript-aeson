@@ -31,6 +31,25 @@ test "float" (fun () ->
 test "int" (fun () ->
   expect @@ int 23 |> toEqual @@ Obj.magic 23);
 
+test "int32" (fun () ->
+  expect @@ int32 (Int32.of_int 23) |> toEqual @@ Obj.magic 23);
+
+test "int64" (fun () ->
+  expect @@ int64 (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
+
+(*
+test "int642" (fun () ->
+  expect @@ int642 (Int64.of_int 23) |> toEqual @@ Obj.magic 23);
+
+test "int642" (fun () ->
+  expect @@ int642 (Int64.of_string "72036854775807") |> toEqual @@ [%raw {| 72036854775807 |}]);
+*)
+
+
+
+test "nativeint" (fun () ->
+  expect @@ nativeint (Nativeint.of_int 23) |> toEqual @@ Obj.magic 23);
+
 test "bool" (fun () ->
   expect @@ bool true |> toEqual @@ Obj.magic true);
 

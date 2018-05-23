@@ -21,6 +21,9 @@ external int32 : int32 -> Js.Json.t = "%identity"
 external int64 : int64 -> Js.Json.t = "%identity"
 (** [int64 n] makes a JSON number of the [int64] [n] *)
 
+(* val int642 : int64 -> Js.Json.t *)
+(** [int642 n] makes a JSON number of the [int64] [n] *)
+
 external nativeint : nativeint -> Js.Json.t = "%identity"
 (** [nativeint n] makes a JSON number of the [nativeint] [n] *)
 

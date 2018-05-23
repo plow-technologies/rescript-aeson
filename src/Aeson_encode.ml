@@ -6,10 +6,17 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external int32 : int32 -> Js.Json.t = "%identity"
 external int64 : int64 -> Js.Json.t = "%identity"
+
 external nativeint : nativeint -> Js.Json.t = "%identity"
 external bool : bool -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-
+(*
+let int642 = [%raw {|
+  function(a) {
+    return ((((int64_t) a[0]) << 32) | a[1]);
+  }
+|}]
+*)
 let nullable encode = function
   | None -> null
   | Some v -> encode v

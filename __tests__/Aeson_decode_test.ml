@@ -383,6 +383,8 @@ describe "optional" (fun () ->
     expect @@ (optional int) (Encode.int 23) |> toEqual (Some 23));
   test "int32 -> int32" (fun () ->
     expect @@ (optional int32) (Encode.int32 (Int32.of_int 23)) |> toEqual (Some (Int32.of_int 23)));
+  test "int64 -> int64" (fun () ->
+    expect @@ (optional int64) (Encode.int64 (Int64.of_int 64)) |> toEqual (Some (Int64.of_int 64)));
   test "string -> int" (fun () ->
     expect @@ (optional int) (Encode.string "test") |> toEqual None);
   test "null -> int" (fun () ->
