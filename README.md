@@ -91,6 +91,12 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 2.0.0
+
+* Remove support for `Js.boolean`. Remove `Aeson.Decode.boolean`, `Aeson.Decode.booleanArray`, `Aeson.Encode.boolean` and `Aeson.Encode.boolean`.
+* Add `Aeson.Decode.boolArray` and `Aeson.Encode.boolArray`.
+* Require BuckleScript >= 3.0.0.
+
 ### 1.1.0
 
 * Add `Aeson.Encode.singleEnumerator` and `Aeson.Decode.singleEnumerator` to support Haskell aeson style of serializing a enumeration type with only a single enumerator (as an empty JSON list `[]`).
