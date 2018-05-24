@@ -7,14 +7,11 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-let boolean json = 
+let bool json = 
   if Js.typeof json = "boolean" then
-    (Obj.magic (json : Js.Json.t) : Js.boolean)
+    (Obj.magic (json : Js.Json.t) : bool)
   else
     raise @@ DecodeError ("Expected boolean, got " ^ Js.Json.stringify json)
-
-let bool json = 
-  boolean json |> Js.to_bool
 
 let float json = 
   if Js.typeof json = "number" then
@@ -27,7 +24,21 @@ let int json =
   if _isInteger f then
     (Obj.magic (f : float) : int)
   else
-    raise @@ DecodeError ("Expected integer, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)
+
+let int32 json = 
+  let f = float json in
+  if _isInteger f then
+    (Obj.magic (f : float) : int32)
+  else
+    raise @@ DecodeError ("Expected int32, got " ^ Js.Json.stringify json)
+
+let nativeint json = 
+  let f = float json in
+  if _isInteger f then
+    (Obj.magic (f : float) : nativeint)
+  else
+    raise @@ DecodeError ("Expected nativeint, got " ^ Js.Json.stringify json)
 
 let string json = 
   if Js.typeof json = "string" then
@@ -192,15 +203,28 @@ let optional decode json =
   match decode json with
   | exception DecodeError _ -> None
   | v -> Some v
+
+let result decodeA decodeB json =
+  match Js.Json.decodeObject json with
+  | Some o -> (
+    match Js_dict.get o "Ok" with
+    | Some l -> Belt.Result.Ok (decodeA l)
+    | None -> (
+      match Js_dict.get o "Error" with
+      | Some r -> Belt.Result.Error (decodeB r)
+      | None -> raise @@ DecodeError ("Expected object with a \"Ok\" key or \"Error\" key, got " ^ Js.Json.stringify json)
+    )
+  )
+  | None -> raise @@ DecodeError ("Expected object with a \"Ok\" key or \"Error\" key, got " ^ Js.Json.stringify json)
   
 let either decodeL decodeR json =
   match Js.Json.decodeObject json with
   | Some o -> (
     match Js_dict.get o "Left" with
-    | Some l -> Aeson_compatibility.Either.Left (decodeL l)
+    | Some l -> Belt.Result.Error (decodeL l)
     | None -> (
       match Js_dict.get o "Right" with
-      | Some r -> Aeson_compatibility.Either.Right (decodeR r)
+      | Some r -> Belt.Result.Ok (decodeR r)
       | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
     )
   )
@@ -233,10 +257,24 @@ let andThen b a json=
 
 let unwrapResult r =
   match r with
-  | Js_result.Ok v -> v
-  | Js_result.Error message -> raise @@ DecodeError message
+  | Belt.Result.Ok v -> v
+  | Belt.Result.Error message -> raise @@ DecodeError message
 
 let wrapResult decoder json =
   match (decoder json) with
-  | v -> Js_result.Ok v
-  | exception DecodeError message -> Js_result.Error message
+  | v -> Belt.Result.Ok v
+  | exception DecodeError message -> Belt.Result.Error message
+
+let int64 json = 
+  let fs = array float json in
+  if Array.length fs = 2 then
+    if (_isInteger (Array.get fs 0) && _isInteger (Array.get fs 1)) then
+      let left = (Obj.magic ((Array.get fs 0) : float) : int32) in
+      let right = (Obj.magic ((Array.get fs 1) : float) : int32) in
+      let res = Int64.of_int32 left in
+      let res = Int64.shift_left res 32 in
+      Int64.logor res (Int64.of_int32 right)
+    else
+      raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
+  else
+    raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)

@@ -31,8 +31,17 @@ test "float" (fun () ->
 test "int" (fun () ->
   expect @@ int 23 |> toEqual @@ Obj.magic 23);
 
-test "boolean" (fun () ->
-  expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
+test "int32" (fun () ->
+  expect @@ int32 (Int32.of_int 23) |> toEqual @@ Obj.magic 23);
+
+test "int64" (fun () ->
+  expect @@ int64 (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
+
+test "nativeint" (fun () ->
+  expect @@ nativeint (Nativeint.of_int 23) |> toEqual @@ Obj.magic 23);
+
+test "bool" (fun () ->
+  expect @@ bool true |> toEqual @@ Obj.magic true);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
@@ -63,5 +72,17 @@ test "stringArray" (fun () ->
 test "nubmerArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
-test "booleanArray" (fun () ->
-  expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+test "boolArray" (fun () ->
+  expect @@ boolArray [|true ; false|] |> toEqual @@ Obj.magic [|true; false|]);
+
+test "result" (fun () ->
+  expect @@ (result string int (Belt.Result.Error 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Error", 123)]));
+  
+test "result" (fun () ->
+  expect @@ (result string int (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Ok", "Good")]));
+  
+test "either" (fun () ->
+  expect @@ (either int string (Belt.Result.Error 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
+  
+test "either" (fun () ->
+  expect @@ (either int string (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));

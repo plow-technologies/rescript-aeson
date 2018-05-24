@@ -15,11 +15,17 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
-(** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
+external int32 : int32 -> Js.Json.t = "%identity"
+(** [int32 n] makes a JSON number of the [int32] [n] *)
 
-val bool : bool -> Js.Json.t
-(** [bool b] makes a JSON boolean of the [bool] [b] *)
+external int64 : int64 -> Js.Json.t = "%identity"
+(** [int64 n] makes a JSON number of the [int64] [n] *)
+
+external nativeint : nativeint -> Js.Json.t = "%identity"
+(** [nativeint n] makes a JSON number of the [nativeint] [n] *)
+
+external bool : bool -> Js.Json.t = "%identity" 
+(** [bool b] makes a JSON boolean of the [Js.bool] [b] *)
 
 val nullable : 'a encoder -> 'a option -> Js.Json.t
 (** [nullable encoder option] returns either the encoded value or [Js.Json.null] *)
@@ -61,7 +67,9 @@ val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
 
-val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t
+val result : 'a encoder -> 'b encoder -> ('a, 'b) Belt.Result.t -> Js.Json.t
+
+val either : 'l encoder -> 'r encoder -> ('r, 'l) Belt.Result.t -> Js.Json.t
 
 val singleEnumerator : 'a encoder
 (** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)
@@ -72,5 +80,5 @@ external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)
 
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
-(** [booleanArray] makes a JSON array of the [Js.boolean array] [a] *)
+external boolArray : bool array -> Js.Json.t = "%identity"
+(** [boolArray] makes a JSON array of the [bool array] [a] *)

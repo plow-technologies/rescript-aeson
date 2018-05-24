@@ -1,16 +1,13 @@
 {
   "name": "bs-aeson",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "BuckleScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
     "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
     "test": "npm run build && jest && npm run test:examples",
-    "test:examples": "npm run build && ./run_examples.sh",
-    "watch:bsb": "bsb -make-world -w",
-    "watch:jest": "jest --watchAll",
-    "watch:screen": "screen -c .screenrc"
+    "test:examples": "npm run build && ./run_examples.sh"
   },
   "repository": {
     "type": "git",
@@ -28,7 +25,7 @@
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
   "devDependencies": {
-    "bs-platform": "^1.9.0",
-    "bs-jest": "reasonml-community/bs-jest"
+    "bs-platform": "^3.1.0",
+    "@glennsl/bs-jest": "^0.4.2"
   }
 }

@@ -4,7 +4,10 @@ external null : Js.Json.t = "" [@@bs.val]
 external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
+external int32 : int32 -> Js.Json.t = "%identity"
+external int64 : int64 -> Js.Json.t = "%identity"
+external nativeint : nativeint -> Js.Json.t = "%identity"
+external bool : bool -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 
 let nullable encode = function
@@ -22,10 +25,6 @@ let optional encode optionalValue =
 
 (* Haskell aeson renders .000Z as Z *)          
 let date d: Js.Json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
-
-let bool b =
-  b |> Js.Boolean.to_js_boolean
-    |> boolean
   
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
@@ -60,13 +59,19 @@ let tuple6 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 tuple =
   let (t0, t1, t2, t3, t4, t5) = tuple in
   array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 |]
 
+let result encodeA encodeB e =
+  match e with
+  | Belt.Result.Ok a -> object_ [("Ok", encodeA a)]
+  | Belt.Result.Error b -> object_ [("Error", encodeB b)]
+
+
 let either encodeL encodeR e =
   match e with
-  | Aeson_compatibility.Either.Left l -> object_ [("Left", encodeL l)]
-  | Aeson_compatibility.Either.Right r -> object_ [("Right", encodeR r)]
+  | Belt.Result.Error l -> object_ [("Left", encodeL l)]
+  | Belt.Result.Ok r -> object_ [("Right", encodeR r)]
 
 let singleEnumerator _x =  array [| |]
 
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+external boolArray : bool array -> Js.Json.t = "%identity"

@@ -15,26 +15,6 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-val boolean : Js.boolean decoder
-(** Decodes a JSON value into a [Js.boolean]
-    
-{b Returns} a [Js.boolean] if the JSON value is a number.
-
-@raise [DecodeError] if unsuccessful 
-
-@example {[
-  open Json
-  (* returns Js.true_ *)
-  let _ = Js.Json.parseExn "true" |> Decode.boolean
-  (* returns Js.false_ *)
-  let _ = Js.Json.parseExn "false" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.boolean
-]}
-*)
-
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     
@@ -44,9 +24,9 @@ val bool : bool decoder
 
 @example {[
   open Json
-  (* returns true *)
+  (* returns Js.true_ *)
   let _ = Js.Json.parseExn "true" |> Decode.bool
-  (* returns false *)
+  (* returns Js.false_ *)
   let _ = Js.Json.parseExn "false" |> Decode.bool
   (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.bool
@@ -94,6 +74,15 @@ val int : int decoder
   let _ = Js.Json.parseExn "null" |> Decode.int
 ]}
 *)
+
+val int32 : int32 decoder
+(** Decodes a JSON value into an [int32] *)
+
+val int64 : int64 decoder
+(** Decodes a JSON value into an [int64] *)
+
+val nativeint : nativeint decoder
+(** Decodes a JSON value into an [nativeint] *)
 
 val string : string decoder
 (** Decodes a JSON value into a [string]
@@ -322,7 +311,9 @@ a composite decoder, and is useful to decode optional JSON object fields.
 ]}
 *)
 
-val either : 'l decoder -> 'r decoder -> ('l, 'r) Aeson_compatibility.Either.t decoder
+val result : 'a decoder -> 'b decoder -> ('a, 'b) Belt.Result.t decoder
+
+val either : 'l decoder -> 'r decoder -> ('r, 'l) Belt.Result.t decoder
   
 val oneOf : 'a decoder list -> 'a decoder
 (** Tries each [decoder] in order, retunring the result of the first that succeeds
@@ -443,6 +434,6 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 ]}
 *)
 
-val unwrapResult : ('a, string) Js_result.t -> 'a
+val unwrapResult : ('a, string) Belt.Result.t -> 'a
 
-val wrapResult : 'a decoder -> Js.Json.t -> ('a, string) Js_result.t
+val wrapResult : 'a decoder -> Js.Json.t -> ('a, string) Belt.Result.t
