@@ -1,6 +1,6 @@
 {
   "name": "bs-aeson",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "BuckleScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
