@@ -82,7 +82,7 @@ test "result" (fun () ->
   expect @@ (result string int (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Ok", "Good")]));
   
 test "either" (fun () ->
-  expect @@ (either int string (Belt.Result.Error 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
+  expect @@ (either int string (Aeson.Compatibility.Either.Left 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
   
 test "either" (fun () ->
-  expect @@ (either int string (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));
+  expect @@ (either int string (Aeson.Compatibility.Either.Right "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));

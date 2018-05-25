@@ -64,11 +64,10 @@ let result encodeA encodeB e =
   | Belt.Result.Ok a -> object_ [("Ok", encodeA a)]
   | Belt.Result.Error b -> object_ [("Error", encodeB b)]
 
-
 let either encodeL encodeR e =
   match e with
-  | Belt.Result.Error l -> object_ [("Left", encodeL l)]
-  | Belt.Result.Ok r -> object_ [("Right", encodeR r)]
+  | Aeson_compatibility.Either.Left l -> object_ [("Left", encodeL l)]
+  | Aeson_compatibility.Either.Right r -> object_ [("Right", encodeR r)]
 
 let singleEnumerator _x =  array [| |]
 

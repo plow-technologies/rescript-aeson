@@ -106,6 +106,25 @@ describe "int64" (fun () ->
     expect @@ int64 (Encode.int64 (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
 );
 
+describe "int642" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "int64" (fun () ->
+    expect @@ int642 (Aeson.Encode.string "23") |> toEqual (Int64.of_int 23));
+
+  test "int64" (fun () ->
+    Js.log(Aeson.Encode.string "23");
+    Js.log(Aeson.Encode.int 23);
+    expect @@ int642 (Aeson.Encode.int 23) |> toEqual (Int64.of_int 23));
+
+  test "int64" (fun () ->
+    expect @@ int642 (Aeson.Encode.int 23) |> toEqual @@ Obj.magic [|0;23|]);
+
+
+);
+
+
 describe "nativeint" (fun () ->
   let open Aeson in
   let open! Decode in
@@ -459,10 +478,10 @@ describe "either" (fun () ->
   let open! Decode in
 
   test "Right" (fun () ->
-    expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Belt.Result.Ok "hello"));
+    expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Compatibility.Either.Right "hello"));
   
   test "Left" (fun () ->
-    expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Belt.Result.Error 2));
+    expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Compatibility.Either.Left 2));
 );
   
 describe "tryEither" (fun () ->

@@ -69,7 +69,7 @@ val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 
 val result : 'a encoder -> 'b encoder -> ('a, 'b) Belt.Result.t -> Js.Json.t
 
-val either : 'l encoder -> 'r encoder -> ('r, 'l) Belt.Result.t -> Js.Json.t
+val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t
 
 val singleEnumerator : 'a encoder
 (** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)
