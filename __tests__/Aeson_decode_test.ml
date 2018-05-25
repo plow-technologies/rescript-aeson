@@ -114,16 +114,11 @@ describe "int642" (fun () ->
     expect @@ int642 (Aeson.Encode.string "23") |> toEqual (Int64.of_int 23));
 
   test "int64" (fun () ->
-    Js.log(Aeson.Encode.string "23");
-    Js.log(Aeson.Encode.int 23);
     expect @@ int642 (Aeson.Encode.int 23) |> toEqual (Int64.of_int 23));
 
   test "int64" (fun () ->
     expect @@ int642 (Aeson.Encode.int 23) |> toEqual @@ Obj.magic [|0;23|]);
-
-
 );
-
 
 describe "nativeint" (fun () ->
   let open Aeson in

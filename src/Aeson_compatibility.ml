@@ -51,9 +51,10 @@ module Either = struct
   let is_left v = either (const true) (const false) v
   let is_right v = either (const false) (const true) v
 
-  let to_string l r = either
-                        (fun v -> "Left (" ^ (l v) ^ ")")
-                        (fun v -> "Right (" ^ (r v) ^ ")")
+  let to_string l r = 
+    either
+      (fun v -> "Left (" ^ (l v) ^ ")")
+      (fun v -> "Right (" ^ (r v) ^ ")")
 
   (** Extract a value of raise an exception *)
   let error v = either (fun e -> raise e) id v
