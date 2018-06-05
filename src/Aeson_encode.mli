@@ -18,8 +18,8 @@ external int : int -> Js.Json.t = "%identity"
 external int32 : int32 -> Js.Json.t = "%identity"
 (** [int32 n] makes a JSON number of the [int32] [n] *)
 
-external int64 : int64 -> Js.Json.t = "%identity"
-(** [int64 n] makes a JSON number of the [int64] [n] *)
+external int64_to_array : int64 -> Js.Json.t = "%identity"
+(** [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned *)
 
 external nativeint : nativeint -> Js.Json.t = "%identity"
 (** [nativeint n] makes a JSON number of the [nativeint] [n] *)

@@ -265,7 +265,7 @@ let wrapResult decoder json =
   | v -> Belt.Result.Ok v
   | exception DecodeError message -> Belt.Result.Error message
 
-let int64 json = 
+let int64_of_array json = 
   let fs = array float json in
   if Array.length fs = 2 then
     if (_isInteger (Array.get fs 0) && _isInteger (Array.get fs 1)) then
@@ -279,9 +279,7 @@ let int64 json =
   else
     raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
 
-let int642 json = 
-(*  let x = Js.Json.stringify json in
-  let xx = "\"" ++ x ++ "\"" in *)
+let int64 json = 
   match string json with
   | s -> Int64.of_string s
   | exception DecodeError _ ->

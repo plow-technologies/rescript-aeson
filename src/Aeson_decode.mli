@@ -81,8 +81,8 @@ val int32 : int32 decoder
 val int64 : int64 decoder
 (** Decodes a JSON value into an [int64] *)
 
-val int642 : int64 decoder
-(** Decodes a JSON value into an [int64] *)
+val int64_of_array : int64 decoder
+(** Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. *)
 
 val nativeint : nativeint decoder
 (** Decodes a JSON value into an [nativeint] *)
