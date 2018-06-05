@@ -221,10 +221,10 @@ let either decodeL decodeR json =
   match Js.Json.decodeObject json with
   | Some o -> (
     match Js_dict.get o "Left" with
-    | Some l -> Belt.Result.Error (decodeL l)
+    | Some l -> Aeson_compatibility.Either.Left (decodeL l)
     | None -> (
       match Js_dict.get o "Right" with
-      | Some r -> Belt.Result.Ok (decodeR r)
+      | Some r -> Aeson_compatibility.Either.Right (decodeR r)
       | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
     )
   )
@@ -265,7 +265,7 @@ let wrapResult decoder json =
   | v -> Belt.Result.Ok v
   | exception DecodeError message -> Belt.Result.Error message
 
-let int64 json = 
+let int64_of_array json = 
   let fs = array float json in
   if Array.length fs = 2 then
     if (_isInteger (Array.get fs 0) && _isInteger (Array.get fs 1)) then
@@ -278,3 +278,11 @@ let int64 json =
       raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
   else
     raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
+
+let int64 json = 
+  match string json with
+  | s -> Int64.of_string s
+  | exception DecodeError _ ->
+      match string (Js.Json.string (Js.Json.stringify json)) with
+      | s -> Int64.of_string s
+      | exception DecodeError _ -> raise @@ DecodeError ("Expected int64 as string, got " ^ Js.Json.stringify json)

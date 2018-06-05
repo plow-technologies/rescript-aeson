@@ -97,13 +97,27 @@ describe "int64" (fun () ->
   let open! Decode in
 
   test "int64" (fun () ->
-    expect @@ int64 (Encode.int64 (Int64.of_int 23)) |> toEqual (Int64.of_int 23));
+    expect @@ int64 (Aeson.Encode.string "23") |> toEqual (Int64.of_int 23));
 
   test "int64" (fun () ->
-    expect @@ int64 (Encode.int64 (Int64.of_string "9223372036854775807")) |> toEqual (Int64.of_string "9223372036854775807"));
+    expect @@ int64 (Aeson.Encode.int 23) |> toEqual (Int64.of_int 23));
 
   test "int64" (fun () ->
-    expect @@ int64 (Encode.int64 (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
+    expect @@ int64 (Aeson.Encode.int 23) |> toEqual @@ Obj.magic [|0;23|]);
+);
+
+describe "int64_of_array" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "int64_of_array" (fun () ->
+    expect @@ int64_of_array (Encode.int64_to_array (Int64.of_int 23)) |> toEqual (Int64.of_int 23));
+
+  test "int64_of_array" (fun () ->
+    expect @@ int64_of_array (Encode.int64_to_array (Int64.of_string "9223372036854775807")) |> toEqual (Int64.of_string "9223372036854775807"));
+
+  test "int64_of_array" (fun () ->
+    expect @@ int64_of_array (Encode.int64_to_array (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
 );
 
 describe "nativeint" (fun () ->
@@ -384,7 +398,7 @@ describe "optional" (fun () ->
   test "int32 -> int32" (fun () ->
     expect @@ (optional int32) (Encode.int32 (Int32.of_int 23)) |> toEqual (Some (Int32.of_int 23)));
   test "int64 -> int64" (fun () ->
-    expect @@ (optional int64) (Encode.int64 (Int64.of_int 64)) |> toEqual (Some (Int64.of_int 64)));
+    expect @@ (optional int64_of_array) (Encode.int64_to_array (Int64.of_int 64)) |> toEqual (Some (Int64.of_int 64)));
   test "string -> int" (fun () ->
     expect @@ (optional int) (Encode.string "test") |> toEqual None);
   test "null -> int" (fun () ->
@@ -459,10 +473,10 @@ describe "either" (fun () ->
   let open! Decode in
 
   test "Right" (fun () ->
-    expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Belt.Result.Ok "hello"));
+    expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Compatibility.Either.Right "hello"));
   
   test "Left" (fun () ->
-    expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Belt.Result.Error 2));
+    expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Compatibility.Either.Left 2));
 );
   
 describe "tryEither" (fun () ->

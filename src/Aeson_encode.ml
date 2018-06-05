@@ -5,7 +5,7 @@ external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external int32 : int32 -> Js.Json.t = "%identity"
-external int64 : int64 -> Js.Json.t = "%identity"
+external int64_to_array : int64 -> Js.Json.t = "%identity"
 external nativeint : nativeint -> Js.Json.t = "%identity"
 external bool : bool -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
@@ -64,11 +64,10 @@ let result encodeA encodeB e =
   | Belt.Result.Ok a -> object_ [("Ok", encodeA a)]
   | Belt.Result.Error b -> object_ [("Error", encodeB b)]
 
-
 let either encodeL encodeR e =
   match e with
-  | Belt.Result.Error l -> object_ [("Left", encodeL l)]
-  | Belt.Result.Ok r -> object_ [("Right", encodeR r)]
+  | Aeson_compatibility.Either.Left l -> object_ [("Left", encodeL l)]
+  | Aeson_compatibility.Either.Right r -> object_ [("Right", encodeR r)]
 
 let singleEnumerator _x =  array [| |]
 

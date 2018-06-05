@@ -91,10 +91,17 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 3.0.0
+
+* Change `Aeson.Decode.int64` to decode a literal.
+* Move previous definition of `Aeson.Decode.int64` to `Aeson.Decode.int64_of_array` and `Aeson.Encode.int64` to `Aeson.Decode.int64_to_array`.
+* Bring back `Aeson.Compatibility.Either` and the definitions of `Aeson.Decode.boolean` and `Aeson.Encode.boolean` from `1.1.0`.
+* Add `Aeson.Compatibility.Either.to_result` and `Aeson.Compatibility.Either.of_result`.
+
 ### 2.0.0
 
 * Remove support for `Js.boolean`. Remove `Aeson.Decode.boolean`, `Aeson.Decode.booleanArray`, `Aeson.Encode.boolean` and `Aeson.Encode.boolean`.
-* Remove `Aeson.Compatibility`, `Aeson.Decode.either` and `Aeson.Encode.either` depende on `Belt.Result.t`.
+* Remove `Aeson.Compatibility`, `Aeson.Decode.either` and `Aeson.Encode.either` depend on `Belt.Result.t`.
 * Remove `Aeson.Option`. These functions are now available in the BuckleScript stdlib Belt in `Belt.Option`.
 * Add `Aeson.Decode.boolArray`, `Aeson.Encode.boolArray`, `Aeson.Decode.int32`, `Aeson.Encode.int32`, `Aeson.Decode.int64`, `Aeson.Encode.int64`, `Aeson.Decode.nativeint`, `Aeson.Encode.nativeint`, `Aeson.Decode.result`, `Aeson.Encode.result`.
 * Require BuckleScript >= 3.1.0.

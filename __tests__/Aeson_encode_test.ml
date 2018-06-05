@@ -34,8 +34,8 @@ test "int" (fun () ->
 test "int32" (fun () ->
   expect @@ int32 (Int32.of_int 23) |> toEqual @@ Obj.magic 23);
 
-test "int64" (fun () ->
-  expect @@ int64 (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
+test "int64_of_array" (fun () ->
+  expect @@ int64_to_array (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
 
 test "nativeint" (fun () ->
   expect @@ nativeint (Nativeint.of_int 23) |> toEqual @@ Obj.magic 23);
@@ -82,7 +82,7 @@ test "result" (fun () ->
   expect @@ (result string int (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Ok", "Good")]));
   
 test "either" (fun () ->
-  expect @@ (either int string (Belt.Result.Error 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
+  expect @@ (either int string (Aeson.Compatibility.Either.Left 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
   
 test "either" (fun () ->
-  expect @@ (either int string (Belt.Result.Ok "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));
+  expect @@ (either int string (Aeson.Compatibility.Either.Right "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));
