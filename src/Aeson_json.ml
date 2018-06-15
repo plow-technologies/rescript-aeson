@@ -20,7 +20,7 @@ type tagged_t =
   | JSONObject of t Js_dict.t   
   | JSONArray of t array 
 
-
+(*
 let is_int64 s =
   try ignore (Int64.of_string s); true
   with _ -> false
@@ -30,15 +30,30 @@ let is_float s =
   with _ -> false
  
 let is_numeric s = is_int64 s || is_float s
+*)
+(* let is_numeric = [%re "/[-+]?[0-9]*\\.?[0-9]*/"] *)
+let is_numeric = [%re "/^Aeson.Json.NumberString\\(([+-]?\\d+(\\.\\d+)?)\\)$/"]
+
+let capture_numeric_string s =
+  match (Js.Re.exec s is_numeric) with
+  | Some result ->
+    begin
+      let captures = Js.Re.captures result in
+      if Array.length captures > 0 then
+        match (Js.Nullable.toOption @@ captures.(1)) with
+        | Some cs -> Some cs
+        | None -> None
+      else None
+    end
+  | None -> None
 
 let classify  (x : t) : tagged_t =
   let ty = Js.typeof x in  
   if ty = "string" then 
     let z = Obj.magic x in
-    if is_numeric z then
-      JSONNumberString z
-    else
-      JSONString z
+    match (capture_numeric_string z) with
+    | Some ns -> JSONNumberString ns
+    | None -> JSONString z
   else if ty = "number" then 
     JSONNumber (Obj.magic x )
   else if ty = "boolean" then
@@ -65,7 +80,7 @@ let test (type a) (x : 'a) (v : a kind) : bool =
   | NumberString -> Js.typeof x = "string"
   | Null -> (Obj.magic x) == Js.null 
   | Array -> Js_array.isArray x 
-  | Object -> (Obj.magic x) != Js.null && Js.typeof x = "object" && not (Js_array.isArray x )
+  | Object -> (Obj.magic x) != Js.null && Js.typeof x = "object" && not (Js_array.isArray x)
 
 let decodeString json = 
   if Js.typeof json = "string" 
