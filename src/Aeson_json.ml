@@ -20,18 +20,6 @@ type tagged_t =
   | JSONObject of t Js_dict.t   
   | JSONArray of t array 
 
-(*
-let is_int64 s =
-  try ignore (Int64.of_string s); true
-  with _ -> false
- 
-let is_float s =
-  try ignore (float_of_string s); true
-  with _ -> false
- 
-let is_numeric s = is_int64 s || is_float s
-*)
-(* let is_numeric = [%re "/[-+]?[0-9]*\\.?[0-9]*/"] *)
 let is_numeric = [%re "/^Aeson.Json.NumberString\\(([+-]?\\d+(\\.\\d+)?)\\)$/"]
 
 let capture_numeric_string s =
@@ -66,11 +54,16 @@ let classify  (x : t) : tagged_t =
   else 
     JSONObject (Obj.magic x)
 
-let stringify (x : t): string = 
+let rec stringify (x : t): string = 
   match (classify x) with
+  | JSONFalse -> "false"
+  | JSONTrue -> "true"
+  | JSONNull -> "null"
+  | JSONString s -> "\"" ^ s ^ "\""
   | JSONNumberString s -> s
-  | JSONString s -> String.concat "" ["\""; s; "\""]
-  | _ -> ""
+  | JSONNumber f -> string_of_float f
+  | JSONObject dict -> "{" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun key -> "\"" ^ key ^ "\":" ^ (stringify (Js_dict.unsafeGet dict key))) (Js_dict.keys dict)) ^ "}"
+  | JSONArray array -> "[" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun item -> stringify item) array) ^ "]"
 
 let test (type a) (x : 'a) (v : a kind) : bool =
   match v with
