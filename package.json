@@ -24,8 +24,11 @@
     "url": "https://github.com/plow-technologies/bs-aeson/issues"
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
+  "dependencies": {
+    "bs-Zarith": "file:../bs-Zarith"
+  },
   "devDependencies": {
-    "bs-platform": "^3.1.0",
+    "bs-platform": "^3.1.5",
     "@glennsl/bs-jest": "^0.4.2"
   }
 }

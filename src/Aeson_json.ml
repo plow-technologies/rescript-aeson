@@ -137,3 +137,10 @@ external stringifyWithSpace: t -> (_ [@bs.as {json|null|json}]) -> int -> string
   [@@bs.val] [@@bs.scope "JSON"]
 *)
 (* let stringifyy json = *)
+
+(* int64 : int64 -> Js.Json.t = "%identity" *)
+let int64 (i: int64) : t =
+  string ("Aeson.Json.NumberString(" ^  Int64.to_string i ^ ")")
+
+let bigint (i: Bigint.t) : t =
+  string ("Aeson.Json.NumberString(" ^  Bigint.to_string i ^ ")")

@@ -15,6 +15,19 @@ describe "json.t" (fun () ->
   test "dict string" (fun () ->
     expect @@ (Json.stringify (Aeson.Json.parseExn {| { "a": "x", "b": "y" } |}))
       |> toEqual "{\"a\":\"x\",\"b\":\"y\"}"  );
+
+  test "dict string" (fun () ->
+    expect @@ (Json.stringify (Aeson.Json.parseExn {| [ "a", "x", "b", "y" ] |}))
+      |> toEqual "[\"a\",\"x\",\"b\",\"y\"]"  );
+
+  test "int64" (fun () -> 
+    expect (Json.stringify (Json.int64 (Int64.of_string "9223372036854775807"))) |> toEqual "9223372036854775807");
+
+  test "bigint" (fun () -> 
+    expect (Json.stringify (Json.bigint (Bigint.of_string "823891829388198398494893843948394892233720368547758072323123123"))) |> toEqual "823891829388198398494893843948394892233720368547758072323123123");
+
+  test "string" (fun () ->
+    expect @@ Json.stringify @@ Json.string "foo" |> toEqual "\"foo\"")
   
 (*
   test "is_numeric" (fun () ->
