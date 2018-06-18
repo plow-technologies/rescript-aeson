@@ -9,7 +9,6 @@ type _ kind =
   | Boolean : bool kind
   | Null : Js_types.null_val kind
 
-
 type tagged_t = 
   | JSONFalse
   | JSONTrue
@@ -62,7 +61,7 @@ let rec stringify (x : t): string =
   | JSONString s -> "\"" ^ s ^ "\""
   | JSONNumberString s -> s
   | JSONNumber f -> string_of_float f
-  | JSONObject dict -> "{" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun key -> "\"" ^ key ^ "\":" ^ (stringify (Js_dict.unsafeGet dict key))) (Js_dict.keys dict)) ^ "}"
+  | JSONObject dict -> "{" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun key -> "\"" ^ key ^ "\":" ^ (stringify (Js.Dict.unsafeGet dict key))) (Js.Dict.keys dict)) ^ "}"
   | JSONArray array -> "[" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun item -> stringify item) array) ^ "]"
 
 let test (type a) (x : 'a) (v : a kind) : bool =
@@ -74,6 +73,7 @@ let test (type a) (x : 'a) (v : a kind) : bool =
   | Null -> (Obj.magic x) == Js.null 
   | Array -> Js_array.isArray x 
   | Object -> (Obj.magic x) != Js.null && Js.typeof x = "object" && not (Js_array.isArray x)
+
 
 let decodeString json = 
   if Js.typeof json = "string" 
@@ -113,10 +113,6 @@ external parse : string -> t = "parse"
 external parseExn : string -> t = "parse" 
   [@@bs.val] [@@bs.scope "JSON"]
 
-external stringifyAny : 'a -> string option = 
-"stringify" [@@bs.val] [@@bs.return undefined_to_opt] [@@bs.scope "JSON"]
-(* TODO: more docs when parse error happens or stringify non-stringfy value *)
-
 external null : t = "" [@@bs.val]
 external string : string -> t = "%identity"
 external number : float -> t = "%identity"
@@ -130,26 +126,33 @@ external stringArray : string array -> t = "%identity"
 external numberArray : float array -> t = "%identity"
 external booleanArray : bool array -> t = "%identity"
 external objectArray : t Js_dict.t array -> t = "%identity"
-(*
-external stringify: t -> string = "stringify" 
-  [@@bs.val] [@@bs.scope "JSON"]
-external stringifyWithSpace: t -> (_ [@bs.as {json|null|json}]) -> int -> string = "stringify" 
-  [@@bs.val] [@@bs.scope "JSON"]
-*)
-(* let stringifyy json = *)
 
-(* int64 : int64 -> Js.Json.t = "%identity" *)
-(*
-let int64 (i: int64) : t =
-  string ("Aeson.Json.NumberString(" ^  Int64.to_string i ^ ")")
-
-let bigint (i: Bigint.t) : t =
-  string ("Aeson.Json.NumberString(" ^  Bigint.to_string i ^ ")")
-*)
-
+(* move to decode *)
 let int64 (i: int64) : t =
   string ((Js.String.fromCharCode 0xE000) ^ Int64.to_string i)
 
 let bigint (i: Bigint.t) : t =
   string ((Js.String.fromCharCode 0xE000) ^ Bigint.to_string i)
+
+let rec to_js_json (x: t): Js.Json.t = 
+  match (classify x) with
+  | JSONTrue  -> Js.Json.boolean true
+  | JSONFalse -> Js.Json.boolean false
+  | JSONNull  -> Js.Json.null
+  | JSONString s -> Js.Json.string s
+  | JSONNumberString s -> Js.Json.string s
+  | JSONNumber n -> Js.Json.number n
+  | JSONObject dict -> Js.Json.object_ @@ Js.Dict.fromArray @@ Array.map (fun key -> (key, to_js_json (Js.Dict.unsafeGet dict key))) (Js.Dict.keys dict)
+  | JSONArray array -> Js.Json.array @@ Array.map (fun item -> to_js_json item) array
+
+
+let rec from_js_json (x: Js.Json.t): t = 
+  match (Js.Json.classify x) with
+  | Js.Json.JSONTrue  -> boolean true
+  | Js.Json.JSONFalse -> boolean false
+  | Js.Json.JSONNull  -> null
+  | Js.Json.JSONString s -> string s
+  | Js.Json.JSONNumber n -> number n
+  | Js.Json.JSONObject dict -> object_ @@ Js.Dict.fromArray @@ Array.map (fun key -> (key, from_js_json (Js.Dict.unsafeGet dict key))) (Js.Dict.keys dict)
+  | Js.Json.JSONArray array -> array_ @@ Array.map (fun item -> from_js_json item) array
 
