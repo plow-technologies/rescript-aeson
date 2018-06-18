@@ -20,7 +20,7 @@ type tagged_t =
   | JSONObject of t Js_dict.t   
   | JSONArray of t array 
 
-let is_numeric = [%re "/^Aeson.Json.NumberString\\(([+-]?\\d+(\\.\\d+)?)\\)$/"]
+let is_numeric = [%re "/^\\uE000([+-]?\\d+(\\.\\d+)?)$/"]
 
 let capture_numeric_string s =
   match (Js.Re.exec s is_numeric) with
@@ -139,8 +139,17 @@ external stringifyWithSpace: t -> (_ [@bs.as {json|null|json}]) -> int -> string
 (* let stringifyy json = *)
 
 (* int64 : int64 -> Js.Json.t = "%identity" *)
+(*
 let int64 (i: int64) : t =
   string ("Aeson.Json.NumberString(" ^  Int64.to_string i ^ ")")
 
 let bigint (i: Bigint.t) : t =
   string ("Aeson.Json.NumberString(" ^  Bigint.to_string i ^ ")")
+*)
+
+let int64 (i: int64) : t =
+  string ((Js.String.fromCharCode 0xE000) ^ Int64.to_string i)
+
+let bigint (i: Bigint.t) : t =
+  string ((Js.String.fromCharCode 0xE000) ^ Bigint.to_string i)
+

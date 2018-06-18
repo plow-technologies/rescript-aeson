@@ -6,11 +6,21 @@ let () =
 describe "json.t" (fun () ->
   let open Aeson in                        
 
+  (* test unicode code points and regex *)
   test "is_numeric" (fun () ->
-    expect (Js.Re.test "Aeson.Json.NumberString(9)" Json.is_numeric) |> toEqual true);
+    expect (Js.Re.test {js|"上"|js} [%re "/\\u4E0A/"]) |> toEqual true);
 
-  test "capture_numeric_string" (fun () ->
-    expect (Json.capture_numeric_string "Aeson.Json.NumberString(9)") |> toEqual (Some "9"));
+  test "is_numeric" (fun () ->
+    expect (Js.Re.test {js|"\u4E0A"|js} [%re "/\\u4E0A/"]) |> toEqual true);
+
+  test "is_numeric" (fun () ->
+    expect (Js.Re.test (Js.String.fromCharCode 0x4E0A) [%re "/^\\u4E0A$/"]) |> toEqual true);
+
+  test "is_numeric" (fun () ->
+    expect (Js.Re.test (Js.String.fromCharCode 0x4E0A) [%re "/^\\u4E0A$/"]) |> toEqual true);  
+
+  test "is_numeric" (fun () ->
+    expect (Js.Re.test (Js.String.fromCharCode 0xE000) [%re "/^\\uE000$/"]) |> toEqual true);  
 
   test "dict string" (fun () ->
     expect @@ (Json.stringify (Aeson.Json.parseExn {| { "a": "x", "b": "y" } |}))
@@ -19,6 +29,7 @@ describe "json.t" (fun () ->
   test "dict string" (fun () ->
     expect @@ (Json.stringify (Aeson.Json.parseExn {| [ "a", "x", "b", "y" ] |}))
       |> toEqual "[\"a\",\"x\",\"b\",\"y\"]"  );
+
 
   test "int64" (fun () -> 
     expect (Json.stringify (Json.int64 (Int64.of_string "9223372036854775807"))) |> toEqual "9223372036854775807");
