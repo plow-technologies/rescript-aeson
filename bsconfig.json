@@ -2,7 +2,7 @@
   "name": "bs-aeson",
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "bs-dependencies": [
-    "bs-Zarith"
+    "bs-zarith"
   ],
   "bs-dev-dependencies": [
     "@glennsl/bs-jest"

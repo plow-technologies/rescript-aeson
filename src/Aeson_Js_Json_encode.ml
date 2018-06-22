@@ -1,14 +1,14 @@
-type 'a encoder = 'a -> Aeson_json.t
+type 'a encoder = 'a -> Js.Json.t
 
-external null : Aeson_json.t = "" [@@bs.val]
-external string : string -> Aeson_json.t = "%identity"
-external float : float -> Aeson_json.t = "%identity"
-external int : int -> Aeson_json.t = "%identity"
-external int32 : int32 -> Aeson_json.t = "%identity"
-external int64_to_array : int64 -> Aeson_json.t = "%identity"
-external nativeint : nativeint -> Aeson_json.t = "%identity"
-external bool : bool -> Aeson_json.t = "%identity" 
-external dict : Aeson_json.t Js_dict.t -> Aeson_json.t = "%identity"
+external null : Js.Json.t = "" [@@bs.val]
+external string : string -> Js.Json.t = "%identity"
+external float : float -> Js.Json.t = "%identity"
+external int : int -> Js.Json.t = "%identity"
+external int32 : int32 -> Js.Json.t = "%identity"
+external int64_to_array : int64 -> Js.Json.t = "%identity"
+external nativeint : nativeint -> Js.Json.t = "%identity"
+external bool : bool -> Js.Json.t = "%identity" 
+external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 
 let nullable encode = function
   | None -> null
@@ -24,13 +24,13 @@ let optional encode optionalValue =
   | None -> null
 
 (* Haskell aeson renders .000Z as Z *)          
-let date d: Aeson_json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
+let date d: Js.Json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
   
-let object_ props: Aeson_json.t =
+let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
         |> dict
 
-external array : Aeson_json.t array -> Aeson_json.t = "%identity"
+external array : Js.Json.t array -> Js.Json.t = "%identity"
 
 let list encode l =
   l |> List.map encode
@@ -71,6 +71,6 @@ let either encodeL encodeR e =
 
 let singleEnumerator _x =  array [| |]
 
-external stringArray : string array -> Aeson_json.t = "%identity"
-external numberArray : float array -> Aeson_json.t = "%identity"
-external boolArray : bool array -> Aeson_json.t = "%identity"
+external stringArray : string array -> Js.Json.t = "%identity"
+external numberArray : float array -> Js.Json.t = "%identity"
+external boolArray : bool array -> Js.Json.t = "%identity"

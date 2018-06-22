@@ -61,12 +61,12 @@ describe "json.t" (fun () ->
 
 
   (* Aeson.Json.t and Js.Json.t*)
-  test "array" (fun () ->
+  test "to_js_json array" (fun () ->
     expect @@ (Json.to_js_json (Aeson.Json.parseExn {| [ "a", "x", "b", "y" ] |}))
       |> toEqual (Js.Json.parseExn {| [ "a", "x", "b", "y" ] |}));
 
   (* Aeson.Json.t and Js.Json.t*)
-  test "array" (fun () ->
+  test "from_js_json array" (fun () ->
     expect @@ (Json.from_js_json (Js.Json.parseExn {| [ "a", "x", "b", "y" ] |}))
       |> toEqual (Aeson.Json.parseExn {| [ "a", "x", "b", "y" ] |}))
 

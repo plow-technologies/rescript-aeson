@@ -60,7 +60,7 @@ let rec stringify (x : t): string =
   | JSONNull -> "null"
   | JSONString s -> "\"" ^ s ^ "\""
   | JSONNumberString s -> s
-  | JSONNumber f -> string_of_float f
+  | JSONNumber f -> Js.Json.stringify (Js.Json.number f)
   | JSONObject dict -> "{" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun key -> "\"" ^ key ^ "\":" ^ (stringify (Js.Dict.unsafeGet dict key))) (Js.Dict.keys dict)) ^ "}"
   | JSONArray array -> "[" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun item -> stringify item) array) ^ "]"
 

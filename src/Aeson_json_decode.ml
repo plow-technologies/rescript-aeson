@@ -279,10 +279,10 @@ let int64_of_array json =
   else
     raise @@ DecodeError ("Expected int64, got " ^ Aeson_json.stringify json)
 
-let int64 json =
+let int64 json = 
   match string json with
   | s -> Int64.of_string s
   | exception DecodeError _ ->
-     match string (Aeson_json.string (Aeson_json.stringify json)) with
-     | s -> Int64.of_string s
-     | exception DecodeError _ -> raise @@ DecodeError ("Expected int64 as string, got " ^ Aeson_json.stringify json)
+      match string (Aeson_json.string (Aeson_json.stringify json)) with
+      | s -> Int64.of_string s
+      | exception DecodeError _ -> raise @@ DecodeError ("Expected int64 as string, got " ^ Aeson_json.stringify json)

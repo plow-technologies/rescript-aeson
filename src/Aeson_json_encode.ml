@@ -74,3 +74,9 @@ let singleEnumerator _x =  array [| |]
 external stringArray : string array -> Aeson_json.t = "%identity"
 external numberArray : float array -> Aeson_json.t = "%identity"
 external boolArray : bool array -> Aeson_json.t = "%identity"
+
+let int64 (i: int64) : Aeson_json.t =
+  string ((Js.String.fromCharCode 0xE000) ^ Int64.to_string i)
+
+let bigint (i: Bigint.t) : Aeson_json.t =
+  string ((Js.String.fromCharCode 0xE000) ^ Bigint.to_string i)

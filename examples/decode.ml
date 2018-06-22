@@ -1,11 +1,11 @@
 (* Decoding a fixed JSON data structure using Aeson.Decode *)
-let mapJsonObjectString f decoder (encoder: int -> Js.Json.t) str =
-  let json = Js.Json.parseExn str in
+let mapJsonObjectString f decoder (encoder: int -> Aeson.Json.t) str =
+  let json = Aeson.Json.parseExn str in
   Aeson.Decode.(dict decoder json)
     |> Js.Dict.map ((fun v -> f v) [@bs])
     |> Js.Dict.map ((fun v -> encoder v) [@bs])
     |> Aeson.Encode.dict
-    |> Js.Json.stringify
+    |> Aeson.Json.stringify
 
 let sum =
   Array.fold_left (+) 0
@@ -22,7 +22,7 @@ let _ =
 
 (* Error handling *)
 let _ =
-  let json = {|{ "y": 42 } |} |> Js.Json.parseExn in
+  let json = {|{ "y": 42 } |} |> Aeson.Json.parseExn in
   match Aeson.Decode.(field "x" int json) with
   | x ->
     Js.log x

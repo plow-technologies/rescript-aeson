@@ -4,7 +4,7 @@
 let _ =
   [| "foo"; "bar" |]
   |> Aeson.Encode.stringArray
-  |> Js.Json.stringify
+  |> Aeson.Json.stringify
   |> Js.log
 
 (* prints ["foo", "bar"] *)
@@ -12,7 +12,7 @@ let _ =
   [| "foo"; "bar" |]
   |> Js.Array.map Aeson.Encode.string
   |> Aeson.Encode.array
-  |> Js.Json.stringify
+  |> Aeson.Json.stringify
   |> Js.log
 
 (* prints { x: 42, foo: 'bar' } *)

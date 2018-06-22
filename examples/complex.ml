@@ -29,6 +29,6 @@ let data = {| {
 } |}
 
 let _ =
-  data |> Js.Json.parseExn
+  data |> Aeson.Json.parseExn
        |> Decode.line
        |> Js.log

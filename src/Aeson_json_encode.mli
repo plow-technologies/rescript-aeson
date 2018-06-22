@@ -82,3 +82,7 @@ external numberArray : float array -> Aeson_json.t = "%identity"
 
 external boolArray : bool array -> Aeson_json.t = "%identity"
 (** [boolArray] makes a JSON array of the [bool array] [a] *)
+
+val int64 : int64 -> Aeson_json.t
+
+val bigint : Bigint.t -> Aeson_json.t
