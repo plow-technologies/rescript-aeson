@@ -58,7 +58,7 @@ let rec stringify (x : t): string =
   | JSONFalse -> "false"
   | JSONTrue -> "true"
   | JSONNull -> "null"
-  | JSONString s -> "\"" ^ s ^ "\""
+  | JSONString s -> Js.Json.stringify (Js.Json.string s)
   | JSONNumberString s -> s
   | JSONNumber f -> Js.Json.stringify (Js.Json.number f)
   | JSONObject dict -> "{" ^ (String.concat "," @@ Array.to_list @@ Array.map (fun key -> "\"" ^ key ^ "\":" ^ (stringify (Js.Dict.unsafeGet dict key))) (Js.Dict.keys dict)) ^ "}"

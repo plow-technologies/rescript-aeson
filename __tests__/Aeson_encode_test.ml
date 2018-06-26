@@ -83,6 +83,13 @@ test "result" (fun () ->
   
 test "either" (fun () ->
   expect @@ (either int string (Aeson.Compatibility.Either.Left 123)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Left", 123)]));
-  
+
+
+test "string" (fun () ->
+  expect @@ (Aeson.Json.stringify @@ string "Hello") |> toEqual @@ (Js.Json.stringify (Aeson.JsJson.Encode.string "Hello")));
+
+test "string" (fun () ->
+  expect @@ (Aeson.Json.stringify @@ string "\u001dÔ.aYz&¢©!d1ÀÒ\u0006<®\u000ci&") |> toEqual @@ (Js.Json.stringify (Aeson.JsJson.Encode.string "\u001dÔ.aYz&¢©!d1ÀÒ\u0006<®\u000ci&")));
+
 test "either" (fun () ->
   expect @@ (either int string (Aeson.Compatibility.Either.Right "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));
