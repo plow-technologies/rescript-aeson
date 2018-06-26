@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.0.0
+* Depend on bs-zarith.
+* Complete support for `Bigint`s, `Rational` numbers and `int64`.
+
 ### 3.0.0
 
 * Change `Aeson.Decode.int64` to decode a literal.
