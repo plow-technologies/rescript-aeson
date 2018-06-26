@@ -13,6 +13,18 @@ module Test = struct
 
   type singleEnumerator =
     | SingleEnumerator
+
+  type user =
+    { name : string
+    ; age : int
+    }
+
+  let encodeUser x =
+    Aeson.Encode.object_
+      [ ( "name", Aeson.Encode.string x.name )
+      ; ( "age", Aeson.Encode.int x.age )
+      ]
+
     
   (* TODO: tests for this function *)
   let test decoder prefix = 
@@ -562,3 +574,16 @@ describe "composite expressions" (fun () ->
       (field "foo" (array int) json, field "bar" string json)
       |> toEqual ([| 1; 2; 3 |], "baz"));
 );
+
+
+
+describe "product type with decoder" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  let user: Test.user = { name = "Lars"; age = 35 } in
+  let json = Aeson.Json.parseExn {| { "name": "Lars", "age": 35 } |} in
+  test "int -> float andThen int" (fun () ->
+      expect @@ (Test.encodeUser user) |> toEqual json)
+  );
+
