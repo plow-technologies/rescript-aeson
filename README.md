@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 3.1.0
+
+* Upgrade `bs-platform` to 4.0.18.
+
 ### 3.0.0
 
 * Change `Aeson.Decode.int64` to decode a literal.
