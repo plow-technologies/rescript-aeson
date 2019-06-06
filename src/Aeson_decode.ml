@@ -106,7 +106,10 @@ let tuple3 first second third json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 3 then
-      (first (Array.unsafe_get source 0), second (Array.unsafe_get source 1), third (Array.unsafe_get source 2))
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2)
+      )
     else
       raise @@ DecodeError ({j|Expected array of length 3, got array of length $length|j})
   end
@@ -118,7 +121,11 @@ let tuple4 first second third fourth json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 4 then
-      (first (Array.unsafe_get source 0), second (Array.unsafe_get source 1), third (Array.unsafe_get source 2), fourth (Array.unsafe_get source 3))
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3)
+      )
     else
       raise @@ DecodeError ({j|Expected array of length 4, got array of length $length|j})
   end
@@ -130,7 +137,12 @@ let tuple5 first second third fourth fifth json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 5 then
-      (first (Array.unsafe_get source 0), second (Array.unsafe_get source 1), third (Array.unsafe_get source 2), fourth (Array.unsafe_get source 3), fifth (Array.unsafe_get source 4))
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth (Array.unsafe_get source 4)
+      )
     else
       raise @@ DecodeError ({j|Expected array of length 5, got array of length $length|j})
   end
@@ -141,13 +153,101 @@ let tuple6 first second third fourth fifth sixth json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
-    if length = 5 then
-      (first (Array.unsafe_get source 0), second (Array.unsafe_get source 1), third (Array.unsafe_get source 2), fourth (Array.unsafe_get source 3), fifth (Array.unsafe_get source 4), sixth (Array.unsafe_get source 5))
+    if length = 6 then
+      (first  (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third  (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth  (Array.unsafe_get source 4),
+       sixth  (Array.unsafe_get source 5)
+      )
     else
       raise @@ DecodeError ({j|Expected array of length 6, got array of length $length|j})
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
+let tuple7 first second third fourth fifth sixth seventh json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 7 then
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth (Array.unsafe_get source 4),
+       sixth (Array.unsafe_get source 5),
+       seventh (Array.unsafe_get source 6)
+      )
+    else
+      raise @@ DecodeError ({j|Expected array of length 7, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
+let tuple8 first second third fourth fifth sixth seventh eighth json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 8 then
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth (Array.unsafe_get source 4),
+       sixth (Array.unsafe_get source 5),
+       seventh (Array.unsafe_get source 6),
+       eighth (Array.unsafe_get source 7)
+      )
+    else
+      raise @@ DecodeError ({j|Expected array of length 8, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
+let tuple9 first second third fourth fifth sixth seventh eighth ninth json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 9 then
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth (Array.unsafe_get source 4),
+       sixth (Array.unsafe_get source 5),
+       seventh (Array.unsafe_get source 6),
+       eighth (Array.unsafe_get source 7),
+       ninth (Array.unsafe_get source 8)
+      )
+    else
+      raise @@ DecodeError ({j|Expected array of length 9, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)  
+
+let tuple10 first second third fourth fifth sixth seventh eighth ninth tenth json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 10 then
+      (first (Array.unsafe_get source 0),
+       second (Array.unsafe_get source 1),
+       third (Array.unsafe_get source 2),
+       fourth (Array.unsafe_get source 3),
+       fifth (Array.unsafe_get source 4),
+       sixth (Array.unsafe_get source 5),
+       seventh (Array.unsafe_get source 6),
+       eighth (Array.unsafe_get source 7),
+       ninth (Array.unsafe_get source 8),
+       tenth (Array.unsafe_get source 9)
+      )
+    else
+      raise @@ DecodeError ({j|Expected array of length 10, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)  
   
 let singleEnumerator a json =
   if Js.Array.isArray json then begin

@@ -59,6 +59,22 @@ let tuple6 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 tuple =
   let (t0, t1, t2, t3, t4, t5) = tuple in
   array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 |]
 
+let tuple7 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 encodeT6 tuple =
+  let (t0, t1, t2, t3, t4, t5, t6) = tuple in
+  array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 ; encodeT6 t6 |]
+
+let tuple8 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 encodeT6 encodeT7 tuple =
+  let (t0, t1, t2, t3, t4, t5, t6, t7) = tuple in
+  array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 ; encodeT6 t6 ; encodeT7 t7 |]
+
+let tuple9 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 encodeT6 encodeT7 encodeT8 tuple =
+  let (t0, t1, t2, t3, t4, t5, t6, t7, t8) = tuple in
+  array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 ; encodeT6 t6 ; encodeT7 t7 ; encodeT8 t8 |]
+
+let tuple10 encodeT0 encodeT1 encodeT2 encodeT3 encodeT4 encodeT5 encodeT6 encodeT7 encodeT8 encodeT9 tuple =
+  let (t0, t1, t2, t3, t4, t5, t6, t7, t8, t9) = tuple in
+  array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 ; encodeT3 t3 ; encodeT4 t4 ; encodeT5 t5 ; encodeT6 t6 ; encodeT7 t7 ; encodeT8 t8 ; encodeT9 t9 |]
+
 let result encodeA encodeB e =
   match e with
   | Belt.Result.Ok a -> object_ [("Ok", encodeA a)]

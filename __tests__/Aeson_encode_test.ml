@@ -69,7 +69,7 @@ test "singleEnumerator typeParameterRef0" (fun () ->
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
 
-test "nubmerArray" (fun () ->
+test "numberArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
 test "boolArray" (fun () ->
@@ -86,3 +86,30 @@ test "either" (fun () ->
   
 test "either" (fun () ->
   expect @@ (either int string (Aeson.Compatibility.Either.Right "Good")) |> toEqual @@ Obj.magic (Js.Dict.fromList [("Right", "Good")]));
+
+test "pair" (fun () ->
+  expect @@ (pair int string (1, "a")) |> toEqual @@ (Js.Json.parseExn {| [1, "a"] |}));
+
+test "tuple3" (fun () ->
+  expect @@ (tuple3 int string bool (1, "a", false)) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false] |}));
+
+test "tuple4" (fun () ->
+  expect @@ (tuple4 int string bool int (1, "a", false, 2)) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2] |}));
+
+test "tuple5" (fun () ->
+  expect @@ (tuple5 int string bool int bool (1, "a", false, 2, true)) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true] |}));
+
+test "tuple6" (fun () ->
+  expect @@ (tuple6 int string bool int bool string (1, "a", false, 2, true, "loop")) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true, "loop"] |}));
+
+test "tuple7" (fun () ->
+  expect @@ (tuple7 int string bool int bool string string (1, "a", false, 2, true, "loop", "recursion")) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true, "loop", "recursion"] |}));
+
+test "tuple8" (fun () ->
+  expect @@ (tuple8 int string bool int bool string string int (1, "a", false, 2, true, "loop", "recursion", 33)) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true, "loop", "recursion", 33] |}));
+
+test "tuple9" (fun () ->
+  expect @@ (tuple9 int string bool int bool string string int string (1, "a", false, 2, true, "loop", "recursion", 33, "blah")) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true, "loop", "recursion", 33, "blah"] |}));
+
+test "tuple10" (fun () ->
+  expect @@ (tuple10 int string bool int bool string string int string bool (1, "a", false, 2, true, "loop", "recursion", 33, "blah", false)) |> toEqual @@ (Js.Json.parseExn {| [1, "a", false, 2, true, "loop", "recursion", 33, "blah", false] |}));

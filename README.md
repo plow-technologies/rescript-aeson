@@ -91,6 +91,12 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 3.2.0
+
+* Fix `Aeson.Decode.tuple6`.
+* Add `Aeson.Decode.tuple7`, `Aeson.Decode.tuple8`, `Aeson.Decode.tuple9`, `Aeson.Decode.tuple10`, `Aeson.Encode.tuple6`, `Aeson.Encode.tuple7`, `Aeson.Encode.tuple8`, `Aeson.Encode.tuple9`, `Aeson.Encode.tuple10`.
+* Add tests for all of the tuple functions.
+
 ### 3.1.0
 
 * Upgrade `bs-platform` to 4.0.18.

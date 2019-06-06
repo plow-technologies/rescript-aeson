@@ -67,6 +67,14 @@ val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
 
+val tuple7 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g) -> Js.Json.t
+
+val tuple8 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> 'h encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h) -> Js.Json.t
+
+val tuple9 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> 'h encoder -> 'i encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i) -> Js.Json.t
+
+val tuple10 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> 'h encoder -> 'i encoder -> 'j encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i * 'j) -> Js.Json.t
+  
 val result : 'a encoder -> 'b encoder -> ('a, 'b) Belt.Result.t -> Js.Json.t
 
 val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t

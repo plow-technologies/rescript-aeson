@@ -284,6 +284,79 @@ describe "pair" (fun () ->
     |> toThrow);
 );
 
+
+describe "tuple3" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple3 string int string" (fun () ->
+    expect @@ tuple3 string int string (Js.Json.parseExn {| ["a", 3, "b"] |})
+    |> toEqual ("a", 3, "b"));
+);
+
+describe "tuple4" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple4 string int string bool" (fun () ->
+    expect @@ tuple4 string int string bool (Js.Json.parseExn {| ["a", 3, "b", true] |})
+    |> toEqual ("a", 3, "b", true));
+);
+
+describe "tuple5" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple5 string int string bool int" (fun () ->
+    expect @@ tuple5 string int string bool int (Js.Json.parseExn {| ["a", 3, "b", true, 98] |})
+    |> toEqual ("a", 3, "b", true, 98));
+);
+
+describe "tuple6" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple6 string int string bool int string" (fun () ->
+    expect @@ tuple6 string int string bool int string (Js.Json.parseExn {| ["a", 3, "b", true, 98, "sleepy"] |})
+    |> toEqual ("a", 3, "b", true, 98, "sleepy"));
+);
+
+describe "tuple7" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple7 string int string bool int string int" (fun () ->
+    expect @@ tuple7 string int string bool int string int (Js.Json.parseExn {| ["a", 3, "b", true, 98, "sleepy", 100] |})
+    |> toEqual ("a", 3, "b", true, 98, "sleepy", 100));
+);
+
+describe "tuple8" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple8 string int string bool int string int string" (fun () ->
+    expect @@ tuple8 string int string bool int string int string (Js.Json.parseExn {| ["a", 3, "b", true, 98, "sleepy", 100, "bedtime"] |})
+    |> toEqual ("a", 3, "b", true, 98, "sleepy", 100, "bedtime"));
+);
+
+describe "tuple9" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple9 string int string bool int string int string bool" (fun () ->
+    expect @@ tuple9 string int string bool int string int string bool (Js.Json.parseExn {| ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false] |})
+    |> toEqual ("a", 3, "b", true, 98, "sleepy", 100, "bedtime", false));
+);
+
+describe "tuple10" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "tuple10 string int string bool int string int string bool int" (fun () ->
+    expect @@ tuple10 string int string bool int string int string bool int (Js.Json.parseExn {| ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false, 22] |})
+    |> toEqual ("a", 3, "b", true, 98, "sleepy", 100, "bedtime", false, 22));
+);
+
 describe "singleEnumerator" (fun () ->
   let open Aeson in
   let open! Decode in

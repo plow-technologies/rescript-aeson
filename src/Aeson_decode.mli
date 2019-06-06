@@ -216,6 +216,14 @@ val tuple4 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> ('a * 'b * 
 val tuple5 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> ('a * 'b * 'c * 'd * 'e) decoder
 
 val tuple6 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> ('a * 'b * 'c * 'd * 'e * 'f) decoder
+
+val tuple7 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g) decoder
+
+val tuple8 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> 'h decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h) decoder
+
+val tuple9 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> 'h decoder -> 'i decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i) decoder
+
+val tuple10 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> 'h decoder -> 'i decoder -> 'j decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i * 'j) decoder
   
 val singleEnumerator : 'a -> Js.Json.t -> 'a
   
