@@ -131,6 +131,63 @@ describe "nativeint" (fun () ->
     expect @@ nativeint (Encode.nativeint (Nativeint.of_int (-23223))) |> toEqual (Nativeint.of_int (-23223)));
 );
 
+describe "uint8" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "uint8" (fun () ->
+    expect @@ uint8 (Encode.uint8 (U.UInt8.ofInt 23)) |> toEqual (U.UInt8.ofInt 23));
+
+  test "uint8" (fun () ->
+    expect @@ uint8 (Encode.uint8 (U.UInt8.ofInt (255))) |> toEqual (U.UInt8.ofInt (255)));
+);
+
+describe "uint16" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "uint16" (fun () ->
+    expect @@ uint16 (Encode.uint16 (U.UInt16.ofInt 23)) |> toEqual (U.UInt16.ofInt 23));
+
+  test "uint16" (fun () ->
+    expect @@ uint16 (Encode.uint16 (U.UInt16.ofInt (1233))) |> toEqual (U.UInt16.ofInt (1233)));
+);
+
+
+describe "uint32" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "uint32" (fun () ->
+    expect @@ uint32 (Encode.uint32 (U.UInt32.ofInt 23)) |> toEqual (U.UInt32.ofInt 23));
+
+  test "uint32" (fun () ->
+    expect @@ uint32 (Encode.uint32 (U.UInt32.ofInt (23223))) |> toEqual (U.UInt32.ofInt (23223)));
+);
+
+describe "uint64" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "uint64" (fun () ->
+    expect @@ uint64 (Encode.uint64 (U.UInt64.ofInt 23)) |> toEqual (U.UInt64.ofInt 23));
+
+  test "uint64" (fun () ->
+    expect @@ uint64 (Encode.uint64 (U.UInt64.ofInt (26423))) |> toEqual (U.UInt64.ofInt (26423)));
+);
+
+describe "bigint" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "bigint" (fun () ->
+    expect @@ bigint (Encode.bigint (Bigint.of_int 23)) |> toEqual (Bigint.of_int 23));
+
+  test "bigint" (fun () ->
+    expect @@ bigint (Encode.bigint (Bigint.of_int (26423))) |> toEqual (Bigint.of_int (26423)));
+  );
+
+
 describe "string" (fun () ->
   let open Aeson in
   let open! Decode in

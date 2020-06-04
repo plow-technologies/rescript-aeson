@@ -12,5 +12,6 @@
       "type": "dev"
     }
   ],
+  "bs-dependencies": ["bs-zarith"],
   "bs-dev-dependencies": ["@glennsl/bs-jest"]
 }

@@ -91,6 +91,14 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.0.0
+
+* Add dependency `bs-zarith`.
+* Add `Aeson.Encode`: `uint8`, `uint16`, `uint32`, `uint64`, `int64_of_string`, `bigint`.
+* Add `Aeson.Decode`: `uint8`, `uint16`, `uint32`, `uint64`, `int64_of_string`, `bigint`.
+* Upgrade `bs-platform` to 7.2.2.
+* Upgrade `@glennsl/bs-jest` to 0.4.9.
+
 ### 3.2.0
 
 * Fix `Aeson.Decode.tuple6`.

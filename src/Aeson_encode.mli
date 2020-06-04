@@ -3,7 +3,7 @@
 type 'a encoder = 'a -> Js.Json.t
 (** The type of a encoder combinator *)
 
-external null : Js.Json.t = "" [@@bs.val]
+external null : Js.Json.t = "null" [@@bs.val]
 (** [null] is the singleton null JSON value *)
 
 external string : string -> Js.Json.t = "%identity"
@@ -24,6 +24,24 @@ external int64_to_array : int64 -> Js.Json.t = "%identity"
 external nativeint : nativeint -> Js.Json.t = "%identity"
 (** [nativeint n] makes a JSON number of the [nativeint] [n] *)
 
+val int64_string : Int64.t -> Js.Json.t
+(** [int64 n] makes a JSON number of the [int64] [n] in the format of a string *)
+                                                 
+val bigint : Bigint.t -> Js.Json.t                                                 
+(** [bigint n] makes a JSON number of the [Bigint.t] [n] in the format of a string *)
+
+val uint8 : U.UInt8.t -> Js.Json.t
+(** [uint8 n] makes a JSON number of the [U.UInt8.t] [n] *)
+                           
+val uint16 : U.UInt16.t -> Js.Json.t
+(** [uint16 n] makes a JSON number of the [U.UInt8.t] [n] *)
+                           
+val uint32 : U.UInt32.t -> Js.Json.t
+(** [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string *)
+
+val uint64 : U.UInt64.t -> Js.Json.t
+(** [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string *)
+                                            
 external bool : bool -> Js.Json.t = "%identity" 
 (** [bool b] makes a JSON boolean of the [Js.bool] [b] *)
 
