@@ -32,7 +32,7 @@ let int32 json =
     (Obj.magic (f : float) : int32)
   else
     raise @@ DecodeError ("Expected int32, got " ^ Js.Json.stringify json)
-
+  
 let nativeint json = 
   let f = float json in
   if _isInteger f then
@@ -46,6 +46,65 @@ let string json =
   else
     raise @@ DecodeError ("Expected string, got " ^ Js.Json.stringify json)
 
+let explode s = List.init (String.length s) (String.get s)
+
+let isDigit char =
+  let c = Char.code char in
+  c >= 48 && c <= 57
+
+let isStringOfDigits s =
+  if String.length s == 0
+  then false
+  else List.fold_right (fun c x -> (isDigit c) && x) (explode s) true
+
+let uint8 json =
+  let f = float json in
+  if _isInteger f then
+    U.UInt8.ofInt (Obj.magic (f : float) : int)
+  else
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)  
+
+let uint16 json =
+  let f = float json in
+  if _isInteger f then
+    U.UInt16.ofInt (Obj.magic (f : float) : int)
+  else
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)  
+
+let uint32 json =
+  match int json with
+  | v -> U.UInt32.ofInt v
+  | exception DecodeError _ -> raise @@ DecodeError ("Expected U.UInt32.t, got " ^ Js.Json.stringify json)
+
+let uint64 json =
+  if Js.typeof json = "string" then
+    let source = (Obj.magic (json : Js.Json.t) : string) in
+    match U.UInt64.ofString source with
+    | Some s -> s
+    | None   -> raise @@ DecodeError ("Expected U.UInt64.t, got " ^ source)
+  else
+    raise @@ DecodeError ("Expected U.UInt64.t, got " ^ Js.Json.stringify json)
+
+let int64_of_string json =
+  if Js.typeof json = "string" then
+    let source = (Obj.magic (json : Js.Json.t) : string) in
+    
+    if isStringOfDigits source
+    then Int64.of_string source
+    else raise @@ DecodeError ("Expected int64, got " ^ source)
+  else
+    raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
+  
+let bigint json =
+  if Js.typeof json = "string" then
+    let source = (Obj.magic (json : Js.Json.t) : string) in
+    
+    if isStringOfDigits source
+    then Bigint.of_string source
+    else raise @@ DecodeError ("Expected Bigint.t, got " ^ source)
+  else
+    raise @@ DecodeError ("Expected Bigint.t, got " ^ Js.Json.stringify json)
+  
 let date json =
   if Js.typeof json = "string" then
     let source = (Obj.magic (json : Js.Json.t) : string) in

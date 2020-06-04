@@ -40,6 +40,21 @@ test "int64_of_array" (fun () ->
 test "nativeint" (fun () ->
   expect @@ nativeint (Nativeint.of_int 23) |> toEqual @@ Obj.magic 23);
 
+test "uint8" (fun () ->
+  expect @@ uint8 (U.UInt8.ofInt 18) |> toEqual @@ Obj.magic 18);
+
+test "uint16" (fun () ->
+  expect @@ uint16 (U.UInt16.ofInt 18) |> toEqual @@ Obj.magic 18);
+
+test "uint32" (fun () ->
+  expect @@ uint32 (U.UInt32.ofInt 18) |> toEqual @@ Obj.magic 18);
+
+test "uint64" (fun () ->
+  expect @@ uint64 (U.UInt64.ofInt 233) |> toEqual @@ Obj.magic "233");
+
+test "bigint" (fun () ->
+  expect @@ bigint (Bigint.of_string "38293829382888882338928") |> toEqual @@ Obj.magic "38293829382888882338928");
+
 test "bool" (fun () ->
   expect @@ bool true |> toEqual @@ Obj.magic true);
 
