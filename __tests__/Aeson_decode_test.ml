@@ -575,6 +575,26 @@ describe "optional" (fun () ->
       |> toThrow);
 );
 
+describe "optionalField" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "optionalField" (fun () ->
+    expect @@
+      (optionalField "x" int (Js.Json.parseExn {| { "x": 2} |}))
+    |> toEqual (Some 2));
+
+  test "optionalField - field does not exist" (fun () ->
+    expect @@
+      (optionalField "y" int (Js.Json.parseExn {| { "x": 2} |}))
+    |> toEqual (None));
+
+  test "field optional - no such field" (fun () ->
+    expectFn
+      (optionalField "x" string) (Js.Json.parseExn {| { "x": 2} |})
+      |> toThrow);
+);
+
 describe "oneOf" (fun () ->
   let open Aeson in
   let open! Decode in

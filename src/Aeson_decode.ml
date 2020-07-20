@@ -352,6 +352,19 @@ let field key decode json =
   else
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
 
+let optionalField key decode json =
+  if Js.typeof json = "object" && 
+      not (Js.Array.isArray json) && 
+      not ((Obj.magic json : 'a Js.null) == Js.null)
+  then begin
+    let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
+    match Js.Dict.get dict key with
+    | Some value -> Some (decode value)
+    | None -> None
+  end
+  else
+    raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
+
 let rec at key_path decoder =
     match key_path with 
       | [key] -> field key decoder
