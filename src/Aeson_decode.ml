@@ -359,7 +359,8 @@ let optionalField key decode json =
   then begin
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
     match Js.Dict.get dict key with
-    | Some value -> Some (decode value)
+    | Some value ->
+       if value == Aeson_encode.null then None else Some (decode value)
     | None -> None
   end
   else

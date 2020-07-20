@@ -584,6 +584,16 @@ describe "optionalField" (fun () ->
       (optionalField "x" int (Js.Json.parseExn {| { "x": 2} |}))
     |> toEqual (Some 2));
 
+  test "optionalField - null returns None" (fun () ->
+    expect @@
+      (optionalField "x" int (Js.Json.parseExn {| { "x": null} |}))
+    |> toEqual None);
+
+  test "optionalField - null returns None" (fun () ->
+    expect @@
+      (optionalField "x" string (Js.Json.parseExn {| { "x": null} |}))
+    |> toEqual None);
+  
   test "optionalField - field does not exist" (fun () ->
     expect @@
       (optionalField "y" int (Js.Json.parseExn {| { "x": 2} |}))

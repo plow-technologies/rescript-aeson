@@ -37,7 +37,7 @@ let optional encode optionalValue =
   | Some value -> encode value
   | None -> null
 
-let optionalField encode fieldName optionalValue =
+let optionalField fieldName encode optionalValue =
   match optionalValue with
   | Some value -> [(fieldName, encode value)]
   | None -> []

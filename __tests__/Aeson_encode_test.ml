@@ -82,7 +82,10 @@ test "object_ - option None" (fun () ->
   expect @@ object_ [("x", optional int None)] |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", null)]));
 
 test "object_ - optionalField Some" (fun () ->
-  expect @@ object_ (optionalField int "x" (Some 42)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
+  expect @@ object_ (optionalField "x" int (Some 42)) |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
+
+test "object_ - optionalField Some" (fun () ->
+  expect @@ object_ (optionalField "x" int (None : int option)) |> toEqual @@ Obj.magic (Js.Dict.fromList []));
 
 test "array int" (fun () ->
   expect @@ array ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);

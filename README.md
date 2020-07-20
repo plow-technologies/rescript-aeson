@@ -91,6 +91,11 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.2.0
+
+* Add `Aeson.Decode.optionalField` returns `null` as none.
+* Make `Aeson.Encode.optionalField` parameter order match `Aeson.Decode.optionalField`.
+
 ### 4.1.0
 
 * Add `Aeson.Encode.optionalField` and `Aeson.Decode.optionalField`.
