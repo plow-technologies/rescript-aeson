@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.1.0
+
+* Add `Aeson.Encode.optionalField` and `Aeson.Decode.optionalField`.
+
 ### 4.0.0
 
 * Add dependency `bs-zarith`.

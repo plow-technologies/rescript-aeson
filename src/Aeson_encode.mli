@@ -61,7 +61,11 @@ external array : Js.Json.t array -> Js.Json.t = "%identity"
 (** [array a] makes a JSON array of the [Js.Json.t array] [a] *)
 
 val optional : 'a encoder -> 'a option -> Js.Json.t
-(** [optional encoder a] returns the encoded value of Some, or Null if Nothing *)
+(** [optional encoder a] returns the encoded value in Some, or null if Nothing *)
+
+val optionalField : 'a encoder -> string -> 'a option -> (string * Js.Json.t) list
+(** [optionalField encoder fieldName a] returns the encoded value with the 
+    fieldName in a list, or an empty list if None *)
 
 val date : Js_date.t encoder
 (** [date d] makes a JSON string of the [date] [d] *)

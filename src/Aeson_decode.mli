@@ -289,6 +289,13 @@ and a value that is successfully decoded with the given decoder.
 ]}
 *)
 
+val optionalField : string -> 'a decoder -> 'a option decoder
+(** Decodes a JSON object with a specific field into the value of that field
+    if the field exists
+
+@raise [DecodeError] if the field exists but the decoder is unsuccessful 
+*)
+
 val at : string list -> 'a decoder -> 'a decoder
 (** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
     

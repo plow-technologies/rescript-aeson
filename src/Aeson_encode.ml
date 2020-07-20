@@ -37,6 +37,11 @@ let optional encode optionalValue =
   | Some value -> encode value
   | None -> null
 
+let optionalField encode fieldName optionalValue =
+  match optionalValue with
+  | Some value -> [(fieldName, encode value)]
+  | None -> []
+
 (* Haskell aeson renders .000Z as Z *)          
 let date d: Js.Json.t = string (Js.String.replace ".000Z" "Z" (Js_date.toISOString d))
   
