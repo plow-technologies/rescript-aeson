@@ -1,6 +1,6 @@
 {
   "name": "bs-aeson",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "BuckleScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
   "dependencies": {
-    "bs-zarith": "^2.0.0"
+    "bs-zarith": "^3.0.0"
   },  
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
-    "bs-platform": "7.2.2"
+    "bs-platform": "^8.2.0"
   }
 }
