@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.3.0
+
+* Require bs-platform 8.0.0 and bs-zarith 3.0.0 as a minimum versions.
+
 ### 4.2.0
 
 * Add `Aeson.Decode.optionalField` returns `null` as none.
