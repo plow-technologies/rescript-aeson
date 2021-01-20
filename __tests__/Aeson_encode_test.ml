@@ -37,9 +37,6 @@ test "int32" (fun () ->
 test "int64_of_array" (fun () ->
   expect @@ int64_to_array (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
 
-test "nativeint" (fun () ->
-  expect @@ nativeint (Nativeint.of_int 23) |> toEqual @@ Obj.magic 23);
-
 test "uint8" (fun () ->
   expect @@ uint8 (U.UInt8.ofInt 18) |> toEqual @@ Obj.magic 18);
 

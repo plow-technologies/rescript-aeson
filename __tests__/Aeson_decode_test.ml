@@ -120,17 +120,6 @@ describe "int64_of_array" (fun () ->
     expect @@ int64_of_array (Encode.int64_to_array (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
 );
 
-describe "nativeint" (fun () ->
-  let open Aeson in
-  let open! Decode in
-
-  test "nativeint" (fun () ->
-    expect @@ nativeint (Encode.nativeint (Nativeint.of_int 23)) |> toEqual (Nativeint.of_int 23));
-
-  test "nativeint" (fun () ->
-    expect @@ nativeint (Encode.nativeint (Nativeint.of_int (-23223))) |> toEqual (Nativeint.of_int (-23223)));
-);
-
 describe "uint8" (fun () ->
   let open Aeson in
   let open! Decode in
