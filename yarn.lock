@@ -561,15 +561,15 @@ browser-resolve@^1.11.3:
   dependencies:
     resolve "1.1.7"
 
-bs-platform@8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-8.2.0.tgz#f3f4c06d5710a4c782f0ed030b1fe11e74a0a6d7"
-  integrity sha512-quvmUac/ZxGDsT7L5+6RNXrLPvLHkWFownacaqlwVoyAm770bPyupTRU49ALPGk3HpjfD5eE+lpGdOSPtuwJiA==
+bs-platform@^8.4.2:
+  version "8.4.2"
+  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-8.4.2.tgz#778dabd1dfb3bc95e0086c58dabae74e4ebdee8a"
+  integrity sha512-9q7S4/LLV/a68CweN382NJdCCr/lOSsJR3oQYnmPK98ChfO/AdiA3lYQkQTp6T+U0I5Z5RypUAUprNstwDtMDQ==
 
-bs-zarith@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/bs-zarith/-/bs-zarith-3.0.0.tgz#d036a16b1c386d1ccea6dd6377d9a33fbaf9567a"
-  integrity sha512-NpKzuvxBzKD1R2lcL0JMlDPU7tdrEHa0TgftKV066+urax9Sh+a5obkI/NIwyHlnFjbg0fnebLdaZpAC7p3ytw==
+bs-zarith@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/bs-zarith/-/bs-zarith-3.1.0.tgz#8550b63826d8da23e0ce8a2694fc39040c6a34ce"
+  integrity sha512-RlOAC40DMBy/5i6nh1RP5URqQAoisKlzVf4JzcCHvIuwT1/DLc/60DcnFNU1lftgtdCBGuqyb6WyzJ+ycNDB8w==
 
 bser@^2.0.0:
   version "2.0.0"

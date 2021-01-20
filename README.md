@@ -56,7 +56,7 @@ module Decode = {
       x: json |> field "x" float,
       y: json |> field "y" float
     };
-  
+
   let line json =>
     Aeson.Decode.{
       start:     json |> field "start" point,
@@ -90,6 +90,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 ```
 
 ## Changes
+
+### 4.4.0
+
+* Require bs-platform 8.4.2 and bs-zarith 3.1.0 as a minimum versions.
 
 ### 4.3.0
 
