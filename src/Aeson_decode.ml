@@ -55,7 +55,17 @@ let isDigit char =
 let isStringOfDigits s =
   if String.length s == 0
   then false
-  else List.fold_right (fun c x -> (isDigit c) && x) (explode s) true
+  else
+    let chars = explode s in
+    let chars' =
+      (if String.length s > 1
+       then
+         if List.hd chars == '-'
+         then List.tl chars
+         else chars
+       else chars
+      ) in
+    List.fold_right (fun c x -> (isDigit c) && x) chars' true
 
 let uint8 json =
   let f = float json in
