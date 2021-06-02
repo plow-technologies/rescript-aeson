@@ -120,6 +120,24 @@ describe "int64_of_array" (fun () ->
     expect @@ int64_of_array (Encode.int64_to_array (Int64.of_string "-9223372036854775807")) |> toEqual (Int64.of_string "-9223372036854775807"));
 );
 
+describe "int64_of_string" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "23" (fun () ->
+    expect @@ int64_of_string (Encode.int64_to_string (Int64.of_int 23)) |> toEqual (Int64.of_int 23));
+
+  test "-1000" (fun () ->
+    expect @@ int64_of_string (Encode.int64_to_string (Int64.of_int (-1000))) |> toEqual (Int64.of_int (-1000)));
+
+  test "-1" (fun () ->
+    expect @@ int64_of_string (Encode.int64_to_string (Int64.of_int (-1))) |> toEqual (Int64.of_int (-1)));
+
+  test "23" (fun () ->
+    expect @@ int64_of_string (Encode.int64_to_string (Int64.of_string "999999999999")) |> toEqual (Int64.of_string "999999999999"));
+  
+);
+
 describe "uint8" (fun () ->
   let open Aeson in
   let open! Decode in
@@ -169,11 +187,14 @@ describe "bigint" (fun () ->
   let open Aeson in
   let open! Decode in
 
-  test "bigint" (fun () ->
+  test "23" (fun () ->
     expect @@ bigint (Encode.bigint (Bigint.of_int 23)) |> toEqual (Bigint.of_int 23));
 
-  test "bigint" (fun () ->
+  test "26423" (fun () ->
     expect @@ bigint (Encode.bigint (Bigint.of_int (26423))) |> toEqual (Bigint.of_int (26423)));
+
+  test "-1289848928492483456726423" (fun () ->
+    expect @@ bigint (Encode.bigint (Bigint.of_string ("-1289848928492483456726423"))) |> toEqual (Bigint.of_string ("-1289848928492483456726423")));
   );
 
 

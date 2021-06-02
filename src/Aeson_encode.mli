@@ -24,7 +24,7 @@ external int64_to_array : int64 -> Js.Json.t = "%identity"
 external nativeint : nativeint -> Js.Json.t = "%identity"
 (** [nativeint n] makes a JSON number of the [nativeint] [n] *)
 
-val int64_string : Int64.t -> Js.Json.t
+val int64_to_string : Int64.t -> Js.Json.t
 (** [int64 n] makes a JSON number of the [int64] [n] in the format of a string *)
                                                  
 val bigint : Bigint.t -> Js.Json.t                                                 

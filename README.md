@@ -91,6 +91,12 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.5.0
+
+* BREAKING CHANGE: Rename `int64_string` to `int64_to_string` (this matches the naming convention).
+* Fix `int64_of_string` to work with negative numbers.
+* Add unit tests for `int64_of_string`, `int64_to_string`, and negative `bigint`.
+
 ### 4.4.0
 
 * Require bs-platform 8.4.2 and bs-zarith 3.1.0 as a minimum versions.

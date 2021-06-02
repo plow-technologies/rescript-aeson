@@ -10,7 +10,7 @@ external nativeint : nativeint -> Js.Json.t = "%identity"
 external bool : bool -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
                                                  
-let int64_string (x: Int64.t) = string (Int64.to_string x)
+let int64_to_string (x: Int64.t) = string (Int64.to_string x)
                                                  
 let bigint (x: Bigint.t) = string (Bigint.to_string x)
                                                  

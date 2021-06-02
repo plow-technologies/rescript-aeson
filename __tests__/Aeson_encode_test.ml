@@ -34,8 +34,11 @@ test "int" (fun () ->
 test "int32" (fun () ->
   expect @@ int32 (Int32.of_int 23) |> toEqual @@ Obj.magic 23);
 
-test "int64_of_array" (fun () ->
+test "int64_to_array" (fun () ->
   expect @@ int64_to_array (Int64.of_int 23) |> toEqual @@ Obj.magic [|0;23|]);
+
+test "int64_to_string" (fun () ->
+  expect @@ int64_to_string (Int64.of_int 23) |> toEqual @@ Obj.magic "23");
 
 test "uint8" (fun () ->
   expect @@ uint8 (U.UInt8.ofInt 18) |> toEqual @@ Obj.magic 18);
@@ -51,6 +54,9 @@ test "uint64" (fun () ->
 
 test "bigint" (fun () ->
   expect @@ bigint (Bigint.of_string "38293829382888882338928") |> toEqual @@ Obj.magic "38293829382888882338928");
+
+test "bigint" (fun () ->
+  expect @@ bigint (Bigint.of_string "-38293829382888882338928") |> toEqual @@ Obj.magic "-38293829382888882338928");
 
 test "bool" (fun () ->
   expect @@ bool true |> toEqual @@ Obj.magic true);
