@@ -70,6 +70,9 @@ val optionalField : string -> 'a encoder -> 'a option -> (string * Js.Json.t) li
 val date : Js_date.t encoder
 (** [date d] makes a JSON string of the [date] [d] *)
 
+val beltMap : 'k encoder -> 'v encoder -> ('k , 'v, 'id) Belt.Map.t -> Js.Json.t
+(** [beltMap k v m] returns the encoded value of a Belt.Map.t(k, v, id) *)
+
 val list : 'a encoder -> 'a list encoder
 (** [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] *)
 

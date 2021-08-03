@@ -170,6 +170,11 @@ let pair left right json =
 
 let tuple2 = pair
 
+let beltMap decodeKey decodeValue ~id:id_ json =
+  match array (pair decodeKey decodeValue) json with
+    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id_
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array|j})
+
 let tuple3 first second third json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in

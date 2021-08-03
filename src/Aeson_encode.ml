@@ -62,6 +62,9 @@ let pair encodeT0 encodeT1 tuple =
 
 let tuple2 = pair
 
+let beltMap encodeKey encodeValue obj =
+  list (pair encodeKey encodeValue) (Array.to_list (Belt.Map.toArray obj))
+
 let tuple3 encodeT0 encodeT1 encodeT2 tuple =
   let (t0, t1, t2) = tuple in
   array [| encodeT0 t0 ; encodeT1 t1 ; encodeT2 t2 |]
