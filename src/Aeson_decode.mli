@@ -190,6 +190,12 @@ val beltMap : 'k decoder -> 'v decoder -> id:('k, 'c) Belt.Map.id -> (('k, 'v, '
     using the k and v decodes.
  *)
 
+val beltMapInt : 'v decoder -> ('v Belt.Map.Int.t) decoder
+(** [beltMapString k v m] *)
+
+val beltMapString : 'v decoder -> ('v Belt.Map.String.t) decoder
+(** [beltMapString k v m] *)
+
 val list : 'a decoder -> 'a list decoder
 (** Decodes a JSON array into an ['a list] using the given decoder on each element
     

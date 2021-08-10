@@ -73,6 +73,12 @@ val date : Js_date.t encoder
 val beltMap : 'k encoder -> 'v encoder -> ('k , 'v, 'id) Belt.Map.t -> Js.Json.t
 (** [beltMap k v m] returns the encoded value of a Belt.Map.t(k, v, id) *)
 
+val beltMapInt : 'v encoder -> 'v Belt.Map.Int.t -> Js.Json.t
+(** [beltMapInt v m] returns the encoded value of a Belt.Map.Int.t(v) *)
+
+val beltMapString : 'v encoder -> 'v Belt.Map.String.t -> Js.Json.t
+(** [beltMapString v m] returns the encoded value of a Belt.Map.String.t(v) *)
+
 val list : 'a encoder -> 'a list encoder
 (** [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] *)
 

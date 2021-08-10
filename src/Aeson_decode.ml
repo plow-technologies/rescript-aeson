@@ -170,10 +170,20 @@ let pair left right json =
 
 let tuple2 = pair
 
-let beltMap decodeKey decodeValue ~id:id_ json =
+let beltMap decodeKey decodeValue ~id:id json =
   match array (pair decodeKey decodeValue) json with
-    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id_
-    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array|j})
+    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
+
+let beltMapInt decodeValue json =
+  match array (pair int decodeValue) json with
+    | decoded_array -> Belt.Map.Int.fromArray decoded_array
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
+
+let beltMapString decodeValue json =
+  match array (pair string decodeValue) json with
+    | decoded_array -> Belt.Map.String.fromArray decoded_array
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
 
 let tuple3 first second third json =
   if Js.Array.isArray json then begin

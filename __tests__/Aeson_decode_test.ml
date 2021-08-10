@@ -40,6 +40,32 @@ module Test = struct
         throws decoder ~prefix rest 
 end
 
+type onpingKey =
+  | OnpingKey of string  
+
+let decodeOnpingKey json =
+  match Aeson.Decode.string json with
+  | x -> OnpingKey x
+
+module OnpingKeyComparable =
+  Belt.Id.MakeComparable(struct
+      type t = onpingKey
+      let cmp = compare
+    end)
+
+type pid =
+  | Pid of int
+
+let decodePid json =
+  match Aeson.Decode.int json with
+  | x -> Pid x
+
+module PidComparable =
+  Belt.Id.MakeComparable(struct
+      type t = pid
+      let cmp = compare
+    end)
+
 let () = 
 
 describe "bool" (fun () ->
@@ -432,6 +458,46 @@ describe "singleEnumerator" (fun () ->
     expect @@
       singleEnumerator Test.SingleEnumerator (Encode.array [||])
       |> toEqual Test.SingleEnumerator);
+);
+
+describe "string pid Belt.Map.t" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  
+  test "test" (fun () ->
+    expect @@
+      beltMap decodePid string ~id:(module PidComparable) (Js.Json.parseExn {| [[1, "A"], [2, "B"]] |})
+      |> toEqual (Belt.Map.fromArray [|(Pid 1, "A"); (Pid 2, "B")|] ~id:(module PidComparable)));  
+);
+
+describe "string onpingKey Belt.Map.t" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  
+  test "test" (fun () ->
+    expect @@
+      beltMap decodeOnpingKey string ~id:(module OnpingKeyComparable) (Js.Json.parseExn {| [["a", "A"], ["b", "B"]] |})
+      |> toEqual (Belt.Map.fromArray [|(OnpingKey "a", "A"); (OnpingKey "b", "B")|] ~id:(module OnpingKeyComparable)));  
+);
+
+describe "string Belt.Map.Int.t" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "test" (fun () ->
+    expect @@
+      beltMapInt string (Js.Json.parseExn {| [[1, "A"], [2, "B"]] |})
+      |> toEqual (Belt.Map.Int.fromArray [|(1, "A"); (2, "B")|]));  
+);
+
+describe "string Belt.Map.String.t" (fun () ->
+  let open Aeson in
+  let open! Decode in
+
+  test "test" (fun () ->
+    expect @@
+      beltMapString string (Js.Json.parseExn {| [["a", "A"], ["b", "B"]] |})
+      |> toEqual (Belt.Map.String.fromArray [|("a", "A"); ("b", "B")|]));  
 );
 
 describe "dict" (fun () ->
