@@ -52,7 +52,7 @@ val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
 (** [withDefault default encoder option] returns the encoded value if present, oterwise [default] *)
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-(** [dict d] makes a JSON objet of the [Js.Dict.t] [d] *)
+(** [dict d] makes a JSON object of the [Js.Dict.t] [d] *)
 
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON objet of the [props] list of properties *)

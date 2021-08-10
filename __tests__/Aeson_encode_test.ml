@@ -33,6 +33,16 @@ module PidComparable =
       let cmp = compare
     end)
 
+type onpingDescription =
+  { descriptions : (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t
+  }
+
+let encodeOnpingDescription (x: onpingDescription) =
+  let v: Js.Json.t = Aeson.Encode.beltMap encodeOnpingKey Aeson.Encode.string x.descriptions in
+  Aeson.Encode.object_
+    [ ( "descriptions", v )
+    ]
+
 let _ =
 
 test "null" (fun () ->
