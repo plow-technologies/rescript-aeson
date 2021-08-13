@@ -112,7 +112,7 @@ test "pid string Belt.Map.t" (fun () ->
 test "string Belt.Map.Int.t" (fun () ->
   let arr = [|(1, "A"); (2, "B")|] in
   let bm: string Belt.Map.Int.t = Belt.Map.Int.fromArray arr in
-  expect @@ beltMapInt string bm |> toEqual @@ Obj.magic arr);
+  expect @@ beltMapInt string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray (Array.map (fun (k,v) -> (string_of_int k, v)) arr));
 
 test "string Belt.Map.String.t" (fun () ->
   let arr = [|("a", "A"); ("b", "B")|] in

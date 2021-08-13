@@ -486,7 +486,7 @@ describe "string Belt.Map.Int.t" (fun () ->
 
   test "test" (fun () ->
     expect @@
-      beltMapInt string (Js.Json.parseExn {| [[1, "A"], [2, "B"]] |})
+      beltMapInt string (Js.Json.parseExn {| {"1": "A", "2": "B"} |})
       |> toEqual (Belt.Map.Int.fromArray [|(1, "A"); (2, "B")|]));  
 );
 

@@ -21,3 +21,12 @@ describe "Belt.Map.String.t" (fun () ->
         (Js.Json.parseExn "{\"a\":\"A\",\"b\":\"B\"}")
     )
 );
+
+describe "Belt.Map.Int.t" (fun () ->
+  test "simple map" (fun () ->
+      jsonRoundtripSpec
+        (Aeson.Decode.wrapResult (Aeson.Decode.beltMapInt Aeson.Decode.string))
+        (Aeson.Encode.beltMapInt Aeson.Encode.string)
+        (Js.Json.parseExn "{\"1\":\"A\",\"2\":\"B\"}")
+    )
+);

@@ -66,7 +66,8 @@ let beltMap encodeKey encodeValue obj =
   list (pair encodeKey encodeValue) (Array.to_list (Belt.Map.toArray obj))
 
 let beltMapInt encodeValue obj =
-  list (pair int encodeValue) (Array.to_list (Belt.Map.Int.toArray obj))
+  object_
+  (List.map (fun (k, v) -> (string_of_int k, encodeValue v)) (Array.to_list (Belt.Map.Int.toArray obj)))
 
 let beltMapString encodeValue obj =
   object_
