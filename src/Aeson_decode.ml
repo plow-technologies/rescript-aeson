@@ -180,11 +180,6 @@ let beltMapInt decodeValue json =
     | decoded_array -> Belt.Map.Int.fromArray decoded_array
     | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
 
-let beltMapString decodeValue json =
-  match array (pair string decodeValue) json with
-    | decoded_array -> Belt.Map.String.fromArray decoded_array
-    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
-
 let tuple3 first second third json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
@@ -363,6 +358,11 @@ let dict decode json =
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
+
+let beltMapString decodeValue json =
+  match dict decodeValue json with
+    | decoded_dict -> Belt.Map.String.fromArray (Js.Dict.entries decoded_dict)
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an associative array with keys as strings|j})
 
 let field key decode json =
   if Js.typeof json = "object" && 

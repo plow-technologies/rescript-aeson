@@ -496,7 +496,7 @@ describe "string Belt.Map.String.t" (fun () ->
 
   test "test" (fun () ->
     expect @@
-      beltMapString string (Js.Json.parseExn {| [["a", "A"], ["b", "B"]] |})
+      beltMapString string (Js.Json.parseExn {| {"a": "A", "b": "B"} |})
       |> toEqual (Belt.Map.String.fromArray [|("a", "A"); ("b", "B")|]));  
 );
 

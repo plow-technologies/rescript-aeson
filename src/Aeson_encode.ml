@@ -69,7 +69,8 @@ let beltMapInt encodeValue obj =
   list (pair int encodeValue) (Array.to_list (Belt.Map.Int.toArray obj))
 
 let beltMapString encodeValue obj =
-  list (pair string encodeValue) (Array.to_list (Belt.Map.String.toArray obj))
+  object_
+  (List.map (fun (k, v) -> (k, encodeValue v)) (Array.to_list (Belt.Map.String.toArray obj)))
 
 let tuple3 encodeT0 encodeT1 encodeT2 tuple =
   let (t0, t1, t2) = tuple in

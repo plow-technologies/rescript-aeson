@@ -19,4 +19,3 @@ describe "Either.t" (fun () ->
   test "of_result: Ok" (fun () ->
     expect @@ Either.of_result (Belt.Result.Ok "Goodbye") |> toEqual (Either.Right "Goodbye"));  
 );
-

@@ -20,6 +20,16 @@ module OnpingKeyComparable =
       let cmp = compare
     end)
 
+type onpingDescription =
+  { descriptions : (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t
+  }
+
+let encodeOnpingDescription (x: onpingDescription) =
+  let v: Js.Json.t = Aeson.Encode.beltMap encodeOnpingKey Aeson.Encode.string x.descriptions in
+  Aeson.Encode.object_
+    [ ( "descriptions", v )
+    ]
+
 type pid =
   | Pid of int
 
@@ -32,16 +42,6 @@ module PidComparable =
       type t = pid
       let cmp = compare
     end)
-
-type onpingDescription =
-  { descriptions : (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t
-  }
-
-let encodeOnpingDescription (x: onpingDescription) =
-  let v: Js.Json.t = Aeson.Encode.beltMap encodeOnpingKey Aeson.Encode.string x.descriptions in
-  Aeson.Encode.object_
-    [ ( "descriptions", v )
-    ]
 
 let _ =
 
@@ -117,7 +117,7 @@ test "string Belt.Map.Int.t" (fun () ->
 test "string Belt.Map.String.t" (fun () ->
   let arr = [|("a", "A"); ("b", "B")|] in
   let bm: string Belt.Map.String.t = Belt.Map.String.fromArray arr in
-  expect @@ beltMapString string bm |> toEqual @@ Obj.magic arr);
+  expect @@ beltMapString string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray arr);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
