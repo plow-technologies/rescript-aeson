@@ -91,6 +91,11 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.6.0
+
+* Add `Aeson.Decode.beltMap`, `Aeson.Decode.beltMapInt`, `Aeson.Decode.beltMapString`.
+* Add `Aeson.Encode.beltMap`, `Aeson.Encode.beltMapInt`, `Aeson.Encode.beltMapString`.
+
 ### 4.5.0
 
 * BREAKING CHANGE: Rename `int64_string` to `int64_to_string` (this matches the naming convention).
