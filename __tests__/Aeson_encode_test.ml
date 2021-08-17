@@ -6,7 +6,43 @@ module Test = struct
   type singleEnumerator =
     | SingleEnumerator
 end
-  
+
+type onpingKey =
+  | OnpingKey of string  
+
+let encodeOnpingKey (x: onpingKey) =
+  match x with
+  | OnpingKey x -> string x
+
+module OnpingKeyComparable =
+  Belt.Id.MakeComparable(struct
+      type t = onpingKey
+      let cmp = compare
+    end)
+
+type onpingDescription =
+  { descriptions : (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t
+  }
+
+let encodeOnpingDescription (x: onpingDescription) =
+  let v: Js.Json.t = Aeson.Encode.beltMap encodeOnpingKey Aeson.Encode.string x.descriptions in
+  Aeson.Encode.object_
+    [ ( "descriptions", v )
+    ]
+
+type pid =
+  | Pid of int
+
+let encodePid (x: pid) =
+  match x with
+  | Pid x -> int x
+
+module PidComparable =
+  Belt.Id.MakeComparable(struct
+      type t = pid
+      let cmp = compare
+    end)
+
 let _ =
 
 test "null" (fun () ->
@@ -60,6 +96,28 @@ test "bigint" (fun () ->
 
 test "bool" (fun () ->
   expect @@ bool true |> toEqual @@ Obj.magic true);
+
+test "onpingKey string Belt.Map.t" (fun () ->
+  let arr = [|("a", "A"); ("b", "B")|] in
+  let arrWithKey = Array.map (fun (k, v) -> (OnpingKey k, v)) arr in
+  let bm: (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module OnpingKeyComparable) in
+  expect @@ beltMap encodeOnpingKey string bm |> toEqual @@ Obj.magic arr);
+
+test "pid string Belt.Map.t" (fun () ->
+  let arr = [|(1, "A"); (2, "B")|] in
+  let arrWithKey = Array.map (fun (k, v) -> (Pid k, v)) arr in
+  let bm: (pid, string, PidComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module PidComparable) in
+  expect @@ beltMap encodePid string bm |> toEqual @@ Obj.magic arr);
+
+test "string Belt.Map.Int.t" (fun () ->
+  let arr = [|(1, "A"); (2, "B")|] in
+  let bm: string Belt.Map.Int.t = Belt.Map.Int.fromArray arr in
+  expect @@ beltMapInt string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray (Array.map (fun (k,v) -> (string_of_int k, v)) arr));
+
+test "string Belt.Map.String.t" (fun () ->
+  let arr = [|("a", "A"); ("b", "B")|] in
+  let bm: string Belt.Map.String.t = Belt.Map.String.fromArray arr in
+  expect @@ beltMapString string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray arr);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());

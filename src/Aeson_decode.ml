@@ -170,6 +170,11 @@ let pair left right json =
 
 let tuple2 = pair
 
+let beltMap decodeKey decodeValue ~id:id json =
+  match array (pair decodeKey decodeValue) json with
+    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
+
 let tuple3 first second third json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
@@ -348,6 +353,31 @@ let dict decode json =
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
+
+let has_some mas =
+  let count =
+    (Array.fold_left
+     (fun acc  ->
+        fun (x, _y)  ->
+          match x with
+          | None  -> acc + 1
+          | Some _a -> acc) 0 mas) in
+  count > 0
+
+let beltMapInt decodeValue json =
+  match dict decodeValue json with
+  | decoded_dict -> (
+       let arr = Array.map (fun (k,v) -> (Belt.Int.fromString k, v)) (Js.Dict.entries decoded_dict) in
+       if has_some arr
+       then raise @@ DecodeError ({j|Unexpectedly received non-integer as key|j})
+       else Belt.Map.Int.fromArray (Array.map (fun (k,v) -> (int_of_string k, v)) (Js.Dict.entries decoded_dict))
+    )
+  | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an associative array with keys as strings|j})
+
+let beltMapString decodeValue json =
+  match dict decodeValue json with
+    | decoded_dict -> Belt.Map.String.fromArray (Js.Dict.entries decoded_dict)
+    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an associative array with keys as strings|j})
 
 let field key decode json =
   if Js.typeof json = "object" && 
