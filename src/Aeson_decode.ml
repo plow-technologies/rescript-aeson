@@ -7,40 +7,33 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-let bool json = 
+let bool json =
   if Js.typeof json = "boolean" then
     (Obj.magic (json : Js.Json.t) : bool)
   else
     raise @@ DecodeError ("Expected boolean, got " ^ Js.Json.stringify json)
 
-let float json = 
+let float json =
   if Js.typeof json = "number" then
     (Obj.magic (json : Js.Json.t) : float)
   else
     raise @@ DecodeError ("Expected number, got " ^ Js.Json.stringify json)
 
-let int json = 
+let int json =
   let f = float json in
   if _isInteger f then
     (Obj.magic (f : float) : int)
   else
     raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)
 
-let int32 json = 
+let int32 json =
   let f = float json in
   if _isInteger f then
     (Obj.magic (f : float) : int32)
   else
     raise @@ DecodeError ("Expected int32, got " ^ Js.Json.stringify json)
-  
-let nativeint json = 
-  let f = float json in
-  if _isInteger f then
-    (Obj.magic (f : float) : nativeint)
-  else
-    raise @@ DecodeError ("Expected nativeint, got " ^ Js.Json.stringify json)
 
-let string json = 
+let string json =
   if Js.typeof json = "string" then
     (Obj.magic (json : Js.Json.t) : string)
   else
@@ -72,14 +65,14 @@ let uint8 json =
   if _isInteger f then
     U.UInt8.ofInt (Obj.magic (f : float) : int)
   else
-    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)  
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)
 
 let uint16 json =
   let f = float json in
   if _isInteger f then
     U.UInt16.ofInt (Obj.magic (f : float) : int)
   else
-    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)  
+    raise @@ DecodeError ("Expected int, got " ^ Js.Json.stringify json)
 
 let uint32 json =
   match int json with
@@ -98,23 +91,23 @@ let uint64 json =
 let int64_of_string json =
   if Js.typeof json = "string" then
     let source = (Obj.magic (json : Js.Json.t) : string) in
-    
+
     if isStringOfDigits source
     then Int64.of_string source
     else raise @@ DecodeError ("Expected int64, got " ^ source)
   else
     raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
-  
+
 let bigint json =
   if Js.typeof json = "string" then
     let source = (Obj.magic (json : Js.Json.t) : string) in
-    
+
     if isStringOfDigits source
     then Bigint.of_string source
     else raise @@ DecodeError ("Expected Bigint.t, got " ^ source)
   else
     raise @@ DecodeError ("Expected Bigint.t, got " ^ Js.Json.stringify json)
-  
+
 let date json =
   if Js.typeof json = "string" then
     let source = (Obj.magic (json : Js.Json.t) : string) in
@@ -124,7 +117,7 @@ let date json =
     else encodedDate
   else
     raise @@ DecodeError ("Expected date, got " ^ Js.Json.stringify json)
-    
+
 let nullable decode json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     Js.null
@@ -132,13 +125,13 @@ let nullable decode json =
     Js.Null.return (decode json)
 
 (* TODO: remove this? *)
-let nullAs value json = 
+let nullAs value json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     value
-  else 
+  else
     raise @@ DecodeError ("Expected null, got " ^ Js.Json.stringify json)
 
-let array decode json = 
+let array decode json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
@@ -299,7 +292,7 @@ let tuple9 first second third fourth fifth sixth seventh eighth ninth json =
       raise @@ DecodeError ({j|Expected array of length 9, got array of length $length|j})
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)  
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
 
 let tuple10 first second third fourth fifth sixth seventh eighth ninth tenth json =
   if Js.Array.isArray json then begin
@@ -321,8 +314,8 @@ let tuple10 first second third fourth fifth sixth seventh eighth ninth tenth jso
       raise @@ DecodeError ({j|Expected array of length 10, got array of length $length|j})
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)  
-  
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
 let singleEnumerator a json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
@@ -335,9 +328,9 @@ let singleEnumerator a json =
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
 
-let dict decode json = 
-  if Js.typeof json = "object" && 
-      not (Js.Array.isArray json) && 
+let dict decode json =
+  if Js.typeof json = "object" &&
+      not (Js.Array.isArray json) &&
       not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
@@ -380,8 +373,8 @@ let beltMapString decodeValue json =
     | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an associative array with keys as strings|j})
 
 let field key decode json =
-  if Js.typeof json = "object" && 
-      not (Js.Array.isArray json) && 
+  if Js.typeof json = "object" &&
+      not (Js.Array.isArray json) &&
       not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
@@ -393,8 +386,8 @@ let field key decode json =
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
 
 let optionalField key decode json =
-  if Js.typeof json = "object" && 
-      not (Js.Array.isArray json) && 
+  if Js.typeof json = "object" &&
+      not (Js.Array.isArray json) &&
       not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
@@ -407,9 +400,9 @@ let optionalField key decode json =
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
 
 let rec at key_path decoder =
-    match key_path with 
+    match key_path with
       | [key] -> field key decoder
-      | first::rest -> field first (at rest decoder) 
+      | first::rest -> field first (at rest decoder)
       | [] -> raise @@ Invalid_argument ("Expected key_path to contain at least one element")
 
 let optional decode json =
@@ -429,7 +422,7 @@ let result decodeA decodeB json =
     )
   )
   | None -> raise @@ DecodeError ("Expected object with a \"Ok\" key or \"Error\" key, got " ^ Js.Json.stringify json)
-  
+
 let either decodeL decodeR json =
   match Js.Json.decodeObject json with
   | Some o -> (
@@ -443,7 +436,7 @@ let either decodeL decodeR json =
   )
   | None -> raise @@ DecodeError ("Expected object with a \"Left\" key or \"Right\" key, got " ^ Js.Json.stringify json)
 
-       
+
 let rec oneOf decoders json =
   match decoders with
   | [] ->
@@ -453,7 +446,7 @@ let rec oneOf decoders json =
     match decode json with
     | v -> v
     | exception _ -> oneOf rest json
-                   
+
 let tryEither a b =
   oneOf [a;b]
 
@@ -478,7 +471,7 @@ let wrapResult decoder json =
   | v -> Belt.Result.Ok v
   | exception DecodeError message -> Belt.Result.Error message
 
-let int64_of_array json = 
+let int64_of_array json =
   let fs = array float json in
   if Array.length fs = 2 then
     if (_isInteger (Array.get fs 0) && _isInteger (Array.get fs 1)) then
@@ -492,7 +485,7 @@ let int64_of_array json =
   else
     raise @@ DecodeError ("Expected int64, got " ^ Js.Json.stringify json)
 
-let int64 json = 
+let int64 json =
   match string json with
   | s -> Int64.of_string s
   | exception DecodeError _ ->

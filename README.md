@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.7.0
+
+* BREAKING CHANGE: Remove 'nativeint' since Rescript no longer supports this
+
 ### 4.6.0
 
 * Add `Aeson.Decode.beltMap`, `Aeson.Decode.beltMapInt`, `Aeson.Decode.beltMapString`.

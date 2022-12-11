@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
   "dependencies": {
-    "bs-zarith": "^3.1.0"
+    "bs-zarith": "^3.2.0"
   },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
-    "bs-platform": "^8.4.2"
+    "bs-platform": "^10.0.1"
   }
 }

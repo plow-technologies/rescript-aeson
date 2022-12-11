@@ -21,28 +21,25 @@ external int32 : int32 -> Js.Json.t = "%identity"
 external int64_to_array : int64 -> Js.Json.t = "%identity"
 (** [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned *)
 
-external nativeint : nativeint -> Js.Json.t = "%identity"
-(** [nativeint n] makes a JSON number of the [nativeint] [n] *)
-
 val int64_to_string : Int64.t -> Js.Json.t
 (** [int64 n] makes a JSON number of the [int64] [n] in the format of a string *)
-                                                 
-val bigint : Bigint.t -> Js.Json.t                                                 
+
+val bigint : Bigint.t -> Js.Json.t
 (** [bigint n] makes a JSON number of the [Bigint.t] [n] in the format of a string *)
 
 val uint8 : U.UInt8.t -> Js.Json.t
 (** [uint8 n] makes a JSON number of the [U.UInt8.t] [n] *)
-                           
+
 val uint16 : U.UInt16.t -> Js.Json.t
 (** [uint16 n] makes a JSON number of the [U.UInt8.t] [n] *)
-                           
+
 val uint32 : U.UInt32.t -> Js.Json.t
 (** [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string *)
 
 val uint64 : U.UInt64.t -> Js.Json.t
 (** [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string *)
-                                            
-external bool : bool -> Js.Json.t = "%identity" 
+
+external bool : bool -> Js.Json.t = "%identity"
 (** [bool b] makes a JSON boolean of the [Js.bool] [b] *)
 
 val nullable : 'a encoder -> 'a option -> Js.Json.t
@@ -64,7 +61,7 @@ val optional : 'a encoder -> 'a option -> Js.Json.t
 (** [optional encoder a] returns the encoded value in Some, or null if Nothing *)
 
 val optionalField : string -> 'a encoder -> 'a option -> (string * Js.Json.t) list
-(** [optionalField encoder fieldName a] returns the encoded value with the 
+(** [optionalField encoder fieldName a] returns the encoded value with the
     fieldName in a list, or an empty list if None *)
 
 val date : Js_date.t encoder
@@ -82,9 +79,9 @@ val beltMapString : 'v encoder -> 'v Belt.Map.String.t -> Js.Json.t
 val list : 'a encoder -> 'a list encoder
 (** [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] *)
 
-(** The functions below are specialized for specific array type which 
+(** The functions below are specialized for specific array type which
     happened to be already JSON object in the BuckleScript runtime. Therefore
-    they are more efficient (constant time rather than linear conversion). *) 
+    they are more efficient (constant time rather than linear conversion). *)
 
 val pair : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
 
@@ -93,7 +90,7 @@ val tuple2 : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
 val tuple3 : 'a encoder -> 'b encoder -> 'c encoder -> ('a * 'b * 'c) -> Js.Json.t
 
 val tuple4 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> ('a * 'b * 'c * 'd) -> Js.Json.t
-  
+
 val tuple5 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> ('a * 'b * 'c * 'd * 'e) -> Js.Json.t
 
 val tuple6 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> ('a * 'b * 'c * 'd * 'e * 'f) -> Js.Json.t
@@ -105,16 +102,16 @@ val tuple8 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder 
 val tuple9 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> 'h encoder -> 'i encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i) -> Js.Json.t
 
 val tuple10 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> 'e encoder -> 'f encoder -> 'g encoder -> 'h encoder -> 'i encoder -> 'j encoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i * 'j) -> Js.Json.t
-  
+
 val result : 'a encoder -> 'b encoder -> ('a, 'b) Belt.Result.t -> Js.Json.t
 
 val either : 'l encoder -> 'r encoder -> ('l, 'r) Aeson_compatibility.Either.t -> Js.Json.t
 
 val singleEnumerator : 'a encoder
 (** [singleEnumerator a] takes a value and returns an empty JSON array. Useful for encoding a single enumerator that matches Haskell aeson. *)
-  
+
 external stringArray : string array -> Js.Json.t = "%identity"
-(** [stringArray a] makes a JSON array of the [string array] [a] *) 
+(** [stringArray a] makes a JSON array of the [string array] [a] *)
 
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)

@@ -1,6 +1,6 @@
 (** Provides a set of low level combinator primitives to decode Js.Json.t data
 structures
-A decoder combinator will return the decoded value if successful, or raise a 
+A decoder combinator will return the decoded value if successful, or raise a
 [DecodeError of string] if unsuccessful, where the string argument contains the
 error message.
 Decoders are designed to be combined to produce more complex decoders that can
@@ -17,10 +17,10 @@ exception DecodeError of string
 
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
-    
+
 {b Returns} a [bool] if the JSON value is a number.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -37,10 +37,10 @@ val bool : bool decoder
 
 val float : float decoder
 (** Decodes a JSON value into a [float]
-    
+
 {b Returns} a [float] if the JSON value is a number.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -57,10 +57,10 @@ val float : float decoder
 
 val int : int decoder
 (** Decodes a JSON value into an [int]
-    
+
 {b Returns} an [int] if the JSON value is a number.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -86,9 +86,6 @@ val int64_of_array : int64 decoder
 
 val int64_of_string : int64 decoder
 (** Decodes a JSON value into an [int64] *)
-  
-val nativeint : nativeint decoder
-(** Decodes a JSON value into an [nativeint] *)
 
 val uint8 : U.UInt8.t decoder
 (** Decodes a JSON value into an [U.UInt8.t] *)
@@ -104,13 +101,13 @@ val uint64 : U.UInt64.t decoder
 
 val bigint : Bigint.t decoder
 (** Decodes a JSON value into an [Bigint.t] *)
-  
+
 val string : string decoder
 (** Decodes a JSON value into a [string]
-    
+
 {b Returns} a [string] if the JSON value is a number.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -125,14 +122,14 @@ val string : string decoder
 
 val date : Js_date.t decoder
 
-  
+
 val nullable : 'a decoder -> 'a Js.null decoder
 (** Decodes a JSON value into an ['a Js.null]
-    
+
 {b Returns} [Js.null] if the JSON value is [null], or an ['a Js.null] if the
 given decoder succeeds,
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -147,10 +144,10 @@ given decoder succeeds,
 
 val nullAs : 'a -> 'a decoder
 (** Returns the given value if the JSON value is [null]
-    
+
 {b Returns} an ['a] if the JSON value is [null].
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -165,11 +162,11 @@ val nullAs : 'a -> 'a decoder
 
 val array : 'a decoder -> 'a array decoder
 (** Decodes a JSON array into an ['a array] using the given decoder on each element
-    
+
 {b Returns} an ['a array] if the JSON value is a JSON array and all its
 elements are successfully decoded.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -185,7 +182,7 @@ elements are successfully decoded.
 *)
 
 val beltMap : 'k decoder -> 'v decoder -> id:('k, 'c) Belt.Map.id -> (('k, 'v, 'c) Belt.Map.t) decoder
-(** [beltMap k v m] 
+(** [beltMap k v m]
     Decodes a JSON array of a JSON array with two elements into a ('k , 'v, 'id) Belt.Map.t
     using the k and v decodes.
  *)
@@ -198,11 +195,11 @@ val beltMapString : 'v decoder -> ('v Belt.Map.String.t) decoder
 
 val list : 'a decoder -> 'a list decoder
 (** Decodes a JSON array into an ['a list] using the given decoder on each element
-    
+
 {b Returns} an ['a list] if the JSON value is a JSON array and all its
 elements are successfully decoded.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -254,16 +251,16 @@ val tuple8 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder 
 val tuple9 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> 'h decoder -> 'i decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i) decoder
 
 val tuple10 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> 'e decoder -> 'f decoder -> 'g decoder -> 'h decoder -> 'i decoder -> 'j decoder -> ('a * 'b * 'c * 'd * 'e * 'f * 'g * 'h * 'i * 'j) decoder
-  
+
 val singleEnumerator : 'a -> Js.Json.t -> 'a
-  
+
 val dict : 'a decoder -> 'a Js.Dict.t decoder
 (** Decodes a JSON object into a dict using the given decoder on each of its values
-    
+
 {b Returns} an ['a Js.Dict.t] if the JSON value is a JSON object and all its
 values are successfully decoded.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -280,11 +277,11 @@ values are successfully decoded.
 
 val field : string -> 'a decoder -> 'a decoder
 (** Decodes a JSON object with a specific field into the value of that field
-    
+
 {b Returns} an ['a] if the JSON value is a JSON object with the given field
 and a value that is successfully decoded with the given decoder.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -305,16 +302,16 @@ val optionalField : string -> 'a decoder -> 'a option decoder
 (** Decodes a JSON object with a specific field into the value of that field
     if the field exists
 
-@raise [DecodeError] if the field exists but the decoder is unsuccessful 
+@raise [DecodeError] if the field exists but the decoder is unsuccessful
 *)
 
 val at : string list -> 'a decoder -> 'a decoder
 (** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
-    
+
 {b Returns} an ['a] if the JSON value is a JSON object with the given field
 and a value that is successfully decoded with the given decoder.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -327,7 +324,7 @@ and a value that is successfully decoded with the given decoder.
 
 val optional : 'a decoder -> 'a option decoder
 (** Maps a decoder [result] to an option
-    
+
 {b Returns} [Some of 'a] if the given decoder is successful, [None] if
 it is not.
 
@@ -362,13 +359,13 @@ a composite decoder, and is useful to decode optional JSON object fields.
 val result : 'a decoder -> 'b decoder -> ('a, 'b) Belt.Result.t decoder
 
 val either : 'l decoder -> 'r decoder -> ('l, 'r) Aeson_compatibility.Either.t decoder
-  
+
 val oneOf : 'a decoder list -> 'a decoder
 (** Tries each [decoder] in order, retunring the result of the first that succeeds
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -381,14 +378,14 @@ val oneOf : 'a decoder list -> 'a decoder
 ]}
 *)
 
-  
+
 val tryEither : 'a decoder -> 'a decoder -> 'a decoder
 
 (** Tries each [decoder] in order, returning the result of the first that succeeds
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -406,7 +403,7 @@ val withDefault : 'a -> 'a decoder -> 'a decoder
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -424,7 +421,7 @@ val map : ('a -> 'b) -> 'a decoder -> 'b decoder
 
 {b Returns} a ['b] if the given decoder succeeds.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   open Json
@@ -438,7 +435,7 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 
 {b Returns} an ['a] if both decoders succeed.
 
-@raise [DecodeError] if unsuccessful 
+@raise [DecodeError] if unsuccessful
 
 @example {[
   (* Deoce a JSON tree structure *)
@@ -477,7 +474,7 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 
   let myTree =
     json
-    |> Js.Json.parseExn 
+    |> Js.Json.parseExn
     |> decodeTree int
 ]}
 *)
