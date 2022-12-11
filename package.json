@@ -4,10 +4,15 @@
   "description": "BuckleScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
-    "build": "bsb -make-world",
-    "clean": "bsb -clean-world",
-    "test": "npm run build && jest && npm run test:examples",
-    "test:examples": "npm run build && ./run_examples.sh"
+    "build": "yarn clean && yarn run re:build",
+    "build-dirty": "yarn run re:build",    
+    "clean": "rescript clean",
+    "start": "yarn run dev | yarn run re:watch",    
+    "test": "yarn run re:build && yarn run jest",
+    "test:examples": "yarn run re:build && ./run_examples.sh",
+    "re:watch": "rescript build -w",
+    "re:build": "rescript build",
+    "re:build-deps": "rescript build -with-deps"
   },
   "repository": {
     "type": "git",
@@ -25,10 +30,10 @@
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
   "dependencies": {
-    "bs-zarith": "^3.1.0"
+    "bs-zarith": "^3.2.0"
   },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
-    "bs-platform": "^8.4.2"
+    "rescript": "^10.0.1"
   }
 }

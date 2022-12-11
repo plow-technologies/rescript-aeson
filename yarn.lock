@@ -667,15 +667,10 @@ browser-resolve@^1.11.3:
   dependencies:
     resolve "1.1.7"
 
-bs-platform@^8.4.2:
-  version "8.4.2"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-8.4.2.tgz#778dabd1dfb3bc95e0086c58dabae74e4ebdee8a"
-  integrity sha512-9q7S4/LLV/a68CweN382NJdCCr/lOSsJR3oQYnmPK98ChfO/AdiA3lYQkQTp6T+U0I5Z5RypUAUprNstwDtMDQ==
-
-bs-zarith@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/bs-zarith/-/bs-zarith-3.1.0.tgz#8550b63826d8da23e0ce8a2694fc39040c6a34ce"
-  integrity sha512-RlOAC40DMBy/5i6nh1RP5URqQAoisKlzVf4JzcCHvIuwT1/DLc/60DcnFNU1lftgtdCBGuqyb6WyzJ+ycNDB8w==
+bs-zarith@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/bs-zarith/-/bs-zarith-3.2.0.tgz#fdaa73c322f0e27cd92eab33fc984228b3791b3c"
+  integrity sha512-cYc/ni6e2fQRpTiwut/UwWdRjeCOZ/qfLiEv3YKKE9xgBL5yccXIb7mHhJG1Q1DX8sJnjvQllrTnjjXMfv1AdQ==
 
 bser@2.1.1:
   version "2.1.1"
@@ -2691,6 +2686,11 @@ require-main-filename@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-2.0.0.tgz#d0b329ecc7cc0f61649f62215be69af54aa8989b"
   integrity sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==
+
+rescript@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.0.1.tgz#5b2da8a8bcfb994bed1eb24820bf10cfb9d8c440"
+  integrity sha512-XwO1GPDtoEU4H03xQE5bp0/qtSVR6YLaJRPxWKrfFgKc+LI36ODOCie7o9UJfgzQdoMYkkZyiTGZ4N9OQEaiUw==
 
 resolve-cwd@^2.0.0:
   version "2.0.0"
