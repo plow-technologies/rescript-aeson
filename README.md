@@ -91,6 +91,12 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.8.0
+
+* `Aeson.Decode.beltMap` now supports decoding object as long as the key is a string. If the key is a number, it still needs to be wrapped with `""`. 
+  * The given `decodeKey` will be called appropriately with either string or number.
+  * Decoding array of tuples is still supported.
+
 ### 4.7.0
 
 * BREAKING CHANGE: Remove 'nativeint' since Rescript no longer supports this

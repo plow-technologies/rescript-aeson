@@ -7,6 +7,17 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
+let unwrapResult r =
+  match r with
+  | Belt.Result.Ok v -> v
+  | Belt.Result.Error message -> raise @@ DecodeError message
+
+let wrapResult decoder json =
+  match (decoder json) with
+  | v -> Belt.Result.Ok v
+  | exception DecodeError message -> Belt.Result.Error message
+
+
 let bool json =
   if Js.typeof json = "boolean" then
     (Obj.magic (json : Js.Json.t) : bool)
@@ -162,11 +173,6 @@ let pair left right json =
 
 
 let tuple2 = pair
-
-let beltMap decodeKey decodeValue ~id:id json =
-  match array (pair decodeKey decodeValue) json with
-    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id
-    | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples|j})
 
 let tuple3 first second third json =
   if Js.Array.isArray json then begin
@@ -357,6 +363,33 @@ let has_some mas =
           | Some _a -> acc) 0 mas) in
   count > 0
 
+let beltMap decodeKey decodeValue ~id:id json =
+  match array (pair decodeKey decodeValue) json with
+    | decoded_array -> Belt.Map.fromArray decoded_array ~id:id
+    | exception DecodeError _ -> 
+        (match dict decodeValue json with
+        | decoded_dict -> 
+            let entries = Js.Dict.entries decoded_dict in
+            let entries = Js.Array.map 
+              (fun (k, v) -> 
+                let key = (match decodeKey (Obj.magic k) with
+                            | key -> key
+                            | exception DecodeError err -> 
+                                (match Belt.Int.fromString (Obj.magic k) with
+                                  | Some key -> 
+                                      (match decodeKey (Aeson_encode.int key) with
+                                        | key -> key
+                                        | exception DecodeError _ -> raise @@ DecodeError ({j|Object key must be a string|j})
+                                      )
+                                  | None -> raise @@ DecodeError err
+                                )
+                          )
+                 in (key, v)
+              ) entries 
+            in Belt.Map.fromArray entries ~id:id
+        | exception DecodeError _ -> raise @@ DecodeError ({j|Expected an array of tuples or dictionary of object with string key|j})
+        )
+
 let beltMapInt decodeValue json =
   match dict decodeValue json with
   | decoded_dict -> (
@@ -460,16 +493,6 @@ let map f decode json =
 
 let andThen b a json=
   b (a json) json
-
-let unwrapResult r =
-  match r with
-  | Belt.Result.Ok v -> v
-  | Belt.Result.Error message -> raise @@ DecodeError message
-
-let wrapResult decoder json =
-  match (decoder json) with
-  | v -> Belt.Result.Ok v
-  | exception DecodeError message -> Belt.Result.Error message
 
 let int64_of_array json =
   let fs = array float json in
