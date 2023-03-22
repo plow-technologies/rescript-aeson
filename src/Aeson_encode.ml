@@ -64,6 +64,16 @@ let tuple2 = pair
 let beltMap encodeKey encodeValue obj =
   list (pair encodeKey encodeValue) (Array.to_list (Belt.Map.toArray obj))
 
+let beltMap1 encodeKey encodeValue obj =
+  let xs = Belt.Map.toArray obj in
+  let encodeKey1 key = 
+    (match Js.Json.classify (encodeKey key) with
+      | JSONString(str) -> str
+      | _ -> Js.Json.stringify (encodeKey key)
+    ) in
+  let xs = Array.map (fun (k, v) -> (encodeKey1 k, encodeValue v)) xs
+  in object_ (Array.to_list xs)
+
 let beltMapInt encodeValue obj =
   object_
   (List.map (fun (k, v) -> (string_of_int k, encodeValue v)) (Array.to_list (Belt.Map.Int.toArray obj)))
