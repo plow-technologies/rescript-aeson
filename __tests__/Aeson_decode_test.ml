@@ -480,6 +480,26 @@ describe "string onpingKey Belt.Map.t" (fun () ->
       |> toEqual (Belt.Map.fromArray [|(OnpingKey "a", "A"); (OnpingKey "b", "B")|] ~id:(module OnpingKeyComparable)));  
 );
 
+describe "decode Belt.Map.t when object is given with string key" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  
+  test "test" (fun () ->
+    expect @@
+      beltMap decodeOnpingKey string ~id:(module OnpingKeyComparable) (Js.Json.parseExn {| {"a": "A", "b": "B"} |})
+      |> toEqual (Belt.Map.fromArray [|(OnpingKey "a", "A"); (OnpingKey "b", "B")|] ~id:(module OnpingKeyComparable)));  
+);
+
+describe "decode Belt.Map.t when object is given with int key" (fun () ->
+  let open Aeson in
+  let open! Decode in
+  
+  test "test" (fun () ->
+    expect @@
+      beltMap decodePid string ~id:(module PidComparable) (Js.Json.parseExn {| {"1": "A", "2": "B"} |})
+      |> toEqual (Belt.Map.fromArray [|(Pid 1, "A"); (Pid 2, "B")|] ~id:(module PidComparable)));  
+);
+
 describe "string Belt.Map.Int.t" (fun () ->
   let open Aeson in
   let open! Decode in
