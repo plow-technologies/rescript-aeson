@@ -91,6 +91,10 @@ Then add `bs-aeson` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 4.9.0
+
+* Add new function called `Aeson.Encode.beltMap1` to encode `Belt.Map.t` as dictionary
+
 ### 4.8.0
 
 * `Aeson.Decode.beltMap` now supports decoding object as long as the key is a string. If the key is a number, it still needs to be wrapped with `""`. 
