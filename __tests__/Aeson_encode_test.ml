@@ -97,17 +97,30 @@ test "bigint" (fun () ->
 test "bool" (fun () ->
   expect @@ bool true |> toEqual @@ Obj.magic true);
 
-test "onpingKey string Belt.Map.t" (fun () ->
+test "onpingKey string Belt.Map.t (encoded as array of tuples)" (fun () ->
   let arr = [|("a", "A"); ("b", "B")|] in
   let arrWithKey = Array.map (fun (k, v) -> (OnpingKey k, v)) arr in
   let bm: (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module OnpingKeyComparable) in
   expect @@ beltMap encodeOnpingKey string bm |> toEqual @@ Obj.magic arr);
 
-test "pid string Belt.Map.t" (fun () ->
+
+test "onpingKey string Belt.Map.t (encoded as dictionary)" (fun () ->
+  let arr = [|("a", "A"); ("b", "B")|] in
+  let arrWithKey = Array.map (fun (k, v) -> (OnpingKey k, v)) arr in
+  let bm: (onpingKey, string, OnpingKeyComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module OnpingKeyComparable) in
+  expect @@ beltMap1 encodeOnpingKey string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray arr);
+
+test "pid string Belt.Map.t (encoded as array of tuples)" (fun () ->
   let arr = [|(1, "A"); (2, "B")|] in
   let arrWithKey = Array.map (fun (k, v) -> (Pid k, v)) arr in
   let bm: (pid, string, PidComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module PidComparable) in
   expect @@ beltMap encodePid string bm |> toEqual @@ Obj.magic arr);
+
+test "pid string Belt.Map.t (encoded as dictionary)" (fun () ->
+  let arr = [|(1, "A"); (2, "B")|] in
+  let arrWithKey = Array.map (fun (k, v) -> (Pid k, v)) arr in
+  let bm: (pid, string, PidComparable.identity) Belt.Map.t = Belt.Map.fromArray arrWithKey ~id:(module PidComparable) in
+  expect @@ beltMap1 encodePid string bm |> toEqual @@ Obj.magic @@ Js.Dict.fromArray @@ Array.map (fun (k, v) -> (Belt.Int.toString k, v)) arr);
 
 test "string Belt.Map.Int.t" (fun () ->
   let arr = [|(1, "A"); (2, "B")|] in
