@@ -1,4 +1,4 @@
-(** Efficient JSON handling
+@@ocaml.text(" Efficient JSON handling
 This module has four aspects to it:
 - Parsing, which turns a JSON string into an encoded JSON data structure
 - Stringificaiton, which produces a JSON string from an encoded JSON data structure
@@ -41,7 +41,7 @@ let arrayOfInts str
     | Error _ -> []
   | Error message -> failWith message
 (* prints `[3, 2, 1]` *)
-let _ = Js.log \@\@ arrayOfInts "[1, 2, 3]" |> Js.Array.reverse
+let _ = Js.log \@\@ arrayOfInts \"[1, 2, 3]\" |> Js.Array.reverse
 ]}
 @example {[
 (* Stringifying a value using Js.Json.stringifyAny *)
@@ -50,20 +50,20 @@ open Js.Json
 let _ =
   match stringifyAny Js.null with
   | Some str -> Js.log str
-  | None -> Js.log "Unable to stringify value"
+  | None -> Js.log \"Unable to stringify value\"
 ]}
 @example {[
 (* Encoding a JSON data structure using Js.Json.Encode *)
 open Js.Json
-(* prints ["foo", "bar"] *)
+(* prints [\"foo\", \"bar\"] *)
 let _ =
-  [| "foo", "bar" |]
+  [| \"foo\", \"bar\" |]
   |> Encode.stringArray
   |> stringify
   |> Js.log
-(* prints ["foo", "bar"] *)
+(* prints [\"foo\", \"bar\"] *)
 let _ =
-  [| "foo", "bar" |]
+  [| \"foo\", \"bar\" |]
   |> Js.Array.map Encode.int
   |> Encode.array
   |> stringify
@@ -85,13 +85,13 @@ let mapJsonObjectString f decoder encoder str =
   | Error _ -> []
 let sum ns =
   Array.fold_left (+) 0
-(* prints `{ "foo": 6, "bar": 24 }` *)
+(* prints `{ \"foo\": 6, \"bar\": 24 }` *)
 let _ =
   Js.log \@\@
     mapJsonObjectString sun Decode.(array int) Encode.int {|
       {
-        "foo": [1, 2, 3],
-        "bar": [9, 8, 7]
+        \"foo\": [1, 2, 3],
+        \"bar\": [9, 8, 7]
       }
     |} 
 ]}
@@ -101,28 +101,28 @@ open Js.Json
 let getIds s =
   let json = 
     try parse s with
-    | _ -> failwith "Error parsing JSON string"
+    | _ -> failwith \"Error parsing JSON string\"
   in 
   match reifyType json with
   | (Object, value) ->
     (* In this branch, compiler infer value : t Js.Dict.t *)
-    begin match Js.Dict.get value "ids" with
+    begin match Js.Dict.get value \"ids\" with
     | Some ids -> 
       begin match reifyType ids with
       | (Array, ids) -> 
         (* In this branch compiler infer ids : t array *)
         ids
-      | _ -> failWith "Expected an array"
+      | _ -> failWith \"Expected an array\"
       end 
-    | None -> failWith "Expected an `ids` property"
+    | None -> failWith \"Expected an `ids` property\"
     end 
-  | _ -> failWith "Expected an object"
+  | _ -> failWith \"Expected an object\"
 (* prints `1, 2, 3` *)
 let _ =
-  Js.log \@\@ getIds {| { "ids" : [1, 2, 3 ] } |} 
+  Js.log \@\@ getIds {| { \"ids\" : [1, 2, 3 ] } |} 
 ]}
 @see <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON> MDN
-*) 
+")
 
 module Decode = Aeson_decode
 module Encode = Aeson_encode
