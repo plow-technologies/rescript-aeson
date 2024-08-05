@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "yarn clean && yarn run re:build",
-    "build-dirty": "yarn run re:build",    
+    "build-dirty": "yarn run re:build",
     "clean": "rescript clean",
-    "start": "yarn run dev | yarn run re:watch",    
+    "start": "yarn run dev | yarn run re:watch",
     "test": "yarn run re:build && yarn run jest",
     "test:examples": "yarn run re:build && ./run_examples.sh",
     "re:watch": "rescript build -w",
@@ -29,11 +29,9 @@
     "url": "https://github.com/plow-technologies/bs-aeson/issues"
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
-  "dependencies": {
-    "bs-zarith": "^3.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
-    "rescript": "^10.0.1"
+    "rescript": "^11.1.3"
   }
 }

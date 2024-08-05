@@ -6,12 +6,8 @@
     {
       "dir": "examples",
       "type": "dev"
-    },
-    {
-      "dir": "__tests__",
-      "type": "dev"
     }
   ],
-  "bs-dependencies": ["bs-zarith"],
-  "bs-dev-dependencies": ["@glennsl/bs-jest"]
+  "bs-dependencies": [],
+  "bs-dev-dependencies": []
 }
