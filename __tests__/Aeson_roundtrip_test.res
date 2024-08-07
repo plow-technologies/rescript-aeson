@@ -14,7 +14,7 @@ let jsonRoundtripSpec = (decode, encode, json) => {
 
 type pairKey = PairKey((int, string))
 
-module PairKeyComparable = Belt.Id.MakeComparable({
+module PairKeyComparable = Belt.Id.MakeComparableU({
   type t = pairKey
   let cmp = (a, b): int =>
     switch (a, b) {
@@ -46,11 +46,13 @@ let decodePairKeyMap = json =>
     {
       pairKeyMap: field(
         "pairKeyMap",
-        beltMap(
-          a => unwrapResult(decodePairKey(a)),
-          Aeson.Decode.string,
-          ~id=module(PairKeyComparable),
-        ),
+        x =>
+          beltMap(
+            a => unwrapResult(decodePairKey(a)),
+            Aeson.Decode.string,
+            ~id=module(PairKeyComparable),
+            x,
+          ),
         json,
       ),
     }
@@ -63,8 +65,8 @@ let () = {
   describe("Belt.Map.String.t", () =>
     test("string key map", () =>
       jsonRoundtripSpec(
-        Aeson.Decode.wrapResult(Aeson.Decode.beltMapString(Aeson.Decode.string)),
-        Aeson.Encode.beltMapString(Aeson.Encode.string),
+        y => Aeson.Decode.wrapResult(x => Aeson.Decode.beltMapString(Aeson.Decode.string, x), y),
+        x => Aeson.Encode.beltMapString(Aeson.Encode.string, x),
         Js.Json.parseExn("{\"a\":\"A\",\"b\":\"B\"}"),
       )
     )
@@ -73,8 +75,8 @@ let () = {
   describe("Belt.Map.Int.t", () =>
     test("int key map", () =>
       jsonRoundtripSpec(
-        Aeson.Decode.wrapResult(Aeson.Decode.beltMapInt(Aeson.Decode.string)),
-        Aeson.Encode.beltMapInt(Aeson.Encode.string),
+        y => Aeson.Decode.wrapResult(x => Aeson.Decode.beltMapInt(Aeson.Decode.string, x), y),
+        x => Aeson.Encode.beltMapInt(Aeson.Encode.string, x),
         Js.Json.parseExn("{\"1\":\"A\",\"2\":\"B\"}"),
       )
     )
