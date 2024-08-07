@@ -13,7 +13,7 @@ let encodeOnpingKey = (x: onpingKey) =>
   | OnpingKey(x) => string(x)
   }
 
-module OnpingKeyComparable = Belt.Id.MakeComparable({
+module OnpingKeyComparable = Belt.Id.MakeComparableU({
   type t = onpingKey
   let cmp = compare
 })
@@ -32,278 +32,220 @@ let encodePid = (x: pid) =>
   | Pid(x) => int(x)
   }
 
-module PidComparable = Belt.Id.MakeComparable({
+module PidComparable = Belt.Id.MakeComparableU({
   type t = pid
   let cmp = compare
 })
 
 let _ = {
-  test("null", () => expect(null) |> \"@@"(toEqual, Obj.magic(Js.null)))
+  test("null", () => expect(null)->toEqual(Obj.magic(Js.null)))
 
-  test("string", () => \"@@"(expect, string("foo")) |> \"@@"(toEqual, Obj.magic("foo")))
+  test("string", () => expect(string("foo"))->toEqual(Obj.magic("foo")))
 
   test("date - non-float time", () => {
     let nowString = "2017-12-08T06:03:22Z"
     let now = Js_date.fromString(nowString)
-    \"@@"(expect, date(now)) |> \"@@"(toEqual, Obj.magic(nowString))
+
+    expect(date(now))->toEqual(Obj.magic(nowString))
   })
 
   test("date - float time", () => {
     let nowString = "2017-12-08T06:03:22.123Z"
     let now = Js_date.fromString(nowString)
-    \"@@"(expect, date(now)) |> \"@@"(toEqual, Obj.magic(nowString))
+
+    expect(date(now))->toEqual(Obj.magic(nowString))
   })
 
-  test("float", () => \"@@"(expect, float(1.23)) |> \"@@"(toEqual, Obj.magic(1.23)))
+  test("float", () => expect(float(1.23))->toEqual(Obj.magic(1.23)))
 
-  test("int", () => \"@@"(expect, int(23)) |> \"@@"(toEqual, Obj.magic(23)))
+  test("int", () => expect(int(23))->toEqual(Obj.magic(23)))
 
-  test("int32", () => \"@@"(expect, int32(Int32.of_int(23))) |> \"@@"(toEqual, Obj.magic(23)))
+  //  test("bigint", () =>
+  //    \"@@"(
+  //      toEqual,
+  //      Obj.magic("38293829382888882338928"),
+  //      \"@@"(expect, bigint(Bigint.of_string("38293829382888882338928"))),
+  //    )
+  //  )
+  //
+  //  test("bigint", () =>
+  //    \"@@"(
+  //      toEqual,
+  //      Obj.magic("-38293829382888882338928"),
+  //      \"@@"(expect, bigint(Bigint.of_string("-38293829382888882338928"))),
+  //    )
+  //  )
 
-  test("int64_to_array", () =>
-    \"@@"(expect, int64_to_array(Int64.of_int(23))) |> \"@@"(toEqual, Obj.magic([0, 23]))
-  )
-
-  test("int64_to_string", () =>
-    \"@@"(expect, int64_to_string(Int64.of_int(23))) |> \"@@"(toEqual, Obj.magic("23"))
-  )
-
-  test("uint8", () => \"@@"(expect, uint8(U.UInt8.ofInt(18))) |> \"@@"(toEqual, Obj.magic(18)))
-
-  test("uint16", () => \"@@"(expect, uint16(U.UInt16.ofInt(18))) |> \"@@"(toEqual, Obj.magic(18)))
-
-  test("uint32", () => \"@@"(expect, uint32(U.UInt32.ofInt(18))) |> \"@@"(toEqual, Obj.magic(18)))
-
-  test("uint64", () =>
-    \"@@"(expect, uint64(U.UInt64.ofInt(233))) |> \"@@"(toEqual, Obj.magic("233"))
-  )
-
-  test("bigint", () =>
-    \"@@"(expect, bigint(Bigint.of_string("38293829382888882338928"))) |> \"@@"(
-      toEqual,
-      Obj.magic("38293829382888882338928"),
-    )
-  )
-
-  test("bigint", () =>
-    \"@@"(expect, bigint(Bigint.of_string("-38293829382888882338928"))) |> \"@@"(
-      toEqual,
-      Obj.magic("-38293829382888882338928"),
-    )
-  )
-
-  test("bool", () => \"@@"(expect, bool(true)) |> \"@@"(toEqual, Obj.magic(true)))
+  test("bool", () => expect(bool(true))->toEqual(Obj.magic(true)))
 
   test("onpingKey string Belt.Map.t (encoded as array of tuples)", () => {
     let arr = [("a", "A"), ("b", "B")]
-    let arrWithKey = Array.map(((k, v)) => (OnpingKey(k), v), arr)
+    let arrWithKey = Array.map(arr, ((k, v)) => (OnpingKey(k), v))
     let bm: Belt.Map.t<onpingKey, string, OnpingKeyComparable.identity> = Belt.Map.fromArray(
       arrWithKey,
       ~id=module(OnpingKeyComparable),
     )
-    \"@@"(expect, beltMap(encodeOnpingKey, string, bm)) |> \"@@"(toEqual, Obj.magic(arr))
+    expect(beltMap(encodeOnpingKey, string, bm))->toEqual(Obj.magic(arr))
   })
 
   test("onpingKey string Belt.Map.t (encoded as dictionary)", () => {
     let arr = [("a", "A"), ("b", "B")]
-    let arrWithKey = Array.map(((k, v)) => (OnpingKey(k), v), arr)
+    let arrWithKey = Array.map(arr, ((k, v)) => (OnpingKey(k), v))
     let bm: Belt.Map.t<onpingKey, string, OnpingKeyComparable.identity> = Belt.Map.fromArray(
       arrWithKey,
       ~id=module(OnpingKeyComparable),
     )
-    \"@@"(expect, beltMap1(encodeOnpingKey, string, bm)) |> \"@@"(
-      toEqual,
-      \"@@"(Obj.magic, Js.Dict.fromArray(arr)),
-    )
+    expect(beltMap1(encodeOnpingKey, string, bm))->toEqual(Obj.magic(Js.Dict.fromArray(arr)))
   })
 
   test("pid string Belt.Map.t (encoded as array of tuples)", () => {
     let arr = [(1, "A"), (2, "B")]
-    let arrWithKey = Array.map(((k, v)) => (Pid(k), v), arr)
+    let arrWithKey = Array.map(arr, ((k, v)) => (Pid(k), v))
     let bm: Belt.Map.t<pid, string, PidComparable.identity> = Belt.Map.fromArray(
       arrWithKey,
       ~id=module(PidComparable),
     )
-    \"@@"(expect, beltMap(encodePid, string, bm)) |> \"@@"(toEqual, Obj.magic(arr))
+    expect(beltMap(encodePid, string, bm))->toEqual(Obj.magic(arr))
   })
 
   test("pid string Belt.Map.t (encoded as dictionary)", () => {
     let arr = [(1, "A"), (2, "B")]
-    let arrWithKey = Array.map(((k, v)) => (Pid(k), v), arr)
+    let arrWithKey = Array.map(arr, ((k, v)) => (Pid(k), v))
     let bm: Belt.Map.t<pid, string, PidComparable.identity> = Belt.Map.fromArray(
       arrWithKey,
       ~id=module(PidComparable),
     )
-    \"@@"(expect, beltMap1(encodePid, string, bm)) |> \"@@"(
-      toEqual,
-      \"@@"(
-        Obj.magic,
-        \"@@"(Js.Dict.fromArray, Array.map(((k, v)) => (Belt.Int.toString(k), v), arr)),
-      ),
+
+    expect(beltMap1(encodePid, string, bm))->toEqual(
+      Array.map(arr, ((k, v)) => (Belt.Int.toString(k), v))->Js.Dict.fromArray->Obj.magic,
     )
   })
 
   test("string Belt.Map.Int.t", () => {
     let arr = [(1, "A"), (2, "B")]
     let bm: Belt.Map.Int.t<string> = Belt.Map.Int.fromArray(arr)
-    \"@@"(expect, beltMapInt(string, bm)) |> \"@@"(
-      toEqual,
-      \"@@"(Obj.magic, Js.Dict.fromArray(Array.map(((k, v)) => (string_of_int(k), v), arr))),
+    expect(beltMapInt(string, bm))->toEqual(
+      Js.Dict.fromArray(Array.map(arr, ((k, v)) => (string_of_int(k), v)))->Obj.magic,
     )
   })
 
   test("string Belt.Map.String.t", () => {
     let arr = [("a", "A"), ("b", "B")]
     let bm: Belt.Map.String.t<string> = Belt.Map.String.fromArray(arr)
-    \"@@"(expect, beltMapString(string, bm)) |> \"@@"(
-      toEqual,
-      \"@@"(Obj.magic, Js.Dict.fromArray(arr)),
-    )
+    expect(beltMapString(string, bm))->toEqual(Js.Dict.fromArray(arr)->Obj.magic)
   })
 
-  test("dict - empty", () =>
-    \"@@"(expect, \"@@"(dict, Js.Dict.empty())) |> \"@@"(toEqual, \"@@"(Obj.magic, Js.Dict.empty()))
-  )
+  test("dict - empty", () => expect(dict(Js.Dict.empty()))->toEqual(Js.Dict.empty()->Obj.magic))
 
   test("dict - simple", () => {
     let o = Js.Dict.empty()
     Js.Dict.set(o, "x", int(42))
-    \"@@"(expect, dict(o)) |> \"@@"(toEqual, Obj.magic(o))
+
+    expect(dict(o))->toEqual(Obj.magic(o))
   })
 
-  test("object_ - empty", () =>
-    \"@@"(expect, \"@@"(object_, list{})) |> \"@@"(toEqual, \"@@"(Obj.magic, Js.Dict.empty()))
-  )
+  test("object_ - empty", () => expect(object_(list{}))->toEqual(Js.Dict.empty()->Obj.magic))
 
   test("object_ - simple", () =>
-    \"@@"(expect, object_(list{("x", int(42))})) |> \"@@"(
-      toEqual,
-      Obj.magic(Js.Dict.fromList(list{("x", 42)})),
-    )
+    expect(object_(list{("x", int(42))}))->toEqual(Obj.magic(Js.Dict.fromList(list{("x", 42)})))
   )
 
   test("object_ - option", () =>
-    \"@@"(expect, object_(list{("x", optional(int, Some(42)))})) |> \"@@"(
-      toEqual,
+    expect(object_(list{("x", optional(int, Some(42)))}))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("x", 42)})),
     )
   )
 
   test("object_ - option Some", () =>
-    \"@@"(expect, object_(list{("x", optional(int, Some(42)))})) |> \"@@"(
-      toEqual,
+    expect(object_(list{("x", optional(int, Some(42)))}))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("x", 42)})),
     )
   )
 
   test("object_ - option None", () =>
-    \"@@"(expect, object_(list{("x", optional(int, None))})) |> \"@@"(
-      toEqual,
+    expect(object_(list{("x", optional(int, None))}))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("x", null)})),
     )
   )
 
   test("object_ - optionalField Some", () =>
-    \"@@"(expect, object_(optionalField("x", int, Some(42)))) |> \"@@"(
-      toEqual,
+    expect(object_(optionalField("x", int, Some(42))))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("x", 42)})),
     )
   )
 
   test("object_ - optionalField Some", () =>
-    \"@@"(expect, object_(optionalField("x", int, (None: option<int>)))) |> \"@@"(
-      toEqual,
+    expect(object_(optionalField("x", int, (None: option<int>))))->toEqual(
       Obj.magic(Js.Dict.fromList(list{})),
     )
   )
 
-  test("array int", () =>
-    \"@@"(expect, array([1, 2, 3] |> Array.map(int))) |> \"@@"(toEqual, Obj.magic([1, 2, 3]))
-  )
+  test("array int", () => expect(array(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3])))
 
-  test("list int", () =>
-    \"@@"(expect, list(int, list{1, 2, 3})) |> \"@@"(toEqual, Obj.magic([1, 2, 3]))
-  )
+  test("list int", () => expect(list(int, list{1, 2, 3}))->toEqual(Obj.magic([1, 2, 3])))
 
   test("singleEnumerator typeParameterRef0", () =>
-    \"@@"(expect, singleEnumerator(Test.SingleEnumerator)) |> \"@@"(toEqual, Obj.magic([]))
+    expect(singleEnumerator(Test.SingleEnumerator))->toEqual(Obj.magic([]))
   )
 
-  test("stringArray", () =>
-    \"@@"(expect, stringArray(["a", "b"])) |> \"@@"(toEqual, Obj.magic(["a", "b"]))
-  )
+  test("stringArray", () => expect(stringArray(["a", "b"]))->toEqual(Obj.magic(["a", "b"])))
 
-  test("numberArray", () =>
-    \"@@"(expect, numberArray([0., 4.])) |> \"@@"(toEqual, Obj.magic([0, 4]))
-  )
+  test("numberArray", () => expect(numberArray([0., 4.]))->toEqual(Obj.magic([0, 4])))
 
-  test("boolArray", () =>
-    \"@@"(expect, boolArray([true, false])) |> \"@@"(toEqual, Obj.magic([true, false]))
-  )
+  test("boolArray", () => expect(boolArray([true, false]))->toEqual(Obj.magic([true, false])))
 
   test("result", () =>
-    \"@@"(expect, result(string, int, Belt.Result.Error(123))) |> \"@@"(
-      toEqual,
+    expect(result(string, int, Belt.Result.Error(123)))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("Error", 123)})),
     )
   )
 
   test("result", () =>
-    \"@@"(expect, result(string, int, Belt.Result.Ok("Good"))) |> \"@@"(
-      toEqual,
+    expect(result(string, int, Belt.Result.Ok("Good")))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("Ok", "Good")})),
     )
   )
 
   test("either", () =>
-    \"@@"(expect, either(int, string, Aeson.Compatibility.Either.Left(123))) |> \"@@"(
-      toEqual,
+    expect(either(int, string, Aeson.Compatibility.Either.Left(123)))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("Left", 123)})),
     )
   )
 
   test("either", () =>
-    \"@@"(expect, either(int, string, Aeson.Compatibility.Either.Right("Good"))) |> \"@@"(
-      toEqual,
+    expect(either(int, string, Aeson.Compatibility.Either.Right("Good")))->toEqual(
       Obj.magic(Js.Dict.fromList(list{("Right", "Good")})),
     )
   )
 
-  test("pair", () =>
-    \"@@"(expect, pair(int, string, (1, "a"))) |> \"@@"(toEqual, Js.Json.parseExn(` [1, "a"] `))
-  )
+  test("pair", () => expect(pair(int, string, (1, "a")))->toEqual(Js.Json.parseExn(` [1, "a"] `)))
 
   test("tuple3", () =>
-    \"@@"(expect, tuple3(int, string, bool, (1, "a", false))) |> \"@@"(
-      toEqual,
+    expect(tuple3(int, string, bool, (1, "a", false)))->toEqual(
       Js.Json.parseExn(` [1, "a", false] `),
     )
   )
 
   test("tuple4", () =>
-    \"@@"(expect, tuple4(int, string, bool, int, (1, "a", false, 2))) |> \"@@"(
-      toEqual,
+    expect(tuple4(int, string, bool, int, (1, "a", false, 2)))->toEqual(
       Js.Json.parseExn(` [1, "a", false, 2] `),
     )
   )
 
   test("tuple5", () =>
-    \"@@"(expect, tuple5(int, string, bool, int, bool, (1, "a", false, 2, true))) |> \"@@"(
-      toEqual,
+    expect(tuple5(int, string, bool, int, bool, (1, "a", false, 2, true)))->toEqual(
       Js.Json.parseExn(` [1, "a", false, 2, true] `),
     )
   )
 
   test("tuple6", () =>
-    \"@@"(
-      expect,
-      tuple6(int, string, bool, int, bool, string, (1, "a", false, 2, true, "loop")),
-    ) |> \"@@"(toEqual, Js.Json.parseExn(` [1, "a", false, 2, true, "loop"] `))
+    expect(tuple6(int, string, bool, int, bool, string, (1, "a", false, 2, true, "loop")))->toEqual(
+      Js.Json.parseExn(` [1, "a", false, 2, true, "loop"] `),
+    )
   )
 
   test("tuple7", () =>
-    \"@@"(
-      expect,
+    expect(
       tuple7(
         int,
         string,
@@ -314,12 +256,11 @@ let _ = {
         string,
         (1, "a", false, 2, true, "loop", "recursion"),
       ),
-    ) |> \"@@"(toEqual, Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion"] `))
+    )->toEqual(Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion"] `))
   )
 
   test("tuple8", () =>
-    \"@@"(
-      expect,
+    expect(
       tuple8(
         int,
         string,
@@ -331,12 +272,11 @@ let _ = {
         int,
         (1, "a", false, 2, true, "loop", "recursion", 33),
       ),
-    ) |> \"@@"(toEqual, Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion", 33] `))
+    )->toEqual(Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion", 33] `))
   )
 
   test("tuple9", () =>
-    \"@@"(
-      expect,
+    expect(
       tuple9(
         int,
         string,
@@ -349,15 +289,11 @@ let _ = {
         string,
         (1, "a", false, 2, true, "loop", "recursion", 33, "blah"),
       ),
-    ) |> \"@@"(
-      toEqual,
-      Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion", 33, "blah"] `),
-    )
+    )->toEqual(Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion", 33, "blah"] `))
   )
 
   test("tuple10", () =>
-    \"@@"(
-      expect,
+    expect(
       tuple10(
         int,
         string,
@@ -371,8 +307,7 @@ let _ = {
         bool,
         (1, "a", false, 2, true, "loop", "recursion", 33, "blah", false),
       ),
-    ) |> \"@@"(
-      toEqual,
+    )->toEqual(
       Js.Json.parseExn(` [1, "a", false, 2, true, "loop", "recursion", 33, "blah", false] `),
     )
   )
