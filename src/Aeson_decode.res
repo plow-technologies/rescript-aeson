@@ -9,7 +9,7 @@ exception DecodeError(string)
 let unwrapResult = r =>
   switch r {
   | Belt.Result.Ok(v) => v
-  | Belt.Result.Error(message) => \"@@"(raise, DecodeError(message))
+  | Belt.Result.Error(message) => DecodeError(message)->raise
   }
 
 let wrapResult = (decoder, json) =>
@@ -22,14 +22,14 @@ let bool = json =>
   if Js.typeof(json) == "boolean" {
     (Obj.magic((json: Js.Json.t)): bool)
   } else {
-    \"@@"(raise, DecodeError("Expected boolean, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected boolean, got " ++ Js.Json.stringify(json))->raise
   }
 
 let float = json =>
   if Js.typeof(json) == "number" {
     (Obj.magic((json: Js.Json.t)): float)
   } else {
-    \"@@"(raise, DecodeError("Expected number, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected number, got " ++ Js.Json.stringify(json))->raise
   }
 
 let int = json => {
@@ -37,7 +37,7 @@ let int = json => {
   if _isInteger(f) {
     (Obj.magic((f: float)): int)
   } else {
-    \"@@"(raise, DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected int, got " ++ Js.Json.stringify(json))->raise
   }
 }
 
@@ -45,7 +45,7 @@ let string = json =>
   if Js.typeof(json) == "string" {
     (Obj.magic((json: Js.Json.t)): string)
   } else {
-    \"@@"(raise, DecodeError("Expected string, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected string, got " ++ Js.Json.stringify(json))->raise
   }
 
 let bigint = json =>
@@ -58,7 +58,7 @@ let bigint = json =>
     | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
     }
   } else {
-    \"@@"(raise, DecodeError("Expected bigint, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected bigint, got " ++ Js.Json.stringify(json))->raise
   }
 
 let date = json =>
@@ -66,12 +66,12 @@ let date = json =>
     let source: string = Obj.magic((json: Js.Json.t))
     let encodedDate = Js_date.fromString(source)
     if Js_float.isNaN(Js_date.getTime(encodedDate)) {
-      \"@@"(raise, DecodeError("Expected date, got " ++ source))
+      DecodeError("Expected date, got " ++ source)->raise
     } else {
       encodedDate
     }
   } else {
-    \"@@"(raise, DecodeError("Expected date, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected date, got " ++ Js.Json.stringify(json))->raise
   }
 
 let nullable = (decode, json) =>
@@ -92,7 +92,7 @@ let array = (decode, json) =>
     }
     target
   } else {
-    \"@@"(raise, DecodeError("Expected array, got " ++ Js.Json.stringify(json)))
+    DecodeError("Expected array, got " ++ Js.Json.stringify(json))->raise
   }
 
 let list = (decode, json) => List.fromArray(array(decode, json))
@@ -438,21 +438,15 @@ let result = (decodeA, decodeB, json) =>
       switch Js_dict.get(o, "Error") {
       | Some(r) => Belt.Result.Error(decodeB(r))
       | None =>
-        \"@@"(
-          raise,
-          DecodeError(
-            "Expected object with a \"Ok\" key or \"Error\" key, got " ++ Js.Json.stringify(json),
-          ),
-        )
+        DecodeError(
+          "Expected object with a \"Ok\" key or \"Error\" key, got " ++ Js.Json.stringify(json),
+        )->raise
       }
     }
   | None =>
-    \"@@"(
-      raise,
-      DecodeError(
-        "Expected object with a \"Ok\" key or \"Error\" key, got " ++ Js.Json.stringify(json),
-      ),
-    )
+    DecodeError(
+      "Expected object with a \"Ok\" key or \"Error\" key, got " ++ Js.Json.stringify(json),
+    )->raise
   }
 
 let either = (decodeL, decodeR, json) =>
@@ -464,31 +458,22 @@ let either = (decodeL, decodeR, json) =>
       switch Js_dict.get(o, "Right") {
       | Some(r) => Aeson_compatibility.Either.Right(decodeR(r))
       | None =>
-        \"@@"(
-          raise,
-          DecodeError(
-            "Expected object with a \"Left\" key or \"Right\" key, got " ++ Js.Json.stringify(json),
-          ),
-        )
+        DecodeError(
+          "Expected object with a \"Left\" key or \"Right\" key, got " ++ Js.Json.stringify(json),
+        )->raise
       }
     }
   | None =>
-    \"@@"(
-      raise,
-      DecodeError(
-        "Expected object with a \"Left\" key or \"Right\" key, got " ++ Js.Json.stringify(json),
-      ),
-    )
+    DecodeError(
+      "Expected object with a \"Left\" key or \"Right\" key, got " ++ Js.Json.stringify(json),
+    )->raise
   }
 
 let rec oneOf = (decoders, json) =>
   switch decoders {
   | list{} =>
     let length = List.length(decoders)
-    \"@@"(
-      raise,
-      DecodeError(`Expected oneOf ${Int.toString(length)}, got ` ++ Js.Json.stringify(json)),
-    )
+    DecodeError(`Expected oneOf ${Int.toString(length)}, got ` ++ Js.Json.stringify(json))->raise
   | list{decode, ...rest} =>
     switch decode(json) {
     | v => v
