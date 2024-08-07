@@ -33,7 +33,7 @@
     "@rescript/core": "^1.5.2"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.9",
+    "@glennsl/rescript-jest": "^0.11.0",
     "rescript": "^11.1.3"
   }
 }

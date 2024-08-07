@@ -6,8 +6,12 @@
     {
       "dir": "examples",
       "type": "dev"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
     }
   ],
   "bs-dependencies": ["@rescript/core"],
-  "bs-dev-dependencies": []
+  "bs-dev-dependencies": ["@glennsl/rescript-jest"]
 }
