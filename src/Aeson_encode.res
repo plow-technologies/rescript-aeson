@@ -4,24 +4,24 @@ type encoder<'a> = 'a => Js.Json.t
 external string: string => Js.Json.t = "%identity"
 external float: float => Js.Json.t = "%identity"
 external int: int => Js.Json.t = "%identity"
-external int32: int32 => Js.Json.t = "%identity"
-external int64_to_array: int64 => Js.Json.t = "%identity"
+// external int32: int32 => Js.Json.t = "%identity"
+// external int64_to_array: int64 => Js.Json.t = "%identity"
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 
-let int64_to_string = (x: Int64.t) => string(Int64.to_string(x))
-
-let bigint = (x: Bigint.t) => string(Bigint.to_string(x))
-
-let uint8 = (x: U.UInt8.t) => int(U.UInt8.toInt(x))
-
-let uint16 = (x: U.UInt16.t) => int(U.UInt16.toInt(x))
-
-/* underlying it is an int64 but is less than JS limit,
- haskell expects a numeric literal */
-let uint32 = (x: U.UInt32.t) => int(U.UInt32.toInt(x))
-
-let uint64 = (x: U.UInt64.t) => string(U.UInt64.toString(x))
+// let int64_to_string = (x: Int64.t) => string(Int64.to_string(x))
+//
+// let bigint = (x: Bigint.t) => string(Bigint.to_string(x))
+//
+// let uint8 = (x: U.UInt8.t) => int(U.UInt8.toInt(x))
+//
+// let uint16 = (x: U.UInt16.t) => int(U.UInt16.toInt(x))
+//
+// /* underlying it is an int64 but is less than JS limit,
+//  haskell expects a numeric literal */
+// let uint32 = (x: U.UInt32.t) => int(U.UInt32.toInt(x))
+//
+// let uint64 = (x: U.UInt64.t) => string(U.UInt64.toString(x))
 
 let nullable = (encode, x) =>
   switch x {
@@ -50,11 +50,11 @@ let optionalField = (fieldName, encode, optionalValue) =>
 /* Haskell aeson renders .000Z as Z */
 let date = (d): Js.Json.t => string(Js.String.replace(".000Z", "Z", Js_date.toISOString(d)))
 
-let object_ = (props): Js.Json.t => props |> Js.Dict.fromList |> dict
+let object_ = (props): Js.Json.t => dict(Js.Dict.fromList(props))
 
 external array: array<Js.Json.t> => Js.Json.t = "%identity"
 
-let list = (encode, l) => l |> List.map(encode) |> Array.of_list |> array
+let list = (encode, l) => array(List.toArray(List.map(l, x => encode(x))))
 
 let pair = (encodeT0, encodeT1, tuple) => {
   let (t0, t1) = tuple
@@ -64,7 +64,7 @@ let pair = (encodeT0, encodeT1, tuple) => {
 let tuple2 = pair
 
 let beltMap = (encodeKey, encodeValue, obj) =>
-  list(pair(encodeKey, encodeValue), Array.to_list(Belt.Map.toArray(obj)))
+  list(pair(encodeKey, encodeValue, ...), List.fromArray(Belt.Map.toArray(obj)))
 
 let beltMap1 = (encodeKey, encodeValue, obj) => {
   let xs = Belt.Map.toArray(obj)
@@ -73,20 +73,20 @@ let beltMap1 = (encodeKey, encodeValue, obj) => {
     | JSONString(str) => str
     | _ => Js.Json.stringify(encodeKey(key))
     }
-  let xs = Array.map(((k, v)) => (encodeKey1(k), encodeValue(v)), xs)
-  object_(Array.to_list(xs))
+  let xs = Array.map(xs, ((k, v)) => (encodeKey1(k), encodeValue(v)))
+  object_(List.fromArray(xs))
 }
 
 let beltMapInt = (encodeValue, obj) =>
   object_(
-    List.map(
-      ((k, v)) => (string_of_int(k), encodeValue(v)),
-      Array.to_list(Belt.Map.Int.toArray(obj)),
-    ),
+    List.map(List.fromArray(Belt.Map.Int.toArray(obj)), ((k, v)) => (
+      string_of_int(k),
+      encodeValue(v),
+    )),
   )
 
 let beltMapString = (encodeValue, obj) =>
-  object_(List.map(((k, v)) => (k, encodeValue(v)), Array.to_list(Belt.Map.String.toArray(obj))))
+  List.map(List.fromArray(Belt.Map.String.toArray(obj)), ((k, v)) => (k, encodeValue(v)))->object_
 
 let tuple3 = (encodeT0, encodeT1, encodeT2, tuple) => {
   let (t0, t1, t2) = tuple

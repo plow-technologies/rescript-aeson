@@ -351,6 +351,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@rescript/core@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@rescript/core/-/core-1.5.2.tgz#7c15659c2e1655ca5430dd665ca5a95ae5b64673"
+  integrity sha512-VWRFHrQu8hWnd9Y9LYZ8kig2urybhZlDVGy5u50bqf2WCRAeysBIfxK8eN4VlpQT38igMo0/uLX1KSpwCVMYGw==
+
 "@types/babel__core@^7.1.0":
   version "7.1.12"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.12.tgz#4d8e9e51eb265552a7e4f1ff2219ab6133bdfb2d"

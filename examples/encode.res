@@ -1,20 +1,17 @@
 /* Encoding a JSON data structure using Aeson.Encode */
 
 /* prints ["foo", "bar"] */
-let _ = ["foo", "bar"] |> Aeson.Encode.stringArray |> Js.Json.stringify |> Js.log
+let _ = Js.log(Js.Json.stringify(Aeson.Encode.stringArray(["foo", "bar"])))
 
 /* prints ["foo", "bar"] */
-let _ =
-  ["foo", "bar"]
-  |> Js.Array.map(Aeson.Encode.string)
-  |> Aeson.Encode.array
-  |> Js.Json.stringify
-  |> Js.log
+let _ = Js.log(
+  Js.Json.stringify(Aeson.Encode.array(Js.Array.map(Aeson.Encode.string, ["foo", "bar"]))),
+)
 
 /* prints { x: 42, foo: 'bar' } */
 let _ = {
   open Aeson.Encode
-  object_(list{("x", int(42)), ("foo", string("bar"))}) |> Js.log
+  Js.log(object_(list{("x", int(42)), ("foo", string("bar"))}))
 }
 
 /* Advanced example: encode a record */
@@ -29,12 +26,11 @@ and point = {
 }
 
 module Encode = {
+  open! Aeson.Encode
   let point = r => {
-    open! Aeson.Encode
-    object_(list{("x", float(r.x)), ("y", float(r.y))})
+    object_(list{("x", Aeson.Encode.float(r.x)), ("y", Aeson.Encode.float(r.y))})
   }
   let line = r => {
-    open Aeson.Encode
     object_(list{
       ("start", point(r.start)),
       ("end", point(r.end_)),
@@ -55,4 +51,4 @@ let data = {
   thickness: Some(2),
 }
 
-let _ = data |> Encode.line |> Js.log
+let _ = Js.log(Encode.line(data))

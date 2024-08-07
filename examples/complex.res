@@ -12,17 +12,17 @@ module Decode = {
   let point = json => {
     open! Aeson.Decode
     {
-      x: json |> field("x", float),
-      y: json |> field("y", float),
+      x: field("x", float, json),
+      y: field("y", float, json),
     }
   }
 
   let line = json => {
     open Aeson.Decode
     {
-      start: json |> field("start", point),
-      end_: json |> field("end", point),
-      thickness: json |> optional(field("thickness", int)),
+      start: field("start", point, json),
+      end_: field("end", point, json),
+      thickness: optional(x => field("thickness", int, x), json),
     }
   }
 }
@@ -32,4 +32,4 @@ let data = ` {
   "end":   { "x": 5.3, "y": 3.8 }
 } `
 
-let _ = data |> Js.Json.parseExn |> Decode.line |> Js.log
+let _ = Js.log(Decode.line(Js.Json.parseExn(data)))

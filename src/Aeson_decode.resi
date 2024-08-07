@@ -75,34 +75,34 @@ let float: decoder<float>
 ")
 let int: decoder<int>
 
-@ocaml.doc(" Decodes a JSON value into an [int32] ")
-let int32: decoder<int32>
-
-@ocaml.doc(" Decodes a JSON value into an [int64] ")
-let int64: decoder<int64>
-
-@ocaml.doc(
-  " Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. "
-)
-let int64_of_array: decoder<int64>
-
-@ocaml.doc(" Decodes a JSON value into an [int64] ")
-let int64_of_string: decoder<int64>
-
-@ocaml.doc(" Decodes a JSON value into an [U.UInt8.t] ")
-let uint8: decoder<U.UInt8.t>
-
-@ocaml.doc(" Decodes a JSON value into an [U.UInt16.t] ")
-let uint16: decoder<U.UInt16.t>
-
-@ocaml.doc(" Decodes a JSON value into an [U.UInt32.t] ")
-let uint32: decoder<U.UInt32.t>
-
-@ocaml.doc(" Decodes a JSON value into an [U.UInt64.t] ")
-let uint64: decoder<U.UInt64.t>
-
-@ocaml.doc(" Decodes a JSON value into an [Bigint.t] ")
-let bigint: decoder<Bigint.t>
+// @ocaml.doc(" Decodes a JSON value into an [int32] ")
+// let int32: decoder<int32>
+//
+// @ocaml.doc(" Decodes a JSON value into an [int64] ")
+// let int64: decoder<int64>
+//
+// @ocaml.doc(
+//   " Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. "
+// )
+// let int64_of_array: decoder<int64>
+//
+// @ocaml.doc(" Decodes a JSON value into an [int64] ")
+// let int64_of_string: decoder<int64>
+//
+// @ocaml.doc(" Decodes a JSON value into an [U.UInt8.t] ")
+// let uint8: decoder<U.UInt8.t>
+//
+// @ocaml.doc(" Decodes a JSON value into an [U.UInt16.t] ")
+// let uint16: decoder<U.UInt16.t>
+//
+// @ocaml.doc(" Decodes a JSON value into an [U.UInt32.t] ")
+// let uint32: decoder<U.UInt32.t>
+//
+// @ocaml.doc(" Decodes a JSON value into an [U.UInt64.t] ")
+// let uint64: decoder<U.UInt64.t>
+//
+// @ocaml.doc(" Decodes a JSON value into an [Bigint.t] ")
+// let bigint: decoder<Bigint.t>
 
 @ocaml.doc(" Decodes a JSON value into a [string]
 
@@ -141,25 +141,7 @@ given decoder succeeds,
   let _ = Js.Json.parseExn \"null\" |> Decode.(nullable int)
 ]}
 ")
-let nullable: decoder<'a> => decoder<Js.null<'a>>
-
-@ocaml.doc(" Returns the given value if the JSON value is [null]
-
-{b Returns} an ['a] if the JSON value is [null].
-
-@raise [DecodeError] if unsuccessful
-
-@example {[
-  open Json
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn \"\"x\"\" |> Decode.nullAs \"x\"
-  (* returns \"x\" *)
-  let _ = Js.Json.parseExn \"null\" |> Decode.nullAs \"x\"
-  (* returns None *)
-  let _ = Js.Json.parseExn \"null\" |> Decode.nullAs None
-]}
-")
-let nullAs: 'a => decoder<'a>
+let nullable: (decoder<'a>, Js.Json.t) => Js.Null.t<'a>
 
 @ocaml.doc(" Decodes a JSON array into an ['a array] using the given decoder on each element
 
@@ -180,19 +162,24 @@ elements are successfully decoded.
   let _ = Js.Json.parseExn \"null\" |> Decode.(array int)
 ]}
 ")
-let array: decoder<'a> => decoder<array<'a>>
+let array: (decoder<'a>, Js.Json.t) => array<'a>
 
 @ocaml.doc(" [beltMap k v m]
     Decodes a JSON array of a JSON array with two elements into a ('k , 'v, 'id) Belt.Map.t
     using the k and v decodes.
  ")
-let beltMap: (decoder<'k>, decoder<'v>, ~id: Belt.Map.id<'k, 'c>) => decoder<Belt.Map.t<'k, 'v, 'c>>
+let beltMap: (
+  decoder<'k>,
+  decoder<'v>,
+  ~id: Belt.Map.id<'k, 'c>,
+  Js.Json.t,
+) => Belt.Map.t<'k, 'v, 'c>
 
 @ocaml.doc(" [beltMapString k v m] ")
-let beltMapInt: decoder<'v> => decoder<Belt.Map.Int.t<'v>>
+let beltMapInt: (decoder<'v>, Js.Json.t) => Belt.Map.Int.t<'v>
 
 @ocaml.doc(" [beltMapString k v m] ")
-let beltMapString: decoder<'v> => decoder<Belt.Map.String.t<'v>>
+let beltMapString: (decoder<'v>, Js.Json.t) => Belt.Map.String.t<'v>
 
 @ocaml.doc(" Decodes a JSON array into an ['a list] using the given decoder on each element
 
@@ -213,7 +200,7 @@ elements are successfully decoded.
   let _ = Js.Json.parseExn \"null\" |> Decode.(list int)
 ]}
 ")
-let list: decoder<'a> => decoder<list<'a>>
+let list: (decoder<'a>, Js.Json.t) => list<'a>
 
 @ocaml.doc(" Decodes a JSON array with two elements into an ['a * 'b] tuple using the
     first decoder on the left element and the second decoder on the right
@@ -233,13 +220,13 @@ let list: decoder<'a> => decoder<list<'a>>
   let _ = Js.Json.parseExn \"[1, 2, 3]\" |> Decode.(pair int int)
 ]}
 ")
-let pair: (decoder<'a>, decoder<'b>) => decoder<('a, 'b)>
+let pair: (decoder<'a>, decoder<'b>, Js.Json.t) => ('a, 'b)
 
-let tuple2: (decoder<'a>, decoder<'b>) => decoder<('a, 'b)>
+let tuple2: (decoder<'a>, decoder<'b>, Js.Json.t) => ('a, 'b)
 
-let tuple3: (decoder<'a>, decoder<'b>, decoder<'c>) => decoder<('a, 'b, 'c)>
+let tuple3: (decoder<'a>, decoder<'b>, decoder<'c>, Js.Json.t) => ('a, 'b, 'c)
 
-let tuple4: (decoder<'a>, decoder<'b>, decoder<'c>, decoder<'d>) => decoder<('a, 'b, 'c, 'd)>
+let tuple4: (decoder<'a>, decoder<'b>, decoder<'c>, decoder<'d>, Js.Json.t) => ('a, 'b, 'c, 'd)
 
 let tuple5: (
   decoder<'a>,
@@ -247,7 +234,8 @@ let tuple5: (
   decoder<'c>,
   decoder<'d>,
   decoder<'e>,
-) => decoder<('a, 'b, 'c, 'd, 'e)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e)
 
 let tuple6: (
   decoder<'a>,
@@ -256,7 +244,8 @@ let tuple6: (
   decoder<'d>,
   decoder<'e>,
   decoder<'f>,
-) => decoder<('a, 'b, 'c, 'd, 'e, 'f)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e, 'f)
 
 let tuple7: (
   decoder<'a>,
@@ -266,7 +255,8 @@ let tuple7: (
   decoder<'e>,
   decoder<'f>,
   decoder<'g>,
-) => decoder<('a, 'b, 'c, 'd, 'e, 'f, 'g)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e, 'f, 'g)
 
 let tuple8: (
   decoder<'a>,
@@ -277,7 +267,8 @@ let tuple8: (
   decoder<'f>,
   decoder<'g>,
   decoder<'h>,
-) => decoder<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)
 
 let tuple9: (
   decoder<'a>,
@@ -289,7 +280,8 @@ let tuple9: (
   decoder<'g>,
   decoder<'h>,
   decoder<'i>,
-) => decoder<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i)
 
 let tuple10: (
   decoder<'a>,
@@ -302,7 +294,8 @@ let tuple10: (
   decoder<'h>,
   decoder<'i>,
   decoder<'j>,
-) => decoder<('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j)>
+  Js.Json.t,
+) => ('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j)
 
 let singleEnumerator: ('a, Js.Json.t) => 'a
 
@@ -325,7 +318,7 @@ values are successfully decoded.
   let _ = Js.Json.parseExn \"null\" |> Decode.(dict int)
 ]}
 ")
-let dict: decoder<'a> => decoder<Js.Dict.t<'a>>
+let dict: (decoder<'a>, Js.Json.t) => Js.Dict.t<'a>
 
 @ocaml.doc(" Decodes a JSON object with a specific field into the value of that field
 
@@ -348,32 +341,32 @@ and a value that is successfully decoded with the given decoder.
   let _ = Js.Json.parseExn \"null\" |> Decode.(field \"x\" int)
 ]}
 ")
-let field: (string, decoder<'a>) => decoder<'a>
+let field: (string, decoder<'a>, Js.Json.t) => 'a
 
 @ocaml.doc(" Decodes a JSON object with a specific field into the value of that field
     if the field exists
 
 @raise [DecodeError] if the field exists but the decoder is unsuccessful
 ")
-let optionalField: (string, decoder<'a>) => decoder<option<'a>>
+let optionalField: (string, decoder<'a>, Js.Json.t) => option<'a>
 
-@ocaml.doc(" Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
-
-{b Returns} an ['a] if the JSON value is a JSON object with the given field
-and a value that is successfully decoded with the given decoder.
-
-@raise [DecodeError] if unsuccessful
-
-@example {[
-  open Json
-  (* returns 23 *)
-  let _ = Js.Json.parseExn {| { \"x\": {\"foo\": 23}, \"y\": 42 } |} |> Decode.(at [\"x\"; \"foo\"] int)
-  (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { \"x\": null, \"y\": \"b\" } |} |> Decode.(at [\"x\"; \"foo\"] int)
-]}
-")
-let at: (list<string>, decoder<'a>) => decoder<'a>
-
+// @ocaml.doc(" Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
+//
+// {b Returns} an ['a] if the JSON value is a JSON object with the given field
+// and a value that is successfully decoded with the given decoder.
+//
+// @raise [DecodeError] if unsuccessful
+//
+// @example {[
+//   open Json
+//   (* returns 23 *)
+//   let _ = Js.Json.parseExn {| { \"x\": {\"foo\": 23}, \"y\": 42 } |} |> Decode.(at [\"x\"; \"foo\"] int)
+//   (* raises DecodeError *)
+//   let _ = Js.Json.parseExn {| { \"x\": null, \"y\": \"b\" } |} |> Decode.(at [\"x\"; \"foo\"] int)
+// ]}
+// ")
+// let at: (list<string>, decoder<'a>, Js.Json.t) => 'a
+//
 @ocaml.doc(" Maps a decoder [result] to an option
 
 {b Returns} [Some of 'a] if the given decoder is successful, [None] if
@@ -406,11 +399,11 @@ a composite decoder, and is useful to decode optional JSON object fields.
   let _ = Js.Json.parseExn {| { \"x\": 23, \"y\": \"b\" } |} |> Decode.(field \"z\" (optional int))
 ]}
 ")
-let optional: decoder<'a> => decoder<option<'a>>
+let optional: (decoder<'a>, Js.Json.t) => option<'a>
 
-let result: (decoder<'a>, decoder<'b>) => decoder<Belt.Result.t<'a, 'b>>
+let result: (decoder<'a>, decoder<'b>, Js.Json.t) => Belt.Result.t<'a, 'b>
 
-let either: (decoder<'l>, decoder<'r>) => decoder<Aeson_compatibility.Either.t<'l, 'r>>
+let either: (decoder<'l>, decoder<'r>, Js.Json.t) => Aeson_compatibility.Either.t<'l, 'r>
 
 @ocaml.doc(" Tries each [decoder] in order, retunring the result of the first that succeeds
 
@@ -428,9 +421,9 @@ let either: (decoder<'l>, decoder<'r>) => decoder<Aeson_compatibility.Either.t<'
   let _ = Js.Json.parseExn \"null\" |> Decode.(oneOf [int; field \"x\" int]
 ]}
 ")
-let oneOf: list<decoder<'a>> => decoder<'a>
+let oneOf: (list<decoder<'a>>, Js.Json.t) => 'a
 
-let tryEither: (decoder<'a>, decoder<'a>) => decoder<'a>
+let tryEither: (decoder<'a>, decoder<'a>, Js.Json.t) => 'a
 
 @@ocaml.text(" Tries each [decoder] in order, returning the result of the first that succeeds
 
@@ -465,7 +458,7 @@ let tryEither: (decoder<'a>, decoder<'a>) => decoder<'a>
   let _ = Js.Json.parseExn \"null\" |> Decode.withDefault 0 int
 ]}
 ")
-let withDefault: ('a, decoder<'a>) => decoder<'a>
+let withDefault: ('a, decoder<'a>, Js.Json.t) => 'a
 
 @ocaml.doc(" Returns a decoder that maps the result of the given decoder if successful
 
@@ -479,7 +472,7 @@ let withDefault: ('a, decoder<'a>) => decoder<'a>
   let _ = Js.Json.parseExn \"23\" |> Decode.map (fun x -> x * x) int
 ]}
 ")
-let map: ('a => 'b, decoder<'a>) => decoder<'b>
+let map: ('a => 'b, decoder<'a>, Js.Json.t) => 'b
 
 @ocaml.doc(" Returns a decoder that maps the result of the given decoder if successful
 
@@ -528,7 +521,7 @@ let map: ('a => 'b, decoder<'a>) => decoder<'b>
     |> decodeTree int
 ]}
 ")
-let andThen: ('a => decoder<'b>, decoder<'a>) => decoder<'b>
+let andThen: (('a, Js.Json.t) => 'b, decoder<'a>, Js.Json.t) => 'b
 
 let unwrapResult: Belt.Result.t<'a, string> => 'a
 

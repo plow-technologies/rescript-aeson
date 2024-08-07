@@ -29,7 +29,9 @@
     "url": "https://github.com/plow-technologies/bs-aeson/issues"
   },
   "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@rescript/core": "^1.5.2"
+  },
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.9",
     "rescript": "^11.1.3"

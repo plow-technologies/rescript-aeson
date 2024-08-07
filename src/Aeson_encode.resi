@@ -15,31 +15,31 @@ external float: float => Js.Json.t = "%identity"
 @ocaml.doc(" [int n] makes a JSON number of the [int] [n] ")
 external int: int => Js.Json.t = "%identity"
 
-@ocaml.doc(" [int32 n] makes a JSON number of the [int32] [n] ")
-external int32: int32 => Js.Json.t = "%identity"
-
-@ocaml.doc(
-  " [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned "
-)
-external int64_to_array: int64 => Js.Json.t = "%identity"
-
-@ocaml.doc(" [int64 n] makes a JSON number of the [int64] [n] in the format of a string ")
-let int64_to_string: Int64.t => Js.Json.t
-
-@ocaml.doc(" [bigint n] makes a JSON number of the [Bigint.t] [n] in the format of a string ")
-let bigint: Bigint.t => Js.Json.t
-
-@ocaml.doc(" [uint8 n] makes a JSON number of the [U.UInt8.t] [n] ")
-let uint8: U.UInt8.t => Js.Json.t
-
-@ocaml.doc(" [uint16 n] makes a JSON number of the [U.UInt8.t] [n] ")
-let uint16: U.UInt16.t => Js.Json.t
-
-@ocaml.doc(" [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string ")
-let uint32: U.UInt32.t => Js.Json.t
-
-@ocaml.doc(" [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string ")
-let uint64: U.UInt64.t => Js.Json.t
+// @ocaml.doc(" [int32 n] makes a JSON number of the [int32] [n] ")
+// external int32: int32 => Js.Json.t = "%identity"
+//
+// @ocaml.doc(
+//   " [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned "
+// )
+// external int64_to_array: int64 => Js.Json.t = "%identity"
+//
+// @ocaml.doc(" [int64 n] makes a JSON number of the [int64] [n] in the format of a string ")
+// let int64_to_string: Int64.t => Js.Json.t
+//
+// @ocaml.doc(" [bigint n] makes a JSON number of the [Bigint.t] [n] in the format of a string ")
+// let bigint: Bigint.t => Js.Json.t
+//
+// @ocaml.doc(" [uint8 n] makes a JSON number of the [U.UInt8.t] [n] ")
+// let uint8: U.UInt8.t => Js.Json.t
+//
+// @ocaml.doc(" [uint16 n] makes a JSON number of the [U.UInt8.t] [n] ")
+// let uint16: U.UInt16.t => Js.Json.t
+//
+// @ocaml.doc(" [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string ")
+// let uint32: U.UInt32.t => Js.Json.t
+//
+// @ocaml.doc(" [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string ")
+// let uint64: U.UInt64.t => Js.Json.t
 
 @ocaml.doc(" [bool b] makes a JSON boolean of the [Js.bool] [b] ")
 external bool: bool => Js.Json.t = "%identity"
@@ -86,7 +86,7 @@ let beltMapInt: (encoder<'v>, Belt.Map.Int.t<'v>) => Js.Json.t
 let beltMapString: (encoder<'v>, Belt.Map.String.t<'v>) => Js.Json.t
 
 @ocaml.doc(" [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] ")
-let list: encoder<'a> => encoder<list<'a>>
+let list: (encoder<'a>, list<'a>) => Js.Json.t
 
 @@ocaml.text(" The functions below are specialized for specific array type which
     happened to be already JSON object in the BuckleScript runtime. Therefore

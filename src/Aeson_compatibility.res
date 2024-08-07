@@ -26,15 +26,15 @@ module Either = {
     }
 
   @ocaml.doc(" Bifunctor interface ")
-  let bimap = (l, r) => either(v => left(l(v)), v => right(r(v)))
+  let bimap = (l, r, e) => either(v => left(l(v)), v => right(r(v)), e)
 
   external id: 'a => 'a = "%identity"
   let const = (v, _) => v
 
   @ocaml.doc(" Functor interface ")
-  let map = f => bimap(id, f)
+  let map = (f, e) => bimap(id, f, e)
   let \"<$>" = map
-  let map_left = f => bimap(f, id)
+  let map_left = (f, e) => bimap(f, id, e)
 
   @ocaml.doc(" Monadic interface ")
   let bind = (m, k) => either(left, k, m)
@@ -55,16 +55,17 @@ module Either = {
     }
 
   @ocaml.doc(" Predicates ")
-  let is_left = v => either(const(true), const(false), v)
-  let is_right = v => either(const(false), const(true), v)
+  let is_left = v => either(x => const(true, x), x => const(false, x), v)
+  let is_right = v => either(x => const(false, x), x => const(true, x), v)
 
-  let to_string = (l, r) => either(v => "Left (" ++ (l(v) ++ ")"), v => "Right (" ++ (r(v) ++ ")"))
+  let to_string = (l, r, e) =>
+    either(v => "Left (" ++ (l(v) ++ ")"), v => "Right (" ++ (r(v) ++ ")"), e)
 
   @ocaml.doc(" Extract a value of raise an exception ")
   let error = v => either(e => raise(e), id, v)
 
   @ocaml.doc(" Silence into an option ")
-  let hush = v => either(const(None), v' => Some(v'), v)
+  let hush = v => either(x => const(None, x), v' => Some(v'), v)
 
   @ocaml.doc(" Expand from an option ")
   let note = (e, x) =>
@@ -74,5 +75,5 @@ module Either = {
     }
 
   @ocaml.doc(" Catamorphism ")
-  let fold = (f, z) => either(const(z), v => f(v, z))
+  let fold = (f, z, e) => either(x => const(z, x), v => f(v, z), e)
 }

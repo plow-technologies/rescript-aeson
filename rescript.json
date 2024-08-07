@@ -1,6 +1,6 @@
 {
   "name": "bs-aeson",
-  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors", "-open RescriptCore"],
   "sources": [
     "src",
     {
@@ -8,6 +8,6 @@
       "type": "dev"
     }
   ],
-  "bs-dependencies": [],
+  "bs-dependencies": ["@rescript/core"],
   "bs-dev-dependencies": []
 }
