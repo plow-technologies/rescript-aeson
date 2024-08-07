@@ -41,15 +41,6 @@ let int = json => {
   }
 }
 
-// let int32 = json => {
-//   let f = float(json)
-//   if _isInteger(f) {
-//     (Obj.magic((f: float)): int32)
-//   } else {
-//     \"@@"(raise, DecodeError("Expected int32, got " ++ Js.Json.stringify(json)))
-//   }
-// }
-
 let string = json =>
   if Js.typeof(json) == "string" {
     (Obj.magic((json: Js.Json.t)): string)
@@ -57,91 +48,18 @@ let string = json =>
     \"@@"(raise, DecodeError("Expected string, got " ++ Js.Json.stringify(json)))
   }
 
-// let explode = s => List.fromInitializer(~length=String.length(s), x => String.get(s, x))
-//
-// let isDigit = char => {
-//   let c = Char.code(char)
-//   c >= 48 && c <= 57
-// }
-//
-// let isStringOfDigits = s =>
-//   if String.length(s) === 0 {
-//     false
-//   } else {
-//     let chars = explode(s)
-//     let chars' = if String.length(s) > 1 {
-//       if List.head(chars) === Some('-') {
-//         List.tail(chars)->Option.getOr([])
-//       } else {
-//         chars
-//       }
-//     } else {
-//       chars
-//     }
-//     List.fold_right((c, x) => isDigit(c) && x, chars', true)
-//   }
+let bigint = json =>
+  if Js.typeof(json) == "string" {
+    let source: string = Obj.magic((json: Js.Json.t))
 
-// let uint8 = json => {
-//   let f = float(json)
-//   if _isInteger(f) {
-//     U.UInt8.ofInt((Obj.magic((f: float)): int))
-//   } else {
-//     \"@@"(raise, DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
-//   }
-// }
-//
-// let uint16 = json => {
-//   let f = float(json)
-//   if _isInteger(f) {
-//     U.UInt16.ofInt((Obj.magic((f: float)): int))
-//   } else {
-//     \"@@"(raise, DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
-//   }
-// }
-//
-// let uint32 = json =>
-//   switch int(json) {
-//   | v => U.UInt32.ofInt(v)
-//   | exception DecodeError(_) =>
-//     \"@@"(raise, DecodeError("Expected U.UInt32.t, got " ++ Js.Json.stringify(json)))
-//   }
-//
-// let uint64 = json =>
-//   if Js.typeof(json) == "string" {
-//     let source: string = Obj.magic((json: Js.Json.t))
-//     switch U.UInt64.ofString(source) {
-//     | Some(s) => s
-//     | None => \"@@"(raise, DecodeError("Expected U.UInt64.t, got " ++ source))
-//     }
-//   } else {
-//     \"@@"(raise, DecodeError("Expected U.UInt64.t, got " ++ Js.Json.stringify(json)))
-//   }
-//
-// let int64_of_string = json =>
-//   if Js.typeof(json) == "string" {
-//     let source: string = Obj.magic((json: Js.Json.t))
-//
-//     if isStringOfDigits(source) {
-//       Int64.of_string(source)
-//     } else {
-//       \"@@"(raise, DecodeError("Expected int64, got " ++ source))
-//     }
-//   } else {
-//     \"@@"(raise, DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
-//   }
-//
-// let bigint = json =>
-//   if Js.typeof(json) == "string" {
-//     let source: string = Obj.magic((json: Js.Json.t))
-//
-//     if isStringOfDigits(source) {
-//       Bigint.of_string(source)
-//     } else {
-//       \"@@"(raise, DecodeError("Expected Bigint.t, got " ++ source))
-//     }
-//   } else {
-//     \"@@"(raise, DecodeError("Expected Bigint.t, got " ++ Js.Json.stringify(json)))
-//   }
+    try {
+      BigInt.fromStringExn(source)
+    } catch {
+    | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
+    }
+  } else {
+    \"@@"(raise, DecodeError("Expected bigint, got " ++ Js.Json.stringify(json)))
+  }
 
 let date = json =>
   if Js.typeof(json) == "string" {
@@ -498,12 +416,12 @@ let optionalField = (key, decode, json) =>
     \"@@"(raise, DecodeError("Expected object, got " ++ Js.Json.stringify(json)))
   }
 
-// let rec at = (key_path, decoder) =>
-//   switch key_path {
-//   | list{key} => field(key, decoder, ...)
-//   | list{first, ...rest} => field(first, at(rest, decoder), ...)
-//   | list{} => \"@@"(raise, Invalid_argument("Expected key_path to contain at least one element"))
-//   }
+let rec at = (key_path, decoder, json) =>
+  switch key_path {
+  | list{key} => field(key, decoder, json)
+  | list{first, ...rest} => field(first, x => at(rest, decoder, x), json)
+  | list{} => \"@@"(raise, Invalid_argument("Expected key_path to contain at least one element"))
+  }
 
 let optional = (decode, json) =>
   switch decode(json) {
@@ -589,31 +507,3 @@ let withDefault = (default, decode, json) =>
 let map = (f, decode, json) => f(decode(json))
 
 let andThen = (b, a, json) => b(a(json), json)
-
-// let int64_of_array = json => {
-//   let fs = array(float, json)
-//   if Array.length(fs) == 2 {
-//     if _isInteger(fs[0]) && _isInteger(fs[1]) {
-//       let left: int32 = Obj.magic((fs[0]: float))
-//       let right: int32 = Obj.magic((fs[1]: float))
-//       let res = Int64.of_int32(left)
-//       let res = Int64.shift_left(res, 32)
-//       Int64.logor(res, Int64.of_int32(right))
-//     } else {
-//       \"@@"(raise, DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
-//     }
-//   } else {
-//     \"@@"(raise, DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
-//   }
-// }
-//
-// let int64 = json =>
-//   switch string(json) {
-//   | s => Int64.of_string(s)
-//   | exception DecodeError(_) =>
-//     switch string(Js.Json.string(Js.Json.stringify(json))) {
-//     | s => Int64.of_string(s)
-//     | exception DecodeError(_) =>
-//       \"@@"(raise, DecodeError("Expected int64 as string, got " ++ Js.Json.stringify(json)))
-//     }
-//   }

@@ -75,34 +75,8 @@ let float: decoder<float>
 ")
 let int: decoder<int>
 
-// @ocaml.doc(" Decodes a JSON value into an [int32] ")
-// let int32: decoder<int32>
-//
-// @ocaml.doc(" Decodes a JSON value into an [int64] ")
-// let int64: decoder<int64>
-//
-// @ocaml.doc(
-//   " Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. "
-// )
-// let int64_of_array: decoder<int64>
-//
-// @ocaml.doc(" Decodes a JSON value into an [int64] ")
-// let int64_of_string: decoder<int64>
-//
-// @ocaml.doc(" Decodes a JSON value into an [U.UInt8.t] ")
-// let uint8: decoder<U.UInt8.t>
-//
-// @ocaml.doc(" Decodes a JSON value into an [U.UInt16.t] ")
-// let uint16: decoder<U.UInt16.t>
-//
-// @ocaml.doc(" Decodes a JSON value into an [U.UInt32.t] ")
-// let uint32: decoder<U.UInt32.t>
-//
-// @ocaml.doc(" Decodes a JSON value into an [U.UInt64.t] ")
-// let uint64: decoder<U.UInt64.t>
-//
-// @ocaml.doc(" Decodes a JSON value into an [Bigint.t] ")
-// let bigint: decoder<Bigint.t>
+@ocaml.doc(" Decodes a JSON value into an [bigint] ")
+let bigint: decoder<bigint>
 
 @ocaml.doc(" Decodes a JSON value into a [string]
 
@@ -350,23 +324,23 @@ let field: (string, decoder<'a>, Js.Json.t) => 'a
 ")
 let optionalField: (string, decoder<'a>, Js.Json.t) => option<'a>
 
-// @ocaml.doc(" Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
-//
-// {b Returns} an ['a] if the JSON value is a JSON object with the given field
-// and a value that is successfully decoded with the given decoder.
-//
-// @raise [DecodeError] if unsuccessful
-//
-// @example {[
-//   open Json
-//   (* returns 23 *)
-//   let _ = Js.Json.parseExn {| { \"x\": {\"foo\": 23}, \"y\": 42 } |} |> Decode.(at [\"x\"; \"foo\"] int)
-//   (* raises DecodeError *)
-//   let _ = Js.Json.parseExn {| { \"x\": null, \"y\": \"b\" } |} |> Decode.(at [\"x\"; \"foo\"] int)
-// ]}
-// ")
-// let at: (list<string>, decoder<'a>, Js.Json.t) => 'a
-//
+@ocaml.doc(" Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
+
+{b Returns} an ['a] if the JSON value is a JSON object with the given field
+and a value that is successfully decoded with the given decoder.
+
+@raise [DecodeError] if unsuccessful
+
+@example {[
+  open Json
+  (* returns 23 *)
+  let _ = Js.Json.parseExn {| { \"x\": {\"foo\": 23}, \"y\": 42 } |} |> Decode.(at [\"x\"; \"foo\"] int)
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn {| { \"x\": null, \"y\": \"b\" } |} |> Decode.(at [\"x\"; \"foo\"] int)
+]}
+")
+let at: (list<string>, decoder<'a>, Js.Json.t) => 'a
+
 @ocaml.doc(" Maps a decoder [result] to an option
 
 {b Returns} [Some of 'a] if the given decoder is successful, [None] if

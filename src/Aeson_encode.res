@@ -4,24 +4,9 @@ type encoder<'a> = 'a => Js.Json.t
 external string: string => Js.Json.t = "%identity"
 external float: float => Js.Json.t = "%identity"
 external int: int => Js.Json.t = "%identity"
-// external int32: int32 => Js.Json.t = "%identity"
-// external int64_to_array: int64 => Js.Json.t = "%identity"
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
-
-// let int64_to_string = (x: Int64.t) => string(Int64.to_string(x))
-//
-// let bigint = (x: Bigint.t) => string(Bigint.to_string(x))
-//
-// let uint8 = (x: U.UInt8.t) => int(U.UInt8.toInt(x))
-//
-// let uint16 = (x: U.UInt16.t) => int(U.UInt16.toInt(x))
-//
-// /* underlying it is an int64 but is less than JS limit,
-//  haskell expects a numeric literal */
-// let uint32 = (x: U.UInt32.t) => int(U.UInt32.toInt(x))
-//
-// let uint64 = (x: U.UInt64.t) => string(U.UInt64.toString(x))
+let bigint = (x: bigint) => BigInt.toString(x)->string
 
 let nullable = (encode, x) =>
   switch x {
