@@ -9,7 +9,7 @@ let resultMap = (f, r) =>
 
 let jsonRoundtripSpec = (decode, encode, json) => {
   let rDecoded = decode(json)
-  expect(resultMap(encode, rDecoded)) |> toEqual(Belt.Result.Ok(json))
+  expect(resultMap(encode, rDecoded))->toEqual(Ok(json))
 }
 
 type pairKey = PairKey((int, string))
