@@ -1,5 +1,5 @@
 {
-  "name": "rescript-aeson",
+  "name": "@plowtech/rescript-aeson",
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors", "-open RescriptCore"],
   "sources": [
     "src",

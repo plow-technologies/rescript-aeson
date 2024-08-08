@@ -42,7 +42,7 @@ let line = data->Js.Json.parseExn->Decode.line
 ## Installation
 
 ```sh
-npm install --save @plow/rescript-aeson
+npm install --save @plowtech/rescript-aeson
 ```
 
 Then add `rescript-aeson` to `bs-dependencies` in your `rescript.json`:

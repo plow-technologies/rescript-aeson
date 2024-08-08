@@ -1,5 +1,5 @@
 {
-  "name": "rescript-aeson",
+  "name": "@plowtech/rescript-aeson",
   "version": "5.0.0",
   "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
