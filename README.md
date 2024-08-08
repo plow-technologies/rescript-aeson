@@ -1,4 +1,4 @@
-# bs-aeson
+# rescript-aeson
 
 ## Example
 
