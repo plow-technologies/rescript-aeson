@@ -1,13 +1,13 @@
 {
-  "name": "bs-aeson",
-  "version": "4.9.0",
-  "description": "BuckleScript JSON serializations that match Haskell aeson",
+  "name": "rescript-aeson",
+  "version": "5.0.0",
+  "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
     "build": "yarn clean && yarn run re:build",
-    "build-dirty": "yarn run re:build",    
+    "build-dirty": "yarn run re:build",
     "clean": "rescript clean",
-    "start": "yarn run dev | yarn run re:watch",    
+    "start": "yarn run dev | yarn run re:watch",
     "test": "yarn run re:build && yarn run jest",
     "test:examples": "yarn run re:build && ./run_examples.sh",
     "re:watch": "rescript build -w",
@@ -16,24 +16,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plow-technologies/bs-aeson.git"
+    "url": "git+https://github.com/plow-technologies/rescript-aeson.git"
   },
   "keywords": [
-    "bucklescript",
+    "rescript",
     "json",
     "aeson"
   ],
   "author": "mchaver",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/plow-technologies/bs-aeson/issues"
+    "url": "https://github.com/plow-technologies/rescript-aeson/issues"
   },
-  "homepage": "https://github.com/plow-technologies/bs-aeson#readme",
+  "homepage": "https://github.com/plow-technologies/rescript-aeson#readme",
   "dependencies": {
-    "bs-zarith": "^3.2.0"
+    "@rescript/core": "^1.5.2"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.9",
-    "rescript": "^10.0.1"
+    "@glennsl/rescript-jest": "^0.11.0",
+    "rescript": "^11.1.3"
   }
 }
