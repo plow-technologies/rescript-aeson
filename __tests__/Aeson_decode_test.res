@@ -96,25 +96,22 @@ let () = {
     Test.throws(int, list{Bool, Float, String, Null, Array, Object})
   })
 
-  // describe("bigint", () => {
-  //   open Aeson
-  //   open! Decode
+  describe("bigint", () => {
+    open Aeson
+    open! Decode
 
-  //   test("23", () =>
-  //     toEqual(Bigint.of_int(23), \"@@"(expect, bigint(Encode.bigint(Bigint.of_int(23)))))
-  //   )
+    test("23", () => expect(bigint(Encode.bigint(BigInt.fromInt(23))))->toEqual(BigInt.fromInt(23)))
 
-  //   test("26423", () =>
-  //     toEqual(Bigint.of_int(26423), \"@@"(expect, bigint(Encode.bigint(Bigint.of_int(26423)))))
-  //   )
+    test("26423", () =>
+      expect(bigint(Encode.bigint(BigInt.fromInt(26423))))->toEqual(BigInt.fromInt(26423))
+    )
 
-  //   test("-1289848928492483456726423", () =>
-  //     toEqual(
-  //       Bigint.of_string("-1289848928492483456726423"),
-  //       \"@@"(expect, bigint(Encode.bigint(Bigint.of_string("-1289848928492483456726423")))),
-  //     )
-  //   )
-  // })
+    test("-1289848928492483456726423", () =>
+      expect(Encode.bigint(BigInt.fromString("-1289848928492483456726423"))->bigint)->toEqual(
+        BigInt.fromString("-1289848928492483456726423"),
+      )
+    )
+  })
 
   describe("string", () => {
     open Aeson
@@ -156,18 +153,18 @@ let () = {
     Test.throws(x => nullable(bool, x), list{Int})
   })
 
-  // describe("nullAs", () => {
-  //   open Aeson
-  //   open Decode
+  describe("nullAs", () => {
+    open Aeson
+    open Decode
 
-  //   test("as 0 - null", () => toEqual(0, \"@@"(expect, nullAs(0)(Encode.null))))
+    test("as 0 - null", () => expect(nullAs(0, Encode.null))->toEqual(0))
 
-  //   test("as Js.null", () => toEqual(Js.null, expect(nullAs(Js.null, Encode.null))))
-  //   test("as None", () => toEqual(None, expect(nullAs(None, Encode.null))))
-  //   test("as Some _", () => toEqual(Some("foo"), expect(nullAs(Some("foo"), Encode.null))))
+    test("as Js.null", () => expect(nullAs(Js.null, Encode.null))->toEqual(Js.null))
+    test("as None", () => expect(nullAs(None, Encode.null))->toEqual(None))
+    test("as Some _", () => expect(nullAs(Some("foo"), Encode.null))->toEqual(Some("foo")))
 
-  //   Test.throws(nullAs(0), list{Bool, Float, Int, String, Array, Object})
-  // })
+    Test.throws(x => nullAs(0, x), list{Bool, Float, Int, String, Array, Object})
+  })
 
   describe("array", () => {
     open Aeson
@@ -186,13 +183,13 @@ let () = {
     test("array string", () =>
       expect(array(string, Js.Json.parseExn(` ["a", "b", "c"] `)))->toEqual(["a", "b", "c"])
     )
-    // test("array nullAs", () =>
-    //   expect(array(nullAs(Js.null), Js.Json.parseExn(` [null, null, null] `)))->toEqual([
-    //     Js.null,
-    //     Js.null,
-    //     Js.null,
-    //   ])
-    // )
+    test("array nullAs", () =>
+      expect(array(x => nullAs(Js.null, x), Js.Json.parseExn(` [null, null, null] `)))->toEqual([
+        Js.null,
+        Js.null,
+        Js.null,
+      ])
+    )
     test("array int -> array bool", () =>
       toThrow(expectFn(x => array(bool, x), Js.Json.parseExn(` [1, 2, 3] `)))
     )
@@ -223,13 +220,13 @@ let () = {
     test("list string", () =>
       expect(list(string, Js.Json.parseExn(` ["a", "b", "c"] `)))->toEqual(list{"a", "b", "c"})
     )
-    //    test("list nullAs", () =>
-    //      expect(list(nullAs(Js.null), Js.Json.parseExn(` [null, null, null] `)))->toEqual(list{
-    //        Js.null,
-    //        Js.null,
-    //        Js.null,
-    //      })
-    //    )
+    test("list nullAs", () =>
+      expect(list(x => nullAs(Js.null, x), Js.Json.parseExn(` [null, null, null] `)))->toEqual(list{
+        Js.null,
+        Js.null,
+        Js.null,
+      })
+    )
     test("array int -> list bool", () =>
       toThrow(expectFn(x => list(bool, x), Js.Json.parseExn(` [1, 2, 3] `)))
     )
@@ -532,12 +529,11 @@ let () = {
         Obj.magic({"a": "x", "b": "y"}),
       )
     )
-    // test("dict nullAs", () =>
-    //   toEqual(
-    //     Obj.magic({"a": Js.null, "b": Js.null}),
-    //     \"@@"(expect, dict(nullAs(Js.null), Js.Json.parseExn(` { "a": null, "b": null } `))),
-    //   )
-    // )
+    test("dict nullAs", () =>
+      expect(
+        dict(x => nullAs(Js.null, x), Js.Json.parseExn(` { "a": null, "b": null } `)),
+      )->toEqual(Obj.magic({"a": Js.null, "b": Js.null}))
+    )
     test("dict null -> dict string", () =>
       toThrow(expectFn(x => dict(string, x), Js.Json.parseExn(` { "a": null, "b": null } `)))
     )
@@ -561,12 +557,11 @@ let () = {
     test("field string", () =>
       expect(field("b", string, Js.Json.parseExn(` { "a": "x", "b": "y" } `)))->toEqual("y")
     )
-    // test("field nullAs", () =>
-    //   toEqual(
-    //     Js.null,
-    //     \"@@"(expect, field("b", nullAs(Js.null), Js.Json.parseExn(` { "a": null, "b": null } `))),
-    //   )
-    // )
+    test("field nullAs", () =>
+      expect(
+        field("b", x => nullAs(Js.null, x), Js.Json.parseExn(` { "a": null, "b": null } `)),
+      )->toEqual(Js.null)
+    )
     test("field null -> field string", () =>
       toThrow(expectFn(x => field("b", string, x), Js.Json.parseExn(` { "a": null, "b": null } `)))
     )
@@ -590,22 +585,18 @@ let () = {
         ),
       )->toEqual(false)
     )
-    // test("field nullAs", () =>
-    //   toEqual(
-    //     Js.null,
-    //     \"@@"(
-    //       expect,
-    //       at(
-    //         list{"a", "x"},
-    //         nullAs(Js.null),
-    //         Js.Json.parseExn(` {
-    //     "a": { "x" : null },
-    //     "b": null
-    //   } `),
-    //       ),
-    //     ),
-    //   )
-    // )
+    test("field nullAs", () =>
+      expect(
+        at(
+          list{"a", "x"},
+          x => nullAs(Js.null, x),
+          Js.Json.parseExn(` {
+        "a": { "x" : null },
+        "b": null
+      } `),
+        ),
+      )->toEqual(Js.null)
+    )
 
     Test.throws(
       x => at(list{"foo", "bar"}, int, x),
@@ -631,9 +622,9 @@ let () = {
     test("string -> string", () =>
       expect(optional(string, Encode.string("test")))->toEqual(Some("test"))
     )
-    // test("null -> null", () =>
-    //   expect(optional(nullAs(Js.null), Encode.null))->toEqual(Some(Js.null))
-    // )
+    test("null -> null", () =>
+      expect(optional(x => nullAs(Js.null, x), Encode.null))->toEqual(Some(Js.null))
+    )
     test("int -> bool", () => expect(optional(bool, Encode.int(1)))->toEqual(None))
 
     test("optional field", () =>

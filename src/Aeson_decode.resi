@@ -117,6 +117,24 @@ given decoder succeeds,
 ")
 let nullable: (decoder<'a>, Js.Json.t) => Js.Null.t<'a>
 
+@ocaml.doc(" Returns the given value if the JSON value is [null]
+
+{b Returns} an ['a] if the JSON value is [null].
+
+@raise [DecodeError] if unsuccessful
+
+@example {[
+  open Json
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn \"x\" |> Decode.nullAs \"x\"
+  (* returns \"x\" *)
+  let _ = Js.Json.parseExn \"null\" |> Decode.nullAs \"x\"
+  (* returns None *)
+  let _ = Js.Json.parseExn \"null\" |> Decode.nullAs None
+]}
+")
+let nullAs: ('a, Js.Json.t) => 'a
+
 @ocaml.doc(" Decodes a JSON array into an ['a array] using the given decoder on each element
 
 {b Returns} an ['a array] if the JSON value is a JSON array and all its

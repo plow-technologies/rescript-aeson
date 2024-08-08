@@ -81,6 +81,14 @@ let nullable = (decode, json) =>
     Js.Null.return(decode(json))
   }
 
+let nullAs = (value, json) => {
+  if (Obj.magic(json): Js.null<'a>) === Js.null {
+    value
+  } else {
+    DecodeError("Expected null, got " ++ Js.Json.stringify(json))->raise
+  }
+}
+
 let array = (decode, json) =>
   if Js.Array.isArray(json) {
     let source: array<Js.Json.t> = Obj.magic((json: Js.Json.t))
