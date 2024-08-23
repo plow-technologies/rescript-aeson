@@ -781,6 +781,11 @@ browserslist@^4.23.1:
     node-releases "^2.0.18"
     update-browserslist-db "^1.1.0"
 
+bs-zarith@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/bs-zarith/-/bs-zarith-3.2.0.tgz#fdaa73c322f0e27cd92eab33fc984228b3791b3c"
+  integrity sha512-cYc/ni6e2fQRpTiwut/UwWdRjeCOZ/qfLiEv3YKKE9xgBL5yccXIb7mHhJG1Q1DX8sJnjvQllrTnjjXMfv1AdQ==
+
 bser@2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/bser/-/bser-2.1.1.tgz"
@@ -2073,10 +2078,10 @@ requires-port@^1.0.0:
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz"
   integrity sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==
 
-rescript@^11.1.3:
-  version "11.1.3"
-  resolved "https://registry.npmjs.org/rescript/-/rescript-11.1.3.tgz"
-  integrity sha512-bI+yxDcwsv7qE34zLuXeO8Qkc2+1ng5ErlSjnUIZdrAWKoGzHXpJ6ZxiiRBUoYnoMsgRwhqvrugIFyNgWasmsw==
+rescript@10.1.4:
+  version "10.1.4"
+  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.4.tgz#0f37710d371f32a704f17b4e804f66ce3c79a305"
+  integrity sha512-FFKlS9AG/XrLepWsyw7B+A9DtQBPWEPDPDKghV831Y2KGbie+eeFBOS0xtRHp0xbt7S0N2Dm6hhX+kTZQ/3Ybg==
 
 resolve-cwd@^3.0.0:
   version "3.0.0"

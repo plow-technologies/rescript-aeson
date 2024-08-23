@@ -15,6 +15,27 @@ let float: float => Js.Json.t
 @ocaml.doc(" [int n] makes a JSON number of the [int] [n] ")
 external int: int => Js.Json.t = "%identity"
 
+external int32: int32 => Js.Json.t = "%identity"
+/* [int32 n] makes a JSON number of the [int32] [n] */
+
+external int64_to_array: int64 => Js.Json.t = "%identity"
+/* [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned */
+
+let int64_to_string: Int64.t => Js.Json.t
+/* [int64 n] makes a JSON number of the [int64] [n] in the format of a string */
+
+let uint8: U.UInt8.t => Js.Json.t
+/* [uint8 n] makes a JSON number of the [U.UInt8.t] [n] */
+
+let uint16: U.UInt16.t => Js.Json.t
+/* [uint16 n] makes a JSON number of the [U.UInt8.t] [n] */
+
+let uint32: U.UInt32.t => Js.Json.t
+/* [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string */
+
+let uint64: U.UInt64.t => Js.Json.t
+/* [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string */
+
 @ocaml.doc(" [bigint n] makes a JSON number of the [bigint] [n] in the format of a string ")
 let bigint: BigInt.t => Js.Json.t
 

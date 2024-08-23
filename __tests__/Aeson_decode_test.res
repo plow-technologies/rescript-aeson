@@ -43,7 +43,7 @@ let decodeOnpingKey = json =>
   | x => OnpingKey(x)
   }
 
-module OnpingKeyComparable = Belt.Id.MakeComparableU({
+module OnpingKeyComparable = Belt.Id.MakeComparable({
   type t = onpingKey
   let cmp = (a, b) => compare(a, b)
 })
@@ -55,7 +55,7 @@ let decodePid = json =>
   | x => Pid(x)
   }
 
-module PidComparable = Belt.Id.MakeComparableU({
+module PidComparable = Belt.Id.MakeComparable({
   type t = pid
   let cmp = compare
 })
@@ -77,8 +77,16 @@ let () = {
 
     test("float", () => expect(float(Encode.float(1.23)))->toEqual(1.23))
     test("int", () => expect(float(Encode.int(23)))->toEqual(23.))
-    test("float", () => expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("Infinity"))))->toEqual(Js.Float.fromString("Infinity")))
-    test("float", () => expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("-Infinity"))))->toEqual(Js.Float.fromString("-Infinity")))
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("Infinity"))))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("-Infinity"))))->toEqual(
+        Js.Float.fromString("-Infinity"),
+      )
+    )
 
     Test.throws(float, list{Bool, String, Null, Array, Object})
   })
