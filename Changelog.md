@@ -1,5 +1,8 @@
 ## Changes
 
+### 5.1.0
+* Support Infinity and -Infinity as floats.
+
 ### 5.0.0
 
 * Support for ReScript v11 with uncurried mode
