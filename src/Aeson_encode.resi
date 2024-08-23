@@ -16,7 +16,7 @@ let float: float => Js.Json.t
 external int: int => Js.Json.t = "%identity"
 
 @ocaml.doc(" [bigint n] makes a JSON number of the [bigint] [n] in the format of a string ")
-let bigint: bigint => Js.Json.t
+let bigint: BigInt.t => Js.Json.t
 
 @ocaml.doc(" [bool b] makes a JSON boolean of the [Js.bool] [b] ")
 external bool: bool => Js.Json.t = "%identity"

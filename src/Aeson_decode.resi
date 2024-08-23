@@ -76,7 +76,7 @@ let float: decoder<float>
 let int: decoder<int>
 
 @ocaml.doc(" Decodes a JSON value into an [bigint] ")
-let bigint: decoder<bigint>
+let bigint: decoder<BigInt.t>
 
 @ocaml.doc(" Decodes a JSON value into a [string]
 

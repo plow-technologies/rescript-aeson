@@ -5,7 +5,7 @@ external string: string => Js.Json.t = "%identity"
 external int: int => Js.Json.t = "%identity"
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
-let bigint = (x: bigint) => BigInt.toString(x)->string
+let bigint = (x: BigInt.t) => BigInt.toString(x)->string
 
 let float = (f: float): Js.Json.t => {
   switch Js.Float.toString(f) {

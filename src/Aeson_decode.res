@@ -61,7 +61,7 @@ let bigint = json =>
     let source: string = Obj.magic((json: Js.Json.t))
 
     try {
-      BigInt.fromStringExn(source)
+      BigInt.fromString(source)
     } catch {
     | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
     }
