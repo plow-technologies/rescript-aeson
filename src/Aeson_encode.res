@@ -2,11 +2,18 @@ type encoder<'a> = 'a => Js.Json.t
 
 @val external null: Js.Json.t = "null"
 external string: string => Js.Json.t = "%identity"
-external float: float => Js.Json.t = "%identity"
 external int: int => Js.Json.t = "%identity"
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 let bigint = (x: bigint) => BigInt.toString(x)->string
+
+let float = (f: float): Js.Json.t => {
+  switch Js.Float.toString(f) {
+  | "Infinity" => Js.Json.string("+inf")
+  | "-Infinity" => Js.Json.string("-inf")
+  | _ => Js.Json.number(f)
+  }
+}
 
 let nullable = (encode, x) =>
   switch x {

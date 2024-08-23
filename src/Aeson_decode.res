@@ -28,6 +28,14 @@ let bool = json =>
 let float = json =>
   if Js.typeof(json) == "number" {
     (Obj.magic((json: Js.Json.t)): float)
+  } else if Js.typeof(json) == "string" {
+    switch (Obj.magic((json: Js.Json.t)): string) {
+    | "+inf" => Js.Float.fromString("Infinity")
+    | "-inf" => Js.Float.fromString("-Infinity")
+    | "+Infinity" => Js.Float.fromString("Infinity")
+    | "-Infinity" => Js.Float.fromString("-Infinity")
+    | _ => DecodeError("Expected \"+inf\" or \"-inf\", got " ++ Js.Json.stringify(json))->raise
+    }
   } else {
     DecodeError("Expected number, got " ++ Js.Json.stringify(json))->raise
   }

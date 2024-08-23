@@ -10,7 +10,7 @@ external null: Js.Json.t = "null"
 external string: string => Js.Json.t = "%identity"
 
 @ocaml.doc(" [float n] makes a JSON number of the [float] [n] ")
-external float: float => Js.Json.t = "%identity"
+let float: float => Js.Json.t
 
 @ocaml.doc(" [int n] makes a JSON number of the [int] [n] ")
 external int: int => Js.Json.t = "%identity"
