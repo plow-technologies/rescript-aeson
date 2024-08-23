@@ -1,5 +1,8 @@
 ## Changes
 
+### 5.1.1
+* Change back to `bsconfig.json` so that this can be used in v10 of rescript. Another version will be released for `rescript.json` support in the future.
+
 ### 5.1.0
 * Support Infinity and -Infinity as floats.
 
