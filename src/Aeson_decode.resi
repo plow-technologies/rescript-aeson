@@ -75,8 +75,26 @@ let float: decoder<float>
 ")
 let int: decoder<int>
 
+/* DO NOT USE */
+let uint8: decoder<U.UInt8.t>
+let uint16: decoder<U.UInt16.t>
+let uint32: decoder<U.UInt32.t>
+let uint64: decoder<U.UInt64.t>
+
+/* Decodes a JSON value into an [int32] */
+let int32: decoder<int32>
+
+/* Decodes a JSON value into an [int64] */
+let int64: decoder<int64>
+
+/* Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. */
+let int64_of_array: decoder<int64>
+
+/* Decodes a JSON value into an [int64] */
+let int64_of_string: decoder<int64>
+
 @ocaml.doc(" Decodes a JSON value into an [bigint] ")
-let bigint: decoder<bigint>
+let bigint: decoder<BigInt.t>
 
 @ocaml.doc(" Decodes a JSON value into a [string]
 

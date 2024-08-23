@@ -25,6 +25,33 @@ let bool = json =>
     DecodeError("Expected boolean, got " ++ Js.Json.stringify(json))->raise
   }
 
+let isDigit = (charCode: option<int>) => {
+  switch charCode {
+  | Some(c) => c >= 48 && c <= 57
+  | None => false
+  }
+}
+
+let isStringOfDigits = s => {
+  if String.length(s) == 0 {
+    false
+  } else {
+    let chars = if String.length(s) > 1 {
+      if String.charAt(s, 0) == "-" {
+        String.sliceToEnd(~start=1, s)
+      } else {
+        s
+      }
+    } else {
+      s
+    }
+    let mCharCodes = Array.fromInitializer(~length=String.length(chars), i =>
+      String.codePointAt(chars, i)
+    )
+    Array.reduce(mCharCodes, true, (acc, c) => acc && isDigit(c))
+  }
+}
+
 let float = json =>
   if Js.typeof(json) == "number" {
     (Obj.magic((json: Js.Json.t)): float)
@@ -40,14 +67,73 @@ let float = json =>
     DecodeError("Expected number, got " ++ Js.Json.stringify(json))->raise
   }
 
-let int = json => {
+let int = (json: Js.Json.t): int => {
   let f = float(json)
   if _isInteger(f) {
     (Obj.magic((f: float)): int)
   } else {
-    DecodeError("Expected int, got " ++ Js.Json.stringify(json))->raise
+    raise(DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
   }
 }
+
+let int32 = (json: Js.Json.t): int32 => {
+  let f = float(json)
+  if _isInteger(f) {
+    (Obj.magic((f: float)): int32)
+  } else {
+    raise(DecodeError("Expected int32, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let uint8 = (json: Js.Json.t): U.UInt8.t => {
+  let f = float(json)
+  if _isInteger(f) {
+    U.UInt8.ofInt((Obj.magic((f: float)): int))
+  } else {
+    raise(DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let uint16 = (json: Js.Json.t): U.UInt16.t => {
+  let f = float(json)
+  if _isInteger(f) {
+    U.UInt16.ofInt((Obj.magic((f: float)): int))
+  } else {
+    raise(DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let uint32 = (json: Js.Json.t): U.UInt32.t => {
+  switch int(json) {
+  | v => U.UInt32.ofInt(v)
+  | exception DecodeError(_) =>
+    raise(DecodeError("Expected U.UInt32.t, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let uint64 = (json: Js.Json.t): U.UInt64.t => {
+  if Js.typeof(json) == "string" {
+    let source = (Obj.magic((json: Js.Json.t)): string)
+    switch U.UInt64.ofString(source) {
+    | Some(s) => s
+    | None => raise(DecodeError("Expected U.UInt64.t, got " ++ source))
+    }
+  } else {
+    raise(DecodeError("Expected U.UInt64.t, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let int64_of_string = (json: Js.Json.t): int64 =>
+  if Js.typeof(json) == "string" {
+    let source = (Obj.magic((json: Js.Json.t)): string)
+    if isStringOfDigits(source) {
+      Int64.of_string(source)
+    } else {
+      raise(DecodeError("Expected int64, got " ++ source))
+    }
+  } else {
+    raise(DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
+  }
 
 let string = json =>
   if Js.typeof(json) == "string" {
@@ -61,7 +147,7 @@ let bigint = json =>
     let source: string = Obj.magic((json: Js.Json.t))
 
     try {
-      BigInt.fromStringExn(source)
+      BigInt.fromString(source)
     } catch {
     | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
     }
@@ -508,3 +594,32 @@ let withDefault = (default, decode, json) =>
 let map = (f, decode, json) => f(decode(json))
 
 let andThen = (b, a, json) => b(a(json), json)
+
+let int64_of_array = (json: Js.Json.t): int64 => {
+  let fs = array(float, json)
+  if Js.Array.length(fs) == 2 {
+    if _isInteger(Array.getUnsafe(fs, 0)) && _isInteger(Array.getUnsafe(fs, 1)) {
+      let left = (Obj.magic(Array.getUnsafe(fs, 0)): int32)
+      let right = (Obj.magic(Array.getUnsafe(fs, 1)): int32)
+      let res = Int64.of_int32(left)
+      let res = Int64.shift_left(res, 32)
+      Int64.logor(res, Int64.of_int32(right))
+    } else {
+      raise(DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
+    }
+  } else {
+    raise(DecodeError("Expected int64, got " ++ Js.Json.stringify(json)))
+  }
+}
+
+let int64 = (json: Js.Json.t): int64 => {
+  switch string(json) {
+  | s => Int64.of_string(s)
+  | exception DecodeError(_) =>
+    switch string(Js.Json.string(Js.Json.stringify(json))) {
+    | s => Int64.of_string(s)
+    | exception DecodeError(_) =>
+      raise(DecodeError("Expected int64 as string, got " ++ Js.Json.stringify(json)))
+    }
+  }
+}
