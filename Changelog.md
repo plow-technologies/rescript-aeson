@@ -2,6 +2,7 @@
 
 ### 5.1.2
 * Rolled back the version of rescript-core to one that supports v10 of rescript.
+* Re-added bs-zarith as a dependency for now, it will be removed when this package is updated to support BigInt natively through a newer version of ReScript Core.
 
 ### 5.1.1
 * Change back to `bsconfig.json` so that this can be used in v10 of rescript. Another version will be released for `rescript.json` support in the future.
