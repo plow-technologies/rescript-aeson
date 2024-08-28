@@ -1,9 +1,6 @@
 ## Changes
 
-### 5.1.0
-* Support Infinity and -Infinity as floats.
-
-### 5.0.0
+### 6.0.0
 
 * Support for ReScript v11 with uncurried mode
 
@@ -12,6 +9,9 @@
 * Remove dependency to `bs-zarith`
 * Remove sized int and float encoders/decoders like `int8`, `int16`, and so on.
 * Bigint encoder/decoder uses native ReScript `bigint` type instead of types from `bs-zarith`
+
+### 5.1.0
+* Support Infinity and -Infinity as floats.
 
 ### 4.9.0
 

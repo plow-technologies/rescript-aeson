@@ -1,6 +1,6 @@
 {
   "name": "@plowtech/rescript-aeson",
-  "version": "5.1.0",
+  "version": "6.0.0",
   "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/plow-technologies/rescript-aeson#readme",
   "dependencies": {
-    "@rescript/core": "^1.5.2"
+    "@rescript/core": "^1.2.0"
   },
   "devDependencies": {
     "@glennsl/rescript-jest": "^0.11.0",
