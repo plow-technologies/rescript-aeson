@@ -1,6 +1,6 @@
 ## Changes
 
-### 6.1.0
+### 7.0.0
 * Better support for Infinity from the Haskell side.
 
 ### 6.0.0
