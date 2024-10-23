@@ -1,5 +1,8 @@
 ## Changes
 
+### 6.1.0
+* Better support for Infinity from the Haskell side.
+
 ### 6.0.0
 
 * Support for ReScript v11 with uncurried mode
