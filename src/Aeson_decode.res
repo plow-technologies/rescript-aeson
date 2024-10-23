@@ -32,6 +32,7 @@ let float = json =>
     switch (Obj.magic((json: Js.Json.t)): string) {
     | "+inf" => Js.Float.fromString("Infinity")
     | "-inf" => Js.Float.fromString("-Infinity")
+    | "Infinity" => Js.Float.fromString("Infinity")
     | "+Infinity" => Js.Float.fromString("Infinity")
     | "-Infinity" => Js.Float.fromString("-Infinity")
     | _ => DecodeError("Expected \"+inf\" or \"-inf\", got " ++ Js.Json.stringify(json))->raise

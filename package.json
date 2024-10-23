@@ -1,6 +1,6 @@
 {
   "name": "@plowtech/rescript-aeson",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {

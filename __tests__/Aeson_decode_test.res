@@ -77,8 +77,31 @@ let () = {
 
     test("float", () => expect(float(Encode.float(1.23)))->toEqual(1.23))
     test("int", () => expect(float(Encode.int(23)))->toEqual(23.))
-    test("float", () => expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("Infinity"))))->toEqual(Js.Float.fromString("Infinity")))
-    test("float", () => expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("-Infinity"))))->toEqual(Js.Float.fromString("-Infinity")))
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("Infinity"))))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("-Infinity"))))->toEqual(
+        Js.Float.fromString("-Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("Infinity")))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("+Infinity")))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("-Infinity")))->toEqual(
+        Js.Float.fromString("-Infinity"),
+      )
+    )
 
     Test.throws(float, list{Bool, String, Null, Array, Object})
   })
