@@ -1,5 +1,8 @@
 ## Changes
 
+### 5.1.3
+* Support string "Infinity" from Haskell as "Infinity" in ReScript.
+
 ### 5.1.2
 * Rolled back the version of rescript-core to one that supports v10 of rescript.
 * Re-added bs-zarith as a dependency for now, it will be removed when this package is updated to support BigInt natively through a newer version of ReScript Core.
