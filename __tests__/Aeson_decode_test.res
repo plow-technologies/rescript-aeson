@@ -87,6 +87,21 @@ let () = {
         Js.Float.fromString("-Infinity"),
       )
     )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("Infinity")))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("+Infinity")))->toEqual(
+        Js.Float.fromString("Infinity"),
+      )
+    )
+    test("float", () =>
+      expect(Aeson.Decode.float(Aeson.Encode.string("-Infinity")))->toEqual(
+        Js.Float.fromString("-Infinity"),
+      )
+    )
 
     Test.throws(float, list{Bool, String, Null, Array, Object})
   })
