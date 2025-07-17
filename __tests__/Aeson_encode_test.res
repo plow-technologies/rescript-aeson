@@ -13,7 +13,7 @@ let encodeOnpingKey = (x: onpingKey) =>
   | OnpingKey(x) => string(x)
   }
 
-module OnpingKeyComparable = Belt.Id.MakeComparableU({
+module OnpingKeyComparable = Belt.Id.MakeComparable({
   type t = onpingKey
   let cmp = compare
 })
@@ -32,7 +32,7 @@ let encodePid = (x: pid) =>
   | Pid(x) => int(x)
   }
 
-module PidComparable = Belt.Id.MakeComparableU({
+module PidComparable = Belt.Id.MakeComparable({
   type t = pid
   let cmp = compare
 })

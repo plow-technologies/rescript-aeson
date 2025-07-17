@@ -1,0 +1,26 @@
+{
+  "name": "@plowtech/rescript-aeson",
+  "bsc-flags": [
+    "-bs-no-version-header",
+    "-bs-super-errors",
+    "-open RescriptCore"
+  ],
+  "sources": [
+    "src",
+    {
+      "dir": "examples",
+      "type": "dev"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ],
+  "bs-dependencies": [
+    "@rescript/core",
+    "bs-zarith"
+  ],
+  "bs-dev-dependencies": [
+    "@glennsl/rescript-jest"
+  ]
+}

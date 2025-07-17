@@ -1,30 +1,18 @@
 /* Decoding a fixed JSON data structure using Aeson.Decode */
-let mapJsonObjectString = (f, decoder, encoder: int => Js.Json.t, str) => {
+let mapJsonObjectString = (f: (. 'a) => 'b, decoder, encoder: (. int) => Js.Json.t, str) => {
   let json = Js.Json.parseExn(str)
+  let m = Aeson.Decode.dict(decoder, json)
 
-  Js.Json.stringify(
-    Aeson.Encode.dict(
-      Js.Dict.map(
-        v => encoder(v),
-        Js.Dict.map(
-          v => f(v),
-          {
-            open Aeson.Decode
-            dict(decoder, json)
-          },
-        ),
-      ),
-    ),
-  )
+  Js.Json.stringify(Aeson.Encode.dict(Js.Dict.map(encoder, Js.Dict.map(f, m))))
 }
 
-let sum = xs => Array.reduce(xs, 0, \"+")
+let sum = (. xs) => Array.reduce(xs, 0, \"+")
 
 /* prints `{ "foo": 6, "bar": 24 }` */
 let _ = mapJsonObjectString(
   sum,
-  Aeson.Decode.array(Aeson.Decode.int, ...),
-  Aeson.Encode.int,
+  Aeson.Decode.array(Aeson.Decode.int),
+  (. x) => Aeson.Encode.int(x),
   `
       {
         "foo": [1, 2, 3],

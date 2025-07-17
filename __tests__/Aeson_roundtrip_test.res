@@ -14,7 +14,7 @@ let jsonRoundtripSpec = (decode, encode, json) => {
 
 type pairKey = PairKey((int, string))
 
-module PairKeyComparable = Belt.Id.MakeComparableU({
+module PairKeyComparable = Belt.Id.MakeComparable({
   type t = pairKey
   let cmp = (a, b): int =>
     switch (a, b) {

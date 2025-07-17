@@ -1,6 +1,6 @@
 ## Changes
 
-### 7.0.0
+### 6.1.0
 * Better support for Infinity from the Haskell side.
 
 ### 6.0.0
@@ -12,6 +12,13 @@
 * Remove dependency to `bs-zarith`
 * Remove sized int and float encoders/decoders like `int8`, `int16`, and so on.
 * Bigint encoder/decoder uses native ReScript `bigint` type instead of types from `bs-zarith`
+
+### 5.1.2
+* Rolled back the version of rescript-core to one that supports v10 of rescript.
+* Re-added bs-zarith as a dependency for now, it will be removed when this package is updated to support BigInt natively through a newer version of ReScript Core.
+
+### 5.1.1
+* Change back to `bsconfig.json` so that this can be used in v10 of rescript. Another version will be released for `rescript.json` support in the future.
 
 ### 5.1.0
 * Support Infinity and -Infinity as floats.
