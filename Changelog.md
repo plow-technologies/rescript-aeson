@@ -1,5 +1,8 @@
 ## Changes
 
+### 6.1.1
+* Fix expected field error not showing the expected key
+
 ### 6.1.0
 * Better support for Infinity from the Haskell side.
 

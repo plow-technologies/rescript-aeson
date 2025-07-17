@@ -493,7 +493,7 @@ let field = (key, decode, json) =>
     let dict: Js.Dict.t<Js.Json.t> = Obj.magic((json: Js.Json.t))
     switch Js.Dict.get(dict, key) {
     | Some(value) => decode(value)
-    | None => \"@@"(raise, DecodeError(`Expected field '$(key)'`))
+    | None => \"@@"(raise, DecodeError(`Expected field '${key}'`))
     }
   } else {
     \"@@"(raise, DecodeError("Expected object, got " ++ Js.Json.stringify(json)))
