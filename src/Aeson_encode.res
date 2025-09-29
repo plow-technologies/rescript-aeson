@@ -3,11 +3,6 @@ type encoder<'a> = 'a => Js.Json.t
 @val external null: Js.Json.t = "null"
 external string: string => Js.Json.t = "%identity"
 external int: int => Js.Json.t = "%identity"
-external int32: int32 => Js.Json.t = "%identity"
-external int64_to_array: int64 => Js.Json.t = "%identity"
-
-let int64_to_string = (x: Int64.t) => string(Int64.to_string(x))
-
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 let bigint = (x: bigint) => BigInt.toString(x)->string

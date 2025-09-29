@@ -78,18 +78,6 @@ let int: decoder<int>
 @ocaml.doc(" Decodes a JSON value into an [bigint] ")
 let bigint: decoder<bigint>
 
-/* Decodes a JSON value into an [int32] */
-let int32: decoder<int32>
-
-/* Decodes a JSON value into an [int64] */
-let int64: decoder<int64>
-
-/* Decodes a JSON value into an [int64] that is stored as an array [high,low] where high is signed and low is unsigned. */
-let int64_of_array: decoder<int64>
-
-/* Decodes a JSON value into an [int64] */
-let int64_of_string: decoder<int64>
-
 @ocaml.doc(" Decodes a JSON value into a [string]
 
 {b Returns} a [string] if the JSON value is a number.

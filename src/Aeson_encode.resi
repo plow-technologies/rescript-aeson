@@ -18,15 +18,6 @@ external int: int => Js.Json.t = "%identity"
 @ocaml.doc(" [bigint n] makes a JSON number of the [bigint] [n] in the format of a string ")
 let bigint: bigint => Js.Json.t
 
-external int32: int32 => Js.Json.t = "%identity"
-/* [int32 n] makes a JSON number of the [int32] [n] */
-
-external int64_to_array: int64 => Js.Json.t = "%identity"
-/* [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned */
-
-let int64_to_string: Int64.t => Js.Json.t
-/* [int64 n] makes a JSON number of the [int64] [n] in the format of a string */
-
 @ocaml.doc(" [bool b] makes a JSON boolean of the [Js.bool] [b] ")
 external bool: bool => Js.Json.t = "%identity"
 
