@@ -105,6 +105,19 @@ let string = json =>
     DecodeError("Expected string, got " ++ Js.Json.stringify(json))->raise
   }
 
+let bigint = json =>
+  if Js.typeof(json) == "string" {
+    let source: string = Obj.magic((json: Js.Json.t))
+
+    try {
+      BigInt.fromStringExn(source)
+    } catch {
+    | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
+    }
+  } else {
+    DecodeError("Expected bigint, got " ++ Js.Json.stringify(json))->raise
+  }
+
 let date = json =>
   if Js.typeof(json) == "string" {
     let source: string = Obj.magic((json: Js.Json.t))

@@ -10,6 +10,7 @@ let int64_to_string = (x: Int64.t) => string(Int64.to_string(x))
 
 external bool: bool => Js.Json.t = "%identity"
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
+let bigint = (x: bigint) => BigInt.toString(x)->string
 
 let float = (f: float): Js.Json.t => {
   switch Js.Float.toString(f) {

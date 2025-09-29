@@ -15,6 +15,9 @@ let float: float => Js.Json.t
 @ocaml.doc(" [int n] makes a JSON number of the [int] [n] ")
 external int: int => Js.Json.t = "%identity"
 
+@ocaml.doc(" [bigint n] makes a JSON number of the [bigint] [n] in the format of a string ")
+let bigint: bigint => Js.Json.t
+
 external int32: int32 => Js.Json.t = "%identity"
 /* [int32 n] makes a JSON number of the [int32] [n] */
 

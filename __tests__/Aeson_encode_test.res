@@ -60,7 +60,17 @@ let _ = {
 
   test("int", () => expect(int(23))->toEqual(Obj.magic(23)))
 
-  // bigint tests removed - not implemented
+  test("bigint", () =>
+    expect(bigint(BigInt.fromString("38293829382888882338928")))->toEqual(
+      Obj.magic("38293829382888882338928"),
+    )
+  )
+
+  test("bigint", () =>
+    expect(bigint(BigInt.fromString("-38293829382888882338928")))->toEqual(
+      Obj.magic("-38293829382888882338928"),
+    )
+  )
 
   test("bool", () => expect(bool(true))->toEqual(Obj.magic(true)))
 

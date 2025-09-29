@@ -121,7 +121,22 @@ let () = {
     Test.throws(int, list{Bool, Float, String, Null, Array, Object})
   })
 
-  // bigint tests removed - not implemented
+  describe("bigint", () => {
+    open Aeson
+    open! Decode
+
+    test("23", () => expect(bigint(Encode.bigint(BigInt.fromInt(23))))->toEqual(BigInt.fromInt(23)))
+
+    test("26423", () =>
+      expect(bigint(Encode.bigint(BigInt.fromInt(26423))))->toEqual(BigInt.fromInt(26423))
+    )
+
+    test("-1289848928492483456726423", () =>
+      expect(Encode.bigint(BigInt.fromString("-1289848928492483456726423"))->bigint)->toEqual(
+        BigInt.fromString("-1289848928492483456726423"),
+      )
+    )
+  })
 
   describe("string", () => {
     open Aeson
