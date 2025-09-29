@@ -86,44 +86,6 @@ let int32 = (json: Js.Json.t): int32 => {
   }
 }
 
-let uint8 = (json: Js.Json.t): U.UInt8.t => {
-  let f = float(json)
-  if _isInteger(f) {
-    U.UInt8.ofInt((Obj.magic((f: float)): int))
-  } else {
-    raise(DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
-  }
-}
-
-let uint16 = (json: Js.Json.t): U.UInt16.t => {
-  let f = float(json)
-  if _isInteger(f) {
-    U.UInt16.ofInt((Obj.magic((f: float)): int))
-  } else {
-    raise(DecodeError("Expected int, got " ++ Js.Json.stringify(json)))
-  }
-}
-
-let uint32 = (json: Js.Json.t): U.UInt32.t => {
-  switch int(json) {
-  | v => U.UInt32.ofInt(v)
-  | exception DecodeError(_) =>
-    raise(DecodeError("Expected U.UInt32.t, got " ++ Js.Json.stringify(json)))
-  }
-}
-
-let uint64 = (json: Js.Json.t): U.UInt64.t => {
-  if Js.typeof(json) == "string" {
-    let source = (Obj.magic((json: Js.Json.t)): string)
-    switch U.UInt64.ofString(source) {
-    | Some(s) => s
-    | None => raise(DecodeError("Expected U.UInt64.t, got " ++ source))
-    }
-  } else {
-    raise(DecodeError("Expected U.UInt64.t, got " ++ Js.Json.stringify(json)))
-  }
-}
-
 let int64_of_string = (json: Js.Json.t): int64 =>
   if Js.typeof(json) == "string" {
     let source = (Obj.magic((json: Js.Json.t)): string)
@@ -141,19 +103,6 @@ let string = json =>
     (Obj.magic((json: Js.Json.t)): string)
   } else {
     DecodeError("Expected string, got " ++ Js.Json.stringify(json))->raise
-  }
-
-let bigint = json =>
-  if Js.typeof(json) == "string" {
-    let source: string = Obj.magic((json: Js.Json.t))
-
-    try {
-      BigInt.fromString(source)
-    } catch {
-    | Exn.Error(_error) => DecodeError("Expected bigint, got " ++ source)->raise
-    }
-  } else {
-    DecodeError("Expected bigint, got " ++ Js.Json.stringify(json))->raise
   }
 
 let date = json =>

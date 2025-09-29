@@ -17,8 +17,7 @@
     }
   ],
   "bs-dependencies": [
-    "@rescript/core",
-    "bs-zarith"
+    "@rescript/core"
   ],
   "bs-dev-dependencies": [
     "@glennsl/rescript-jest"
