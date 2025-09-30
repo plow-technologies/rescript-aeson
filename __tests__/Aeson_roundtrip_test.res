@@ -62,55 +62,55 @@ let decodePairKeyMap = json =>
   }
 
 let () = {
-  describe("encodeArray", () => {
-    test("encodeArray with int", () =>
+  describe("array", () => {
+    test("array with int", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.int, j), json),
-        arr => Aeson.Encode.encodeArray(Aeson.Encode.int, arr),
+        arr => Aeson.Encode.array(Aeson.Encode.int, arr),
         Js.Json.parseExn("[1, 2, 3, 4, 5]"),
       )
     )
 
-    test("encodeArray with string", () =>
+    test("array with string", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.string, j), json),
-        arr => Aeson.Encode.encodeArray(Aeson.Encode.string, arr),
+        arr => Aeson.Encode.array(Aeson.Encode.string, arr),
         Js.Json.parseExn(`["hello", "world", "test"]`),
       )
     )
 
-    test("encodeArray with bool", () =>
+    test("array with bool", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.bool, j), json),
-        arr => Aeson.Encode.encodeArray(Aeson.Encode.bool, arr),
+        arr => Aeson.Encode.array(Aeson.Encode.bool, arr),
         Js.Json.parseExn("[true, false, true, true, false]"),
       )
     )
 
-    test("encodeArray with float", () =>
+    test("array with float", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.float, j), json),
-        arr => Aeson.Encode.encodeArray(Aeson.Encode.float, arr),
+        arr => Aeson.Encode.array(Aeson.Encode.float, arr),
         Js.Json.parseExn("[1.5, 2.7, 3.14159, 42.0]"),
       )
     )
 
-    test("encodeArray with nested arrays", () =>
+    test("array with nested arrays", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j =>
           Aeson.Decode.array(json => Aeson.Decode.array(Aeson.Decode.int, json), j), json),
-        arr => Aeson.Encode.encodeArray(innerArr =>
-          Aeson.Encode.encodeArray(Aeson.Encode.int, innerArr), arr),
+        arr => Aeson.Encode.array(innerArr =>
+          Aeson.Encode.array(Aeson.Encode.int, innerArr), arr),
         Js.Json.parseExn("[[1, 2], [3, 4, 5], [], [6]]"),
       )
     )
 
-    test("encodeArray with objects", () =>
+    test("array with objects", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j =>
           Aeson.Decode.array(json =>
             Aeson.Decode.dict(Aeson.Decode.string, json), j), json),
-        arr => Aeson.Encode.encodeArray(dict =>
+        arr => Aeson.Encode.array(dict =>
           Aeson.Encode.object_(
             Js.Dict.entries(dict)->Array.map(((k, v)) => (k, Aeson.Encode.string(v)))->List.fromArray
           ), arr),
@@ -118,21 +118,21 @@ let () = {
       )
     )
 
-    test("encodeArray with optional values", () =>
+    test("array with optional values", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j =>
           Aeson.Decode.array(json =>
             Aeson.Decode.optional(Aeson.Decode.int, json), j), json),
-        arr => Aeson.Encode.encodeArray(val =>
+        arr => Aeson.Encode.array(val =>
           Aeson.Encode.nullable(Aeson.Encode.int, val), arr),
         Js.Json.parseExn("[1, null, 3, null, 5]"),
       )
     )
 
-    test("empty encodeArray", () =>
+    test("empty array", () =>
       jsonRoundtripSpec(
         json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.int, j), json),
-        arr => Aeson.Encode.encodeArray(Aeson.Encode.int, arr),
+        arr => Aeson.Encode.array(Aeson.Encode.int, arr),
         Js.Json.parseExn("[]"),
       )
     )

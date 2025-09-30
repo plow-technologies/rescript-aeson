@@ -176,7 +176,7 @@ let _ = {
     )
   )
 
-  test("array int", () => expect(array(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3])))
+  test("jsonArray int", () => expect(jsonArray(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3])))
 
   test("list int", () => expect(list(int, list{1, 2, 3}))->toEqual(Obj.magic([1, 2, 3])))
 

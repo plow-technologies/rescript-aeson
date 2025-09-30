@@ -44,16 +44,16 @@ let date = (d): Js.Json.t => string(Js.String.replace(".000Z", "Z", Js_date.toIS
 
 let object_ = (props): Js.Json.t => dict(Js.Dict.fromList(props))
 
-external array: array<Js.Json.t> => Js.Json.t = "%identity"
+external jsonArray: array<Js.Json.t> => Js.Json.t = "%identity"
 
-let encodeArray = (encode, a) =>
-  array(Array.map(a, x => encode(x)))
+let array = (encode, a) =>
+  jsonArray(Array.map(a, x => encode(x)))
 
-let list = (encode, l) => array(List.toArray(List.map(l, x => encode(x))))
+let list = (encode, l) => jsonArray(List.toArray(List.map(l, x => encode(x))))
 
 let pair = (encodeT0, encodeT1, tuple) => {
   let (t0, t1) = tuple
-  array([encodeT0(t0), encodeT1(t1)])
+  jsonArray([encodeT0(t0), encodeT1(t1)])
 }
 
 let tuple2 = pair
@@ -85,27 +85,27 @@ let beltMapString = (encodeValue, obj) =>
 
 let tuple3 = (encodeT0, encodeT1, encodeT2, tuple) => {
   let (t0, t1, t2) = tuple
-  array([encodeT0(t0), encodeT1(t1), encodeT2(t2)])
+  jsonArray([encodeT0(t0), encodeT1(t1), encodeT2(t2)])
 }
 
 let tuple4 = (encodeT0, encodeT1, encodeT2, encodeT3, tuple) => {
   let (t0, t1, t2, t3) = tuple
-  array([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3)])
+  jsonArray([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3)])
 }
 
 let tuple5 = (encodeT0, encodeT1, encodeT2, encodeT3, encodeT4, tuple) => {
   let (t0, t1, t2, t3, t4) = tuple
-  array([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3), encodeT4(t4)])
+  jsonArray([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3), encodeT4(t4)])
 }
 
 let tuple6 = (encodeT0, encodeT1, encodeT2, encodeT3, encodeT4, encodeT5, tuple) => {
   let (t0, t1, t2, t3, t4, t5) = tuple
-  array([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3), encodeT4(t4), encodeT5(t5)])
+  jsonArray([encodeT0(t0), encodeT1(t1), encodeT2(t2), encodeT3(t3), encodeT4(t4), encodeT5(t5)])
 }
 
 let tuple7 = (encodeT0, encodeT1, encodeT2, encodeT3, encodeT4, encodeT5, encodeT6, tuple) => {
   let (t0, t1, t2, t3, t4, t5, t6) = tuple
-  array([
+  jsonArray([
     encodeT0(t0),
     encodeT1(t1),
     encodeT2(t2),
@@ -128,7 +128,7 @@ let tuple8 = (
   tuple,
 ) => {
   let (t0, t1, t2, t3, t4, t5, t6, t7) = tuple
-  array([
+  jsonArray([
     encodeT0(t0),
     encodeT1(t1),
     encodeT2(t2),
@@ -153,7 +153,7 @@ let tuple9 = (
   tuple,
 ) => {
   let (t0, t1, t2, t3, t4, t5, t6, t7, t8) = tuple
-  array([
+  jsonArray([
     encodeT0(t0),
     encodeT1(t1),
     encodeT2(t2),
@@ -180,7 +180,7 @@ let tuple10 = (
   tuple,
 ) => {
   let (t0, t1, t2, t3, t4, t5, t6, t7, t8, t9) = tuple
-  array([
+  jsonArray([
     encodeT0(t0),
     encodeT1(t1),
     encodeT2(t2),
@@ -206,7 +206,7 @@ let either = (encodeL, encodeR, e) =>
   | Aeson_compatibility.Either.Right(r) => object_(list{("Right", encodeR(r))})
   }
 
-let singleEnumerator = _x => array([])
+let singleEnumerator = _x => jsonArray([])
 
 external stringArray: array<string> => Js.Json.t = "%identity"
 external numberArray: array<float> => Js.Json.t = "%identity"

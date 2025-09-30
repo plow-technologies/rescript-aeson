@@ -21,7 +21,7 @@ module Test = {
     | Int => test(prefix ++ "int", () => expectFn(decoder, Encode.int(23))->toThrow)
     | String => test(prefix ++ "string", () => expectFn(decoder, Encode.string("test"))->toThrow)
     | Null => test(prefix ++ "null", () => expectFn(decoder, Encode.null)->toThrow)
-    | Array => test(prefix ++ "array", () => expectFn(decoder, Encode.array([]))->toThrow)
+    | Array => test(prefix ++ "array", () => expectFn(decoder, Encode.jsonArray([]))->toThrow)
     | Object => test(prefix ++ "object", () => expectFn(decoder, Encode.object_(list{}))->toThrow)
     | Bool => test(prefix ++ "bool", () => expectFn(decoder, Encode.bool(true))->toThrow)
     }
@@ -195,7 +195,7 @@ let () = {
     open Aeson
     open! Decode
 
-    test("array", () => expect(array(int, Encode.array([])))->toEqual([]))
+    test("array", () => expect(array(int, Encode.jsonArray([])))->toEqual([]))
 
     test("array bool", () =>
       expect(array(bool, Js.Json.parseExn(` [true, false, true] `)))->toEqual([true, false, true])
@@ -226,7 +226,7 @@ let () = {
     open Aeson
     open! Decode
 
-    test("array", () => expect(list(int, Encode.array([])))->toEqual(list{}))
+    test("array", () => expect(list(int, Encode.jsonArray([])))->toEqual(list{}))
 
     test("list bool", () =>
       expect(list(bool, Js.Json.parseExn(` [true, false, true] `)))->toEqual(list{
@@ -426,7 +426,7 @@ let () = {
     open! Decode
 
     test("singleEnumerator", () =>
-      expect(singleEnumerator(Test.SingleEnumerator, Encode.array([])))->toEqual(
+      expect(singleEnumerator(Test.SingleEnumerator, Encode.jsonArray([])))->toEqual(
         Test.SingleEnumerator,
       )
     )
@@ -639,7 +639,7 @@ let () = {
 
     test("string -> int", () => expect(optional(int, Encode.string("test")))->toEqual(None))
     test("null -> int", () => expect(optional(int, Encode.null))->toEqual(None))
-    test("array -> int", () => expect(optional(int, Encode.array([])))->toEqual(None))
+    test("array -> int", () => expect(optional(int, Encode.jsonArray([])))->toEqual(None))
     test("object -> int", () => expect(optional(int, Encode.object_(list{})))->toEqual(None))
 
     test("bool -> bool ", () => expect(optional(bool, Encode.bool(true)))->toEqual(Some(true)))
@@ -770,7 +770,7 @@ let () = {
     test("int", () => expect(withDefault(0, int, Encode.int(23)))->toEqual(23))
     test("string", () => expect(withDefault(0, int, Encode.string("test")))->toEqual(0))
     test("null", () => expect(withDefault(0, int, Encode.null))->toEqual(0))
-    test("array", () => expect(withDefault(0, int, Encode.array([])))->toEqual(0))
+    test("array", () => expect(withDefault(0, int, Encode.jsonArray([])))->toEqual(0))
     test("object", () => expect(withDefault(0, int, Encode.object_(list{})))->toEqual(0))
   })
 

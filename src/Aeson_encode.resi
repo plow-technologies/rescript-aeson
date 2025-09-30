@@ -35,8 +35,8 @@ external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 @ocaml.doc(" [object_ props] makes a JSON objet of the [props] list of properties ")
 let object_: list<(string, Js.Json.t)> => Js.Json.t
 
-@ocaml.doc(" [array a] makes a JSON array of the [Js.Json.t array] [a] ")
-external array: array<Js.Json.t> => Js.Json.t = "%identity"
+@ocaml.doc(" [jsonArray a] makes a JSON array of the [Js.Json.t array] [a] ")
+external jsonArray: array<Js.Json.t> => Js.Json.t = "%identity"
 
 @ocaml.doc(" [optional encoder a] returns the encoded value in Some, or null if Nothing ")
 let optional: (encoder<'a>, option<'a>) => Js.Json.t
@@ -62,8 +62,8 @@ let beltMapInt: (encoder<'v>, Belt.Map.Int.t<'v>) => Js.Json.t
 @ocaml.doc(" [beltMapString v m] returns the encoded value of a Belt.Map.String.t(v) ")
 let beltMapString: (encoder<'v>, Belt.Map.String.t<'v>) => Js.Json.t
 
-@ocaml.doc(" [encodeArray encoder a] makes a JSON array of the [array] [a] using the given [encoder] ")
-let encodeArray: (encoder<'a>, array<'a>) => Js.Json.t
+@ocaml.doc(" [array encoder a] makes a JSON array of the [array] [a] using the given [encoder] ")
+let array: (encoder<'a>, array<'a>) => Js.Json.t
 
 @ocaml.doc(" [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] ")
 let list: (encoder<'a>, list<'a>) => Js.Json.t
