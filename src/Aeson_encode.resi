@@ -62,6 +62,9 @@ let beltMapInt: (encoder<'v>, Belt.Map.Int.t<'v>) => Js.Json.t
 @ocaml.doc(" [beltMapString v m] returns the encoded value of a Belt.Map.String.t(v) ")
 let beltMapString: (encoder<'v>, Belt.Map.String.t<'v>) => Js.Json.t
 
+@ocaml.doc(" [encodeArray encoder a] makes a JSON array of the [array] [a] using the given [encoder] ")
+let encodeArray: (encoder<'a>, array<'a>) => Js.Json.t
+
 @ocaml.doc(" [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] ")
 let list: (encoder<'a>, list<'a>) => Js.Json.t
 

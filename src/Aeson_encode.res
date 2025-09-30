@@ -46,6 +46,9 @@ let object_ = (props): Js.Json.t => dict(Js.Dict.fromList(props))
 
 external array: array<Js.Json.t> => Js.Json.t = "%identity"
 
+let encodeArray = (encode, a) =>
+  array(Array.map(a, x => encode(x)))
+
 let list = (encode, l) => array(List.toArray(List.map(l, x => encode(x))))
 
 let pair = (encodeT0, encodeT1, tuple) => {
