@@ -136,6 +136,25 @@ let () = {
         BigInt.fromString("-1289848928492483456726423"),
       )
     )
+
+    // Test failure cases
+    test("invalid string should throw", () =>
+      expect(() => bigint(Encode.string("not-a-number")))->toThrow
+    )
+
+    test("float string should throw", () =>
+      expect(() => bigint(Encode.string("123.45")))->toThrow
+    )
+
+    test("string with text should throw", () =>
+      expect(() => bigint(Encode.string("123abc")))->toThrow
+    )
+
+    test("string with decimal point should throw", () =>
+      expect(() => bigint(Encode.string("123.0")))->toThrow
+    )
+
+    Test.throws(bigint, list{Bool, Float, Int, Null, Array, Object})
   })
 
   describe("string", () => {
