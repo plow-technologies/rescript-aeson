@@ -32,7 +32,7 @@ let withDefault: (Js.Json.t, encoder<'a>, option<'a>) => Js.Json.t
 @ocaml.doc(" [dict d] makes a JSON object of the [Js.Dict.t] [d] ")
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 
-@ocaml.doc(" [object_ props] makes a JSON objet of the [props] list of properties ")
+@ocaml.doc(" [object_ props] makes a JSON object of the [props] list of properties ")
 let object_: list<(string, Js.Json.t)> => Js.Json.t
 
 @ocaml.doc(" [jsonArray a] makes a JSON array of the [Js.Json.t array] [a] ")
