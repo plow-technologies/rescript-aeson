@@ -178,6 +178,34 @@ let _ = {
 
   test("jsonArray int", () => expect(jsonArray(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3])))
 
+  test("array int", () => expect(array(int, [1, 2, 3]))->toEqual(Obj.magic([1, 2, 3])))
+
+  test("array string", () =>
+    expect(array(string, ["foo", "bar", "baz"]))->toEqual(Obj.magic(["foo", "bar", "baz"]))
+  )
+
+  test("array bool", () =>
+    expect(array(bool, [true, false, true]))->toEqual(Obj.magic([true, false, true]))
+  )
+
+  test("array float", () =>
+    expect(array(float, [1.5, 2.7, 3.14]))->toEqual(Obj.magic([1.5, 2.7, 3.14]))
+  )
+
+  test("array empty", () =>
+    expect(array(int, []))->toEqual(Obj.magic([]))
+  )
+
+  test("array nullable", () => {
+    let result = array(v => nullable(int, v), [Some(1), None, Some(3)])
+    let expected = Js.Json.parseExn(`[1, null, 3]`)
+    expect(result)->toEqual(expected)
+  })
+
+  test("array nested", () =>
+    expect(array(arr => array(int, arr), [[1, 2], [3, 4, 5]]))->toEqual(Obj.magic([[1, 2], [3, 4, 5]]))
+  )
+
   test("list int", () => expect(list(int, list{1, 2, 3}))->toEqual(Obj.magic([1, 2, 3])))
 
   test("singleEnumerator typeParameterRef0", () =>
