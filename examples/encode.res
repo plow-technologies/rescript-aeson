@@ -5,7 +5,7 @@ let _ = Js.log(Js.Json.stringify(Aeson.Encode.stringArray(["foo", "bar"])))
 
 /* prints ["foo", "bar"] */
 let _ = Js.log(
-  Js.Json.stringify(Aeson.Encode.array(Js.Array.map(Aeson.Encode.string, ["foo", "bar"]))),
+  Js.Json.stringify(Aeson.Encode.jsonArray(Js.Array.map(Aeson.Encode.string, ["foo", "bar"]))),
 )
 
 /* prints { x: 42, foo: 'bar' } */

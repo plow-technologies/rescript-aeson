@@ -15,29 +15,8 @@ let float: float => Js.Json.t
 @ocaml.doc(" [int n] makes a JSON number of the [int] [n] ")
 external int: int => Js.Json.t = "%identity"
 
-external int32: int32 => Js.Json.t = "%identity"
-/* [int32 n] makes a JSON number of the [int32] [n] */
-
-external int64_to_array: int64 => Js.Json.t = "%identity"
-/* [int64 n] makes a JSON number of the [int64] [n] in the format of [high, low] where high is signed and low is unsigned */
-
-let int64_to_string: Int64.t => Js.Json.t
-/* [int64 n] makes a JSON number of the [int64] [n] in the format of a string */
-
-let uint8: U.UInt8.t => Js.Json.t
-/* [uint8 n] makes a JSON number of the [U.UInt8.t] [n] */
-
-let uint16: U.UInt16.t => Js.Json.t
-/* [uint16 n] makes a JSON number of the [U.UInt8.t] [n] */
-
-let uint32: U.UInt32.t => Js.Json.t
-/* [uint32 n] makes a JSON number of the [U.UInt32.t] [n] in the format of a string */
-
-let uint64: U.UInt64.t => Js.Json.t
-/* [uint64 n] makes a JSON number of the [U.UInt64.t] [n] in the format of a string */
-
 @ocaml.doc(" [bigint n] makes a JSON number of the [bigint] [n] in the format of a string ")
-let bigint: BigInt.t => Js.Json.t
+let bigint: bigint => Js.Json.t
 
 @ocaml.doc(" [bool b] makes a JSON boolean of the [Js.bool] [b] ")
 external bool: bool => Js.Json.t = "%identity"
@@ -53,11 +32,11 @@ let withDefault: (Js.Json.t, encoder<'a>, option<'a>) => Js.Json.t
 @ocaml.doc(" [dict d] makes a JSON object of the [Js.Dict.t] [d] ")
 external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
 
-@ocaml.doc(" [object_ props] makes a JSON objet of the [props] list of properties ")
+@ocaml.doc(" [object_ props] makes a JSON object of the [props] list of properties ")
 let object_: list<(string, Js.Json.t)> => Js.Json.t
 
-@ocaml.doc(" [array a] makes a JSON array of the [Js.Json.t array] [a] ")
-external array: array<Js.Json.t> => Js.Json.t = "%identity"
+@ocaml.doc(" [jsonArray a] makes a JSON array of the [Js.Json.t array] [a] ")
+external jsonArray: array<Js.Json.t> => Js.Json.t = "%identity"
 
 @ocaml.doc(" [optional encoder a] returns the encoded value in Some, or null if Nothing ")
 let optional: (encoder<'a>, option<'a>) => Js.Json.t
@@ -82,6 +61,9 @@ let beltMapInt: (encoder<'v>, Belt.Map.Int.t<'v>) => Js.Json.t
 
 @ocaml.doc(" [beltMapString v m] returns the encoded value of a Belt.Map.String.t(v) ")
 let beltMapString: (encoder<'v>, Belt.Map.String.t<'v>) => Js.Json.t
+
+@ocaml.doc(" [array encoder a] makes a JSON array of the [array] [a] using the given [encoder] ")
+let array: (encoder<'a>, array<'a>) => Js.Json.t
 
 @ocaml.doc(" [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] ")
 let list: (encoder<'a>, list<'a>) => Js.Json.t

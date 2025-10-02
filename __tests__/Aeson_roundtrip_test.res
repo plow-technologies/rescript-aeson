@@ -14,9 +14,9 @@ let jsonRoundtripSpec = (decode, encode, json) => {
 
 type pairKey = PairKey((int, string))
 
-module PairKeyComparable = Belt.Id.MakeComparable({
+module PairKeyComparable = Belt.Id.MakeComparableU({
   type t = pairKey
-  let cmp = (a, b): int =>
+  let cmp = (. a, b): int =>
     switch (a, b) {
     | (PairKey(a), PairKey(b)) => compare(a, b)
     }
@@ -62,6 +62,82 @@ let decodePairKeyMap = json =>
   }
 
 let () = {
+  describe("array", () => {
+    test("array with int", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.int, j), json),
+        arr => Aeson.Encode.array(Aeson.Encode.int, arr),
+        Js.Json.parseExn("[1, 2, 3, 4, 5]"),
+      )
+    )
+
+    test("array with string", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.string, j), json),
+        arr => Aeson.Encode.array(Aeson.Encode.string, arr),
+        Js.Json.parseExn(`["hello", "world", "test"]`),
+      )
+    )
+
+    test("array with bool", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.bool, j), json),
+        arr => Aeson.Encode.array(Aeson.Encode.bool, arr),
+        Js.Json.parseExn("[true, false, true, true, false]"),
+      )
+    )
+
+    test("array with float", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.float, j), json),
+        arr => Aeson.Encode.array(Aeson.Encode.float, arr),
+        Js.Json.parseExn("[1.5, 2.7, 3.14159, 42.0]"),
+      )
+    )
+
+    test("array with nested arrays", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j =>
+          Aeson.Decode.array(json => Aeson.Decode.array(Aeson.Decode.int, json), j), json),
+        arr => Aeson.Encode.array(innerArr =>
+          Aeson.Encode.array(Aeson.Encode.int, innerArr), arr),
+        Js.Json.parseExn("[[1, 2], [3, 4, 5], [], [6]]"),
+      )
+    )
+
+    test("array with objects", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j =>
+          Aeson.Decode.array(json =>
+            Aeson.Decode.dict(Aeson.Decode.string, json), j), json),
+        arr => Aeson.Encode.array(dict =>
+          Aeson.Encode.object_(
+            Js.Dict.entries(dict)->Array.map(((k, v)) => (k, Aeson.Encode.string(v)))->List.fromArray
+          ), arr),
+        Js.Json.parseExn(`[{"name": "Alice", "role": "dev"}, {"name": "Bob", "role": "admin"}]`),
+      )
+    )
+
+    test("array with optional values", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j =>
+          Aeson.Decode.array(json =>
+            Aeson.Decode.optional(Aeson.Decode.int, json), j), json),
+        arr => Aeson.Encode.array(val =>
+          Aeson.Encode.nullable(Aeson.Encode.int, val), arr),
+        Js.Json.parseExn("[1, null, 3, null, 5]"),
+      )
+    )
+
+    test("empty array", () =>
+      jsonRoundtripSpec(
+        json => Aeson.Decode.wrapResult(j => Aeson.Decode.array(Aeson.Decode.int, j), json),
+        arr => Aeson.Encode.array(Aeson.Encode.int, arr),
+        Js.Json.parseExn("[]"),
+      )
+    )
+  })
+
   describe("Belt.Map.String.t", () =>
     test("string key map", () =>
       jsonRoundtripSpec(

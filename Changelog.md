@@ -1,5 +1,17 @@
 ## Changes
 
+### 7.0.0
+
+**BREAKING CHANGE**
+
+* Update rescript dependency 11.1.4.
+* Move bsconfig.json to rescript.json.
+* Really remove `bs-zarith` dependency. It was still a dependency in bsconfig.json.
+* Remove support for `uint8`, `uint16`, `uint32`, `uint64`, `int32`, `int64` and `int64_of_string`. Use `int` or `bigint`.
+* Update `bigint` to use `rescript-core` instead of `bs-zarith`.
+* Rename `Aeson.Encode.array` to `Aeson.Encode.jsonArray`.
+* Create new `Aeson.Encode.array` function. It takes a decoder and a json.
+
 ### 6.1.1
 * Fix expected field error not showing the expected key
 
