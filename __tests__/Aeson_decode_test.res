@@ -43,7 +43,7 @@ let decodeOnpingKey = json =>
   | x => OnpingKey(x)
   }
 
-module OnpingKeyComparable = Belt.Id.MakeComparableU({
+module OnpingKeyComparable = Belt.Id.MakeComparable({
   type t = onpingKey
   let cmp = (a, b) => compare(a, b)
 })
@@ -55,7 +55,7 @@ let decodePid = json =>
   | x => Pid(x)
   }
 
-module PidComparable = Belt.Id.MakeComparableU({
+module PidComparable = Belt.Id.MakeComparable({
   type t = pid
   let cmp = (a, b) => compare(a, b)
 })

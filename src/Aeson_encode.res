@@ -42,7 +42,7 @@ let optionalField = (fieldName, encode, optionalValue) =>
 /* Haskell aeson renders .000Z as Z */
 let date = (d): JSON.t => string(Js.String.replace(".000Z", "Z", Date.toISOString(d)))
 
-let object_ = (props): JSON.t => dict(Js.Dict.fromList(props))
+let object_ = (props): JSON.t => dict(Dict.fromArray(List.toArray(props)))
 
 external jsonArray: array<JSON.t> => JSON.t = "%identity"
 
@@ -63,9 +63,9 @@ let beltMap = (encodeKey, encodeValue, obj) =>
 let beltMap1 = (encodeKey, encodeValue, obj) => {
   let xs = Belt.Map.toArray(obj)
   let encodeKey1 = key =>
-    switch Js.Json.classify(encodeKey(key)) {
-    | JSONString(str) => str
-    | _ => JSON.stringify(encodeKey(key))
+    switch JSON.Decode.string(encodeKey(key)) {
+    | Some(str) => str
+    | None => JSON.stringify(encodeKey(key))
     }
   let xs = Array.map(xs, ((k, v)) => (encodeKey1(k), encodeValue(v)))
   object_(List.fromArray(xs))
@@ -74,7 +74,7 @@ let beltMap1 = (encodeKey, encodeValue, obj) => {
 let beltMapInt = (encodeValue, obj) =>
   object_(
     List.map(List.fromArray(Belt.Map.Int.toArray(obj)), ((k, v)) => (
-      string_of_int(k),
+      Int.toString(k),
       encodeValue(v),
     )),
   )

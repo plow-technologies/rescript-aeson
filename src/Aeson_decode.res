@@ -263,13 +263,10 @@ let tuple9 = (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth
         ninth(Array.getUnsafe(source, 8)),
       )
     } else {
-      \"@@"(
-        raise,
-        DecodeError(`Expected array of length 9, got array of length ${Int.toString(length)}`),
-      )
+      throw(DecodeError(`Expected array of length 9, got array of length ${Int.toString(length)}`))
     }
   } else {
-    \"@@"(raise, DecodeError("Expected array, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let tuple10 = (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, json) =>
@@ -290,13 +287,10 @@ let tuple10 = (first, second, third, fourth, fifth, sixth, seventh, eighth, nint
         tenth(Array.getUnsafe(source, 9)),
       )
     } else {
-      \"@@"(
-        raise,
-        DecodeError(`Expected array of length 10, got array of length ${Int.toString(length)}`),
-      )
+      throw(DecodeError(`Expected array of length 10, got array of length ${Int.toString(length)}`))
     }
   } else {
-    \"@@"(raise, DecodeError("Expected array, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let singleEnumerator = (a, json) =>
@@ -306,13 +300,10 @@ let singleEnumerator = (a, json) =>
     if length == 0 {
       a
     } else {
-      \"@@"(
-        raise,
-        DecodeError(`Expected array of length 0, got array of length ${Int.toString(length)}`),
-      )
+      throw(DecodeError(`Expected array of length 0, got array of length ${Int.toString(length)}`))
     }
   } else {
-    \"@@"(raise, DecodeError("Expected array, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let dict = (decode, json) =>
@@ -330,7 +321,7 @@ let dict = (decode, json) =>
     }
     target
   } else {
-    \"@@"(raise, DecodeError("Expected object, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let has_some = mas => {
@@ -358,19 +349,16 @@ let beltMap = (decodeKey, decodeValue, ~id, json) =>
           | Some(key) =>
             switch decodeKey(Aeson_encode.int(key)) {
             | key => key
-            | exception DecodeError(_) => \"@@"(raise, DecodeError(`Object key must be a string`))
+            | exception DecodeError(_) => throw( DecodeError(`Object key must be a string`))
             }
-          | None => \"@@"(raise, DecodeError(err))
+          | None => throw( DecodeError(err))
           }
         }
         (key, v)
       }, entries)
       Belt.Map.fromArray(entries, ~id)
     | exception DecodeError(_) =>
-      \"@@"(
-        raise,
-        DecodeError(`Expected an array of tuples or dictionary of object with string key`),
-      )
+      throw(DecodeError(`Expected an array of tuples or dictionary of object with string key`))
     }
   }
 
@@ -379,21 +367,21 @@ let beltMapInt = (decodeValue, json) =>
   | decoded_dict =>
     let arr = Array.map(Dict.toArray(decoded_dict), ((k, v)) => (Belt.Int.fromString(k), v))
     if has_some(arr) {
-      \"@@"(raise, DecodeError(`Unexpectedly received non-integer as key`))
+      throw( DecodeError(`Unexpectedly received non-integer as key`))
     } else {
       Belt.Map.Int.fromArray(
-        Array.map(Dict.toArray(decoded_dict), ((k, v)) => (int_of_string(k), v)),
+        Array.map(Dict.toArray(decoded_dict), ((k, v)) => (Belt.Option.getExn(Int.fromString(k)), v)),
       )
     }
   | exception DecodeError(_) =>
-    \"@@"(raise, DecodeError(`Expected an associative array with keys as strings`))
+    throw( DecodeError(`Expected an associative array with keys as strings`))
   }
 
 let beltMapString = (decodeValue, json) =>
   switch dict(decodeValue, json) {
   | decoded_dict => Belt.Map.String.fromArray(Dict.toArray(decoded_dict))
   | exception DecodeError(_) =>
-    \"@@"(raise, DecodeError(`Expected an associative array with keys as strings`))
+    throw( DecodeError(`Expected an associative array with keys as strings`))
   }
 
 let field = (key, decode, json) =>
@@ -403,10 +391,10 @@ let field = (key, decode, json) =>
     let dict: dict<JSON.t> = Obj.magic((json: JSON.t))
     switch Dict.get(dict, key) {
     | Some(value) => decode(value)
-    | None => \"@@"(raise, DecodeError(`Expected field '${key}'`))
+    | None => throw( DecodeError(`Expected field '${key}'`))
     }
   } else {
-    \"@@"(raise, DecodeError("Expected object, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let optionalField = (key, decode, json) =>
@@ -424,14 +412,14 @@ let optionalField = (key, decode, json) =>
     | None => None
     }
   } else {
-    \"@@"(raise, DecodeError("Expected object, got " ++ Js.Json.stringify(json)))
+    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let rec at = (key_path, decoder, json) =>
   switch key_path {
   | list{key} => field(key, decoder, json)
   | list{first, ...rest} => field(first, x => at(rest, decoder, x), json)
-  | list{} => \"@@"(raise, Invalid_argument("Expected key_path to contain at least one element"))
+  | list{} => throw( Invalid_argument("Expected key_path to contain at least one element"))
   }
 
 let optional = (decode, json) =>

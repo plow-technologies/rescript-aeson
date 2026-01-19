@@ -13,7 +13,7 @@ let encodeOnpingKey = (x: onpingKey) =>
   | OnpingKey(x) => string(x)
   }
 
-module OnpingKeyComparable = Belt.Id.MakeComparableU({
+module OnpingKeyComparable = Belt.Id.MakeComparable({
   type t = onpingKey
   let cmp = (a, b) => compare(a, b)
 })
@@ -32,7 +32,7 @@ let encodePid = (x: pid) =>
   | Pid(x) => int(x)
   }
 
-module PidComparable = Belt.Id.MakeComparableU({
+module PidComparable = Belt.Id.MakeComparable({
   type t = pid
   let cmp = (a, b) => compare(a, b)
 })
@@ -121,7 +121,7 @@ let _ = {
     let arr = [(1, "A"), (2, "B")]
     let bm: Belt.Map.Int.t<string> = Belt.Map.Int.fromArray(arr)
     expect(beltMapInt(string, bm))->toEqual(
-      Dict.fromArray(Array.map(arr, ((k, v)) => (string_of_int(k), v)))->Obj.magic,
+      Dict.fromArray(Array.map(arr, ((k, v)) => (Int.toString(k), v)))->Obj.magic,
     )
   })
 
@@ -143,36 +143,36 @@ let _ = {
   test("object_ - empty", () => expect(object_(list{}))->toEqual(Dict.make()->Obj.magic))
 
   test("object_ - simple", () =>
-    expect(object_(list{("x", int(42))}))->toEqual(Obj.magic(Js.Dict.fromList(list{("x", 42)})))
+    expect(object_(list{("x", int(42))}))->toEqual(Obj.magic(Dict.fromArray(List.toArray(list{("x", 42)}))))
   )
 
   test("object_ - option", () =>
     expect(object_(list{("x", optional(int, Some(42)))}))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("x", 42)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("x", 42)})))
     )
   )
 
   test("object_ - option Some", () =>
     expect(object_(list{("x", optional(int, Some(42)))}))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("x", 42)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("x", 42)})))
     )
   )
 
   test("object_ - option None", () =>
     expect(object_(list{("x", optional(int, None))}))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("x", null)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("x", null)})))
     )
   )
 
   test("object_ - optionalField Some", () =>
     expect(object_(optionalField("x", int, Some(42))))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("x", 42)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("x", 42)})))
     )
   )
 
   test("object_ - optionalField Some", () =>
     expect(object_(optionalField("x", int, (None: option<int>))))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{})),
+      Obj.magic(Dict.fromArray(List.toArray(list{})))
     )
   )
 
@@ -222,25 +222,25 @@ let _ = {
 
   test("result", () =>
     expect(result(string, int, Belt.Result.Error(123)))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("Error", 123)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("Error", 123)})))
     )
   )
 
   test("result", () =>
     expect(result(string, int, Belt.Result.Ok("Good")))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("Ok", "Good")})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("Ok", "Good")})))
     )
   )
 
   test("either", () =>
     expect(either(int, string, Aeson.Compatibility.Either.Left(123)))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("Left", 123)})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("Left", 123)})))
     )
   )
 
   test("either", () =>
     expect(either(int, string, Aeson.Compatibility.Either.Right("Good")))->toEqual(
-      Obj.magic(Js.Dict.fromList(list{("Right", "Good")})),
+      Obj.magic(Dict.fromArray(List.toArray(list{("Right", "Good")})))
     )
   )
 
