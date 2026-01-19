@@ -15,14 +15,14 @@ module Either = {
   @ocaml.doc(" Conversion functions ")
   let to_result = e =>
     switch e {
-    | Left(l) => Belt.Result.Error(l)
-    | Right(r) => Belt.Result.Ok(r)
+    | Left(l) => Error(l)
+    | Right(r) => Ok(r)
     }
 
   let of_result = r =>
     switch r {
-    | Belt.Result.Ok(r) => Right(r)
-    | Belt.Result.Error(l) => Left(l)
+    | Ok(r) => Right(r)
+    | Error(l) => Left(l)
     }
 
   @ocaml.doc(" Bifunctor interface ")

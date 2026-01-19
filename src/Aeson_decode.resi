@@ -388,7 +388,7 @@ a composite decoder, and is useful to decode optional JSON object fields.
 ")
 let optional: (decoder<'a>, JSON.t) => option<'a>
 
-let result: (decoder<'a>, decoder<'b>, JSON.t) => Belt.Result.t<'a, 'b>
+let result: (decoder<'a>, decoder<'b>, JSON.t) => result<'a, 'b>
 
 let either: (decoder<'l>, decoder<'r>, JSON.t) => Aeson_compatibility.Either.t<'l, 'r>
 
@@ -510,6 +510,6 @@ let map: ('a => 'b, decoder<'a>, JSON.t) => 'b
 ")
 let andThen: (('a, JSON.t) => 'b, decoder<'a>, JSON.t) => 'b
 
-let unwrapResult: Belt.Result.t<'a, string> => 'a
+let unwrapResult: result<'a, string> => 'a
 
-let wrapResult: (decoder<'a>, JSON.t) => Belt.Result.t<'a, string>
+let wrapResult: (decoder<'a>, JSON.t) => result<'a, string>

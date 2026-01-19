@@ -8,14 +8,14 @@ exception DecodeError(string)
 
 let unwrapResult = r =>
   switch r {
-  | Belt.Result.Ok(v) => v
-  | Belt.Result.Error(message) => DecodeError(message)->throw
+  | Ok(v) => v
+  | Error(message) => DecodeError(message)->throw
   }
 
 let wrapResult = (decoder, json) =>
   switch decoder(json) {
-  | v => Belt.Result.Ok(v)
-  | exception DecodeError(message) => Belt.Result.Error(message)
+  | v => Ok(v)
+  | exception DecodeError(message) => Error(message)
   }
 
 let bool = json =>
@@ -266,7 +266,7 @@ let tuple9 = (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth
       throw(DecodeError(`Expected array of length 9, got array of length ${Int.toString(length)}`))
     }
   } else {
-    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let tuple10 = (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, json) =>
@@ -290,7 +290,7 @@ let tuple10 = (first, second, third, fourth, fifth, sixth, seventh, eighth, nint
       throw(DecodeError(`Expected array of length 10, got array of length ${Int.toString(length)}`))
     }
   } else {
-    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let singleEnumerator = (a, json) =>
@@ -303,12 +303,14 @@ let singleEnumerator = (a, json) =>
       throw(DecodeError(`Expected array of length 0, got array of length ${Int.toString(length)}`))
     }
   } else {
-    throw( DecodeError("Expected array, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected array, got " ++ JSON.stringify(json)))
   }
 
 let dict = (decode, json) =>
   if (
-    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
+    Type.typeof(json) == #object &&
+      (!Array.isArray(json) &&
+      !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let source: dict<JSON.t> = Obj.magic((json: JSON.t))
     let keys = Dict.keysToArray(source)
@@ -321,7 +323,7 @@ let dict = (decode, json) =>
     }
     target
   } else {
-    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let has_some = mas => {
@@ -349,9 +351,9 @@ let beltMap = (decodeKey, decodeValue, ~id, json) =>
           | Some(key) =>
             switch decodeKey(Aeson_encode.int(key)) {
             | key => key
-            | exception DecodeError(_) => throw( DecodeError(`Object key must be a string`))
+            | exception DecodeError(_) => throw(DecodeError(`Object key must be a string`))
             }
-          | None => throw( DecodeError(err))
+          | None => throw(DecodeError(err))
           }
         }
         (key, v)
@@ -367,39 +369,46 @@ let beltMapInt = (decodeValue, json) =>
   | decoded_dict =>
     let arr = Array.map(Dict.toArray(decoded_dict), ((k, v)) => (Belt.Int.fromString(k), v))
     if has_some(arr) {
-      throw( DecodeError(`Unexpectedly received non-integer as key`))
+      throw(DecodeError(`Unexpectedly received non-integer as key`))
     } else {
       Belt.Map.Int.fromArray(
-        Array.map(Dict.toArray(decoded_dict), ((k, v)) => (Belt.Option.getExn(Int.fromString(k)), v)),
+        Array.map(Dict.toArray(decoded_dict), ((k, v)) => (
+          Belt.Option.getExn(Int.fromString(k)),
+          v,
+        )),
       )
     }
   | exception DecodeError(_) =>
-    throw( DecodeError(`Expected an associative array with keys as strings`))
+    throw(DecodeError(`Expected an associative array with keys as strings`))
   }
 
 let beltMapString = (decodeValue, json) =>
   switch dict(decodeValue, json) {
   | decoded_dict => Belt.Map.String.fromArray(Dict.toArray(decoded_dict))
   | exception DecodeError(_) =>
-    throw( DecodeError(`Expected an associative array with keys as strings`))
+    throw(DecodeError(`Expected an associative array with keys as strings`))
   }
 
 let field = (key, decode, json) =>
   if (
-    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
+    Type.typeof(json) == #object &&
+      (!Array.isArray(json) &&
+      !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let dict: dict<JSON.t> = Obj.magic((json: JSON.t))
     switch Dict.get(dict, key) {
     | Some(value) => decode(value)
-    | None => throw( DecodeError(`Expected field '${key}'`))
+    | None => throw(DecodeError(`Expected field '${key}'`))
     }
   } else {
-    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let optionalField = (key, decode, json) =>
   if (
-    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
+    Type.typeof(json) == #object &&
+      (!Array.isArray(json) &&
+      !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let dict: dict<JSON.t> = Obj.magic((json: JSON.t))
     switch Dict.get(dict, key) {
@@ -412,14 +421,14 @@ let optionalField = (key, decode, json) =>
     | None => None
     }
   } else {
-    throw( DecodeError("Expected object, got " ++ JSON.stringify(json)))
+    throw(DecodeError("Expected object, got " ++ JSON.stringify(json)))
   }
 
 let rec at = (key_path, decoder, json) =>
   switch key_path {
   | list{key} => field(key, decoder, json)
   | list{first, ...rest} => field(first, x => at(rest, decoder, x), json)
-  | list{} => throw( Invalid_argument("Expected key_path to contain at least one element"))
+  | list{} => throw(Invalid_argument("Expected key_path to contain at least one element"))
   }
 
 let optional = (decode, json) =>
@@ -432,10 +441,10 @@ let result = (decodeA, decodeB, json) =>
   switch JSON.Decode.object(json) {
   | Some(o) =>
     switch Dict.get(o, "Ok") {
-    | Some(l) => Belt.Result.Ok(decodeA(l))
+    | Some(l) => Ok(decodeA(l))
     | None =>
       switch Dict.get(o, "Error") {
-      | Some(r) => Belt.Result.Error(decodeB(r))
+      | Some(r) => Error(decodeB(r))
       | None =>
         DecodeError(
           "Expected object with a \"Ok\" key or \"Error\" key, got " ++ JSON.stringify(json),

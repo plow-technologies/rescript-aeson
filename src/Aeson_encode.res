@@ -195,8 +195,8 @@ let tuple10 = (
 
 let result = (encodeA, encodeB, e) =>
   switch e {
-  | Belt.Result.Ok(a) => object_(list{("Ok", encodeA(a))})
-  | Belt.Result.Error(b) => object_(list{("Error", encodeB(b))})
+  | Ok(a) => object_(list{("Ok", encodeA(a))})
+  | Error(b) => object_(list{("Error", encodeB(b))})
   }
 
 let either = (encodeL, encodeR, e) =>
