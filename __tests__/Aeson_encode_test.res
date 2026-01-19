@@ -15,7 +15,7 @@ let encodeOnpingKey = (x: onpingKey) =>
 
 module OnpingKeyComparable = Belt.Id.MakeComparableU({
   type t = onpingKey
-  let cmp = (. a, b) => compare(a, b)
+  let cmp = (a, b) => compare(a, b)
 })
 
 type onpingDescription = {descriptions: Belt.Map.t<onpingKey, string, OnpingKeyComparable.identity>}
@@ -34,7 +34,7 @@ let encodePid = (x: pid) =>
 
 module PidComparable = Belt.Id.MakeComparableU({
   type t = pid
-  let cmp = (. a, b) => compare(a, b)
+  let cmp = (a, b) => compare(a, b)
 })
 
 let _ = {
@@ -61,13 +61,13 @@ let _ = {
   test("int", () => expect(int(23))->toEqual(Obj.magic(23)))
 
   test("bigint", () =>
-    expect(bigint(BigInt.fromString("38293829382888882338928")))->toEqual(
+    expect(bigint(BigInt.fromStringOrThrow("38293829382888882338928")))->toEqual(
       Obj.magic("38293829382888882338928"),
     )
   )
 
   test("bigint", () =>
-    expect(bigint(BigInt.fromString("-38293829382888882338928")))->toEqual(
+    expect(bigint(BigInt.fromStringOrThrow("-38293829382888882338928")))->toEqual(
       Obj.magic("-38293829382888882338928"),
     )
   )
@@ -176,7 +176,9 @@ let _ = {
     )
   )
 
-  test("jsonArray int", () => expect(jsonArray(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3])))
+  test("jsonArray int", () =>
+    expect(jsonArray(Array.map([1, 2, 3], int)))->toEqual(Obj.magic([1, 2, 3]))
+  )
 
   test("array int", () => expect(array(int, [1, 2, 3]))->toEqual(Obj.magic([1, 2, 3])))
 
@@ -192,9 +194,7 @@ let _ = {
     expect(array(float, [1.5, 2.7, 3.14]))->toEqual(Obj.magic([1.5, 2.7, 3.14]))
   )
 
-  test("array empty", () =>
-    expect(array(int, []))->toEqual(Obj.magic([]))
-  )
+  test("array empty", () => expect(array(int, []))->toEqual(Obj.magic([])))
 
   test("array nullable", () => {
     let result = array(v => nullable(int, v), [Some(1), None, Some(3)])
@@ -203,7 +203,9 @@ let _ = {
   })
 
   test("array nested", () =>
-    expect(array(arr => array(int, arr), [[1, 2], [3, 4, 5]]))->toEqual(Obj.magic([[1, 2], [3, 4, 5]]))
+    expect(array(arr => array(int, arr), [[1, 2], [3, 4, 5]]))->toEqual(
+      Obj.magic([[1, 2], [3, 4, 5]]),
+    )
   )
 
   test("list int", () => expect(list(int, list{1, 2, 3}))->toEqual(Obj.magic([1, 2, 3])))

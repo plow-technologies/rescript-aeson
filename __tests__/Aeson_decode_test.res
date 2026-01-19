@@ -45,7 +45,7 @@ let decodeOnpingKey = json =>
 
 module OnpingKeyComparable = Belt.Id.MakeComparableU({
   type t = onpingKey
-  let cmp = (. a, b) => compare(a, b)
+  let cmp = (a, b) => compare(a, b)
 })
 
 type pid = Pid(int)
@@ -57,7 +57,7 @@ let decodePid = json =>
 
 module PidComparable = Belt.Id.MakeComparableU({
   type t = pid
-  let cmp = (. a, b) => compare(a, b)
+  let cmp = (a, b) => compare(a, b)
 })
 
 let () = {
@@ -132,9 +132,9 @@ let () = {
     )
 
     test("-1289848928492483456726423", () =>
-      expect(Encode.bigint(BigInt.fromString("-1289848928492483456726423"))->bigint)->toEqual(
-        BigInt.fromString("-1289848928492483456726423"),
-      )
+      expect(
+        Encode.bigint(BigInt.fromStringOrThrow("-1289848928492483456726423"))->bigint,
+      )->toEqual(BigInt.fromStringOrThrow("-1289848928492483456726423"))
     )
 
     // Test failure cases
@@ -142,9 +142,7 @@ let () = {
       expect(() => bigint(Encode.string("not-a-number")))->toThrow
     )
 
-    test("float string should throw", () =>
-      expect(() => bigint(Encode.string("123.45")))->toThrow
-    )
+    test("float string should throw", () => expect(() => bigint(Encode.string("123.45")))->toThrow)
 
     test("string with text should throw", () =>
       expect(() => bigint(Encode.string("123abc")))->toThrow

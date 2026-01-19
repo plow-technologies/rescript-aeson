@@ -283,10 +283,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@glennsl/rescript-jest@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.npmjs.org/@glennsl/rescript-jest/-/rescript-jest-0.11.0.tgz"
-  integrity sha512-eQLKqin80v7wviUu0ZX3zZreKkllYet3YqC1QC6Sap8tLltfBiR7U3nAA8LAkM6K+uFVsTAtOjZt6dy2TrujEQ==
+"@glennsl/rescript-jest@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@glennsl/rescript-jest/-/rescript-jest-0.13.1.tgz#5805acc743454958416a82c3c92bac33192e425b"
+  integrity sha512-c293d4xZw5sZasUptUGoOF+q0JCr+b3fXqLe++pwrVunc+l1+oxyb+35ZQ46cA29/d8uyDJw+Wi3i3Rl+aAM6A==
   dependencies:
     jest "^27.3.1"
 
@@ -507,10 +507,35 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@rescript/core@^1.2.0":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@rescript/core/-/core-1.6.1.tgz#159670c94d64a2b8236f46be2bf09a007b1ece08"
-  integrity sha512-vyb5k90ck+65Fgui+5vCja/mUfzKaK3kOPT4Z6aAJdHLH1eljEi1zKhXroCiCtpNLSWp8k4ulh1bdB5WS0hvqA==
+"@rescript/darwin-arm64@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/darwin-arm64/-/darwin-arm64-12.1.0.tgz#19b75d31e97386dabfe382a6c98653314812afe3"
+  integrity sha512-OuJMT+2h2Lp60n8ONFx1oBAAePSVkM9zl7E/EX4VD2xkQoVTPklz0BpHYOICnFJSCOOdbOhbsTBXdLpo3yvllg==
+
+"@rescript/darwin-x64@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/darwin-x64/-/darwin-x64-12.1.0.tgz#5af8767bce73e6a4b22aa96262566ddecf338795"
+  integrity sha512-r5Iv4ga+LaNq+6g9LODwZG4bwydd9UDXACP/HKxOfrP9XQCITlF/XqB1ZDJWyJOgJLZSJCd7erlG38YtB0VZKA==
+
+"@rescript/linux-arm64@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/linux-arm64/-/linux-arm64-12.1.0.tgz#3f99d6ff8fd8aa002db22fb38346ce03873090a1"
+  integrity sha512-UTZv4GTjbyQ/T5LQDfQiGcumK3SzE1K7+ug6gWpDcGZ7ALc7hCS6BVEFL/LDs8iWVwAwkK/6r456s2zRnvS7wQ==
+
+"@rescript/linux-x64@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/linux-x64/-/linux-x64-12.1.0.tgz#e8cd45418a7eebfe643ae826e0e19b13a1ad1e51"
+  integrity sha512-c0PXuBL09JRSA4nQusYbR4mW5QJrBPqxDrqvIX+M79fk3d6jQmj5x4NsBwk5BavxvmbR/JU1JjYBlSAa3h22Vg==
+
+"@rescript/runtime@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/runtime/-/runtime-12.1.0.tgz#331ad481c05efdd86b83c3ced6d182d7f30be845"
+  integrity sha512-bvr9RfvBD+JS/6foWCA4l2fLXmUXN0KGqylXQPHt09QxUghqgoCiaWVHaHSx5dOIk/jAPlGQ7zB5yVeMas/EFQ==
+
+"@rescript/win32-x64@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@rescript/win32-x64/-/win32-x64-12.1.0.tgz#8ba1b79aea58a6e46ce286f3fd1c280859bb45c2"
+  integrity sha512-nQC42QByyAbryfkbyK67iskipUqXVwTPCFrqissY4jJoP0128gg0yG6DydJnV1stXphtFdMFHtmyYE1ffG7UBg==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.6"
@@ -2096,10 +2121,18 @@ requires-port@^1.0.0:
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz"
   integrity sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==
 
-rescript@^11.1.4:
-  version "11.1.4"
-  resolved "https://registry.yarnpkg.com/rescript/-/rescript-11.1.4.tgz#9a42ebc4fc5363707e39cef5b3188160b63bee42"
-  integrity sha512-0bGU0bocihjSC6MsE3TMjHjY0EUpchyrREquLS8VsZ3ohSMD+VHUEwimEfB3kpBI1vYkw3UFZ3WD8R28guz/Vw==
+rescript@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/rescript/-/rescript-12.1.0.tgz#29754fa801fa8f79a94b0fe4783ff963391be4f1"
+  integrity sha512-n/B43wzIEKV4OmlrWbrlQOL4zZaz0RM/Cc8PG2YvhQvQDW7nscHJliDq1AGeVwHoMX68MeaKKzLDOMOMU9Z6FA==
+  dependencies:
+    "@rescript/runtime" "12.1.0"
+  optionalDependencies:
+    "@rescript/darwin-arm64" "12.1.0"
+    "@rescript/darwin-x64" "12.1.0"
+    "@rescript/linux-arm64" "12.1.0"
+    "@rescript/linux-x64" "12.1.0"
+    "@rescript/win32-x64" "12.1.0"
 
 resolve-cwd@^3.0.0:
   version "3.0.0"

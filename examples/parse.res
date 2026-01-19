@@ -7,4 +7,4 @@ let arrayOfInts = str => {
 }
 
 /* prints `[3, 2, 1]` */
-let _ = Js.log(arrayOfInts("[1, 2, 3]") |> Js.Array.reverseInPlace)
+let _ = Js.log(arrayOfInts("[1, 2, 3]")->Js.Array.reverseInPlace)
