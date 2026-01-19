@@ -32,4 +32,4 @@ let data = ` {
   "end":   { "x": 5.3, "y": 3.8 }
 } `
 
-let _ = Js.log(Decode.line(Js.Json.parseExn(data)))
+let _ = Console.log(Decode.line(JSON.parseOrThrow(data)))

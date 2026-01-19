@@ -1,17 +1,17 @@
 /* Encoding a JSON data structure using Aeson.Encode */
 
 /* prints ["foo", "bar"] */
-let _ = Js.log(Js.Json.stringify(Aeson.Encode.stringArray(["foo", "bar"])))
+let _ = Console.log(JSON.stringify(Aeson.Encode.stringArray(["foo", "bar"])))
 
 /* prints ["foo", "bar"] */
-let _ = Js.log(
-  Js.Json.stringify(Aeson.Encode.jsonArray(Js.Array.map(Aeson.Encode.string, ["foo", "bar"]))),
+let _ = Console.log(
+  JSON.stringify(Aeson.Encode.jsonArray(Js.Array.map(Aeson.Encode.string, ["foo", "bar"]))),
 )
 
 /* prints { x: 42, foo: 'bar' } */
 let _ = {
   open Aeson.Encode
-  Js.log(object_(list{("x", int(42)), ("foo", string("bar"))}))
+  Console.log(object_(list{("x", int(42)), ("foo", string("bar"))}))
 }
 
 /* Advanced example: encode a record */
@@ -51,4 +51,4 @@ let data = {
   thickness: Some(2),
 }
 
-let _ = Js.log(Encode.line(data))
+let _ = Console.log(Encode.line(data))

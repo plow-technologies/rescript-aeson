@@ -78,28 +78,28 @@ let () = {
     test("float", () => expect(float(Encode.float(1.23)))->toEqual(1.23))
     test("int", () => expect(float(Encode.int(23)))->toEqual(23.))
     test("float", () =>
-      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("Infinity"))))->toEqual(
-        Js.Float.fromString("Infinity"),
+      expect(Aeson.Decode.float(Aeson.Encode.float(Float.parseFloat("Infinity"))))->toEqual(
+        Float.parseFloat("Infinity"),
       )
     )
     test("float", () =>
-      expect(Aeson.Decode.float(Aeson.Encode.float(Js.Float.fromString("-Infinity"))))->toEqual(
-        Js.Float.fromString("-Infinity"),
+      expect(Aeson.Decode.float(Aeson.Encode.float(Float.parseFloat("-Infinity"))))->toEqual(
+        Float.parseFloat("-Infinity"),
       )
     )
     test("float", () =>
       expect(Aeson.Decode.float(Aeson.Encode.string("Infinity")))->toEqual(
-        Js.Float.fromString("Infinity"),
+        Float.parseFloat("Infinity"),
       )
     )
     test("float", () =>
       expect(Aeson.Decode.float(Aeson.Encode.string("+Infinity")))->toEqual(
-        Js.Float.fromString("Infinity"),
+        Float.parseFloat("Infinity"),
       )
     )
     test("float", () =>
       expect(Aeson.Decode.float(Aeson.Encode.string("-Infinity")))->toEqual(
-        Js.Float.fromString("-Infinity"),
+        Float.parseFloat("-Infinity"),
       )
     )
 
@@ -168,7 +168,7 @@ let () = {
     open Aeson
     open! Decode
     let nowString = "2017-12-08T06:03:22Z"
-    let now = Js_date.fromString(nowString)
+    let now = Date.fromString(nowString)
 
     test("date", () => expect(date(Encode.date(now)))->toEqual(now))
   })
@@ -177,17 +177,15 @@ let () = {
     open Aeson
     open! Decode
 
-    test("int -> int", () => expect(nullable(int, Encode.int(23)))->toEqual(Js.Null.return(23)))
-    test("null -> int", () => expect(nullable(int, Encode.null))->toEqual(Js.null))
+    test("int -> int", () => expect(nullable(int, Encode.int(23)))->toEqual(Null.make(23)))
+    test("null -> int", () => expect(nullable(int, Encode.null))->toEqual(null))
 
-    test("bool -> bool", () =>
-      expect(nullable(bool, Encode.bool(true)))->toEqual(Js.Null.return(true))
-    )
+    test("bool -> bool", () => expect(nullable(bool, Encode.bool(true)))->toEqual(Null.make(true)))
     test("float -> float", () =>
-      expect(nullable(float, Encode.float(1.23)))->toEqual(Js.Null.return(1.23))
+      expect(nullable(float, Encode.float(1.23)))->toEqual(Null.make(1.23))
     )
     test("string -> string", () =>
-      expect(nullable(string, Encode.string("test")))->toEqual(Js.Null.return("test"))
+      expect(nullable(string, Encode.string("test")))->toEqual(Null.make("test"))
     )
     // test("null -> null", () => expect(nullable(nullAs(Js.null), Encode.null))->toEqual(Js.null))
 
@@ -201,7 +199,7 @@ let () = {
 
     test("as 0 - null", () => expect(nullAs(0, Encode.null))->toEqual(0))
 
-    test("as Js.null", () => expect(nullAs(Js.null, Encode.null))->toEqual(Js.null))
+    test("as Js.null", () => expect(nullAs(null, Encode.null))->toEqual(null))
     test("as None", () => expect(nullAs(None, Encode.null))->toEqual(None))
     test("as Some _", () => expect(nullAs(Some("foo"), Encode.null))->toEqual(Some("foo")))
 
@@ -215,25 +213,27 @@ let () = {
     test("array", () => expect(array(int, Encode.jsonArray([])))->toEqual([]))
 
     test("array bool", () =>
-      expect(array(bool, Js.Json.parseExn(` [true, false, true] `)))->toEqual([true, false, true])
+      expect(array(bool, JSON.parseOrThrow(` [true, false, true] `)))->toEqual([true, false, true])
     )
 
     test("array float", () =>
-      expect(array(float, Js.Json.parseExn(` [1, 2, 3] `)))->toEqual([1., 2., 3.])
+      expect(array(float, JSON.parseOrThrow(` [1, 2, 3] `)))->toEqual([1., 2., 3.])
     )
-    test("array int", () => expect(array(int, Js.Json.parseExn(` [1, 2, 3] `)))->toEqual([1, 2, 3]))
+    test("array int", () =>
+      expect(array(int, JSON.parseOrThrow(` [1, 2, 3] `)))->toEqual([1, 2, 3])
+    )
     test("array string", () =>
-      expect(array(string, Js.Json.parseExn(` ["a", "b", "c"] `)))->toEqual(["a", "b", "c"])
+      expect(array(string, JSON.parseOrThrow(` ["a", "b", "c"] `)))->toEqual(["a", "b", "c"])
     )
     test("array nullAs", () =>
-      expect(array(x => nullAs(Js.null, x), Js.Json.parseExn(` [null, null, null] `)))->toEqual([
-        Js.null,
-        Js.null,
-        Js.null,
+      expect(array(x => nullAs(null, x), JSON.parseOrThrow(` [null, null, null] `)))->toEqual([
+        null,
+        null,
+        null,
       ])
     )
     test("array int -> array bool", () =>
-      toThrow(expectFn(x => array(bool, x), Js.Json.parseExn(` [1, 2, 3] `)))
+      toThrow(expectFn(x => array(bool, x), JSON.parseOrThrow(` [1, 2, 3] `)))
     )
 
     Test.throws(x => array(int, x), list{Bool, Float, Int, String, Null, Object})
@@ -246,7 +246,7 @@ let () = {
     test("array", () => expect(list(int, Encode.jsonArray([])))->toEqual(list{}))
 
     test("list bool", () =>
-      expect(list(bool, Js.Json.parseExn(` [true, false, true] `)))->toEqual(list{
+      expect(list(bool, JSON.parseOrThrow(` [true, false, true] `)))->toEqual(list{
         true,
         false,
         true,
@@ -254,23 +254,23 @@ let () = {
     )
 
     test("list float", () =>
-      expect(list(float, Js.Json.parseExn(` [1, 2, 3] `)))->toEqual(list{1., 2., 3.})
+      expect(list(float, JSON.parseOrThrow(` [1, 2, 3] `)))->toEqual(list{1., 2., 3.})
     )
     test("list int", () =>
-      expect(list(int, Js.Json.parseExn(` [1, 2, 3] `)))->toEqual(list{1, 2, 3})
+      expect(list(int, JSON.parseOrThrow(` [1, 2, 3] `)))->toEqual(list{1, 2, 3})
     )
     test("list string", () =>
-      expect(list(string, Js.Json.parseExn(` ["a", "b", "c"] `)))->toEqual(list{"a", "b", "c"})
+      expect(list(string, JSON.parseOrThrow(` ["a", "b", "c"] `)))->toEqual(list{"a", "b", "c"})
     )
     test("list nullAs", () =>
-      expect(list(x => nullAs(Js.null, x), Js.Json.parseExn(` [null, null, null] `)))->toEqual(list{
-        Js.null,
-        Js.null,
-        Js.null,
+      expect(list(x => nullAs(null, x), JSON.parseOrThrow(` [null, null, null] `)))->toEqual(list{
+        null,
+        null,
+        null,
       })
     )
     test("array int -> list bool", () =>
-      toThrow(expectFn(x => list(bool, x), Js.Json.parseExn(` [1, 2, 3] `)))
+      toThrow(expectFn(x => list(bool, x), JSON.parseOrThrow(` [1, 2, 3] `)))
     )
 
     Test.throws(x => list(int, x), list{Bool, Float, Int, String, Null, Object})
@@ -281,20 +281,22 @@ let () = {
     open! Decode
 
     test("pair string int", () =>
-      expect(pair(string, int, Js.Json.parseExn(` ["a", 3] `)))->toEqual(("a", 3))
+      expect(pair(string, int, JSON.parseOrThrow(` ["a", 3] `)))->toEqual(("a", 3))
     )
     test("pair int int", () =>
-      expect(pair(int, int, Js.Json.parseExn(` [4, 3] `)))->toEqual((4, 3))
+      expect(pair(int, int, JSON.parseOrThrow(` [4, 3] `)))->toEqual((4, 3))
     )
-    test("pair missing", () => toThrow(expectFn(x => pair(int, int, x), Js.Json.parseExn(` [4] `))))
+    test("pair missing", () =>
+      toThrow(expectFn(x => pair(int, int, x), JSON.parseOrThrow(` [4] `)))
+    )
     test("pair too large", () =>
-      toThrow(expectFn(x => pair(int, int, x), Js.Json.parseExn(` [3, 4, 5] `)))
+      toThrow(expectFn(x => pair(int, int, x), JSON.parseOrThrow(` [3, 4, 5] `)))
     )
     test("pair bad left type", () =>
-      toThrow(expectFn(x => pair(int, int, x), Js.Json.parseExn(` ["3", 4] `)))
+      toThrow(expectFn(x => pair(int, int, x), JSON.parseOrThrow(` ["3", 4] `)))
     )
     test("pair bad right type", () =>
-      toThrow(expectFn(x => pair(string, string, x), Js.Json.parseExn(` ["3", 4] `)))
+      toThrow(expectFn(x => pair(string, string, x), JSON.parseOrThrow(` ["3", 4] `)))
     )
   })
 
@@ -303,7 +305,7 @@ let () = {
     open! Decode
 
     test("tuple3 string int string", () =>
-      expect(tuple3(string, int, string, Js.Json.parseExn(` ["a", 3, "b"] `)))->toEqual((
+      expect(tuple3(string, int, string, JSON.parseOrThrow(` ["a", 3, "b"] `)))->toEqual((
         "a",
         3,
         "b",
@@ -317,7 +319,7 @@ let () = {
 
     test("tuple4 string int string bool", () =>
       expect(
-        tuple4(string, int, string, bool, Js.Json.parseExn(` ["a", 3, "b", true] `)),
+        tuple4(string, int, string, bool, JSON.parseOrThrow(` ["a", 3, "b", true] `)),
       )->toEqual(("a", 3, "b", true))
     )
   })
@@ -328,7 +330,7 @@ let () = {
 
     test("tuple5 string int string bool int", () =>
       expect(
-        tuple5(string, int, string, bool, int, Js.Json.parseExn(` ["a", 3, "b", true, 98] `)),
+        tuple5(string, int, string, bool, int, JSON.parseOrThrow(` ["a", 3, "b", true, 98] `)),
       )->toEqual(("a", 3, "b", true, 98))
     )
   })
@@ -346,7 +348,7 @@ let () = {
           bool,
           int,
           string,
-          Js.Json.parseExn(` ["a", 3, "b", true, 98, "sleepy"] `),
+          JSON.parseOrThrow(` ["a", 3, "b", true, 98, "sleepy"] `),
         ),
       )->toEqual(("a", 3, "b", true, 98, "sleepy"))
     )
@@ -366,7 +368,7 @@ let () = {
           int,
           string,
           int,
-          Js.Json.parseExn(` ["a", 3, "b", true, 98, "sleepy", 100] `),
+          JSON.parseOrThrow(` ["a", 3, "b", true, 98, "sleepy", 100] `),
         ),
       )->toEqual(("a", 3, "b", true, 98, "sleepy", 100))
     )
@@ -387,7 +389,7 @@ let () = {
           string,
           int,
           string,
-          Js.Json.parseExn(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime"] `),
+          JSON.parseOrThrow(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime"] `),
         ),
       )->toEqual(("a", 3, "b", true, 98, "sleepy", 100, "bedtime"))
     )
@@ -409,7 +411,7 @@ let () = {
           int,
           string,
           bool,
-          Js.Json.parseExn(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false] `),
+          JSON.parseOrThrow(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false] `),
         ),
       )->toEqual(("a", 3, "b", true, 98, "sleepy", 100, "bedtime", false))
     )
@@ -432,7 +434,7 @@ let () = {
           string,
           bool,
           int,
-          Js.Json.parseExn(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false, 22] `),
+          JSON.parseOrThrow(` ["a", 3, "b", true, 98, "sleepy", 100, "bedtime", false, 22] `),
         ),
       )->toEqual(("a", 3, "b", true, 98, "sleepy", 100, "bedtime", false, 22))
     )
@@ -459,7 +461,7 @@ let () = {
           decodePid,
           string,
           ~id=module(PidComparable),
-          Js.Json.parseExn(` [[1, "A"], [2, "B"]] `),
+          JSON.parseOrThrow(` [[1, "A"], [2, "B"]] `),
         ),
       )->toEqual(Belt.Map.fromArray([(Pid(1), "A"), (Pid(2), "B")], ~id=module(PidComparable)))
     )
@@ -475,7 +477,7 @@ let () = {
           decodeOnpingKey,
           string,
           ~id=module(OnpingKeyComparable),
-          Js.Json.parseExn(` [["a", "A"], ["b", "B"]] `),
+          JSON.parseOrThrow(` [["a", "A"], ["b", "B"]] `),
         ),
       )->toEqual(
         Belt.Map.fromArray(
@@ -496,7 +498,7 @@ let () = {
           decodeOnpingKey,
           string,
           ~id=module(OnpingKeyComparable),
-          Js.Json.parseExn(` {"a": "A", "b": "B"} `),
+          JSON.parseOrThrow(` {"a": "A", "b": "B"} `),
         ),
       )->toEqual(
         Belt.Map.fromArray(
@@ -517,7 +519,7 @@ let () = {
           decodePid,
           string,
           ~id=module(PidComparable),
-          Js.Json.parseExn(` {"1": "A", "2": "B"} `),
+          JSON.parseOrThrow(` {"1": "A", "2": "B"} `),
         ),
       )->toEqual(Belt.Map.fromArray([(Pid(1), "A"), (Pid(2), "B")], ~id=module(PidComparable)))
     )
@@ -528,7 +530,7 @@ let () = {
     open! Decode
 
     test("test", () =>
-      expect(beltMapInt(string, Js.Json.parseExn(` {"1": "A", "2": "B"} `)))->toEqual(
+      expect(beltMapInt(string, JSON.parseOrThrow(` {"1": "A", "2": "B"} `)))->toEqual(
         Belt.Map.Int.fromArray([(1, "A"), (2, "B")]),
       )
     )
@@ -539,7 +541,7 @@ let () = {
     open! Decode
 
     test("test", () =>
-      expect(beltMapString(string, Js.Json.parseExn(` {"a": "A", "b": "B"} `)))->toEqual(
+      expect(beltMapString(string, JSON.parseOrThrow(` {"a": "A", "b": "B"} `)))->toEqual(
         Belt.Map.String.fromArray([("a", "A"), ("b", "B")]),
       )
     )
@@ -549,35 +551,35 @@ let () = {
     open Aeson
     open! Decode
 
-    test("object", () => expect(dict(int, Encode.object_(list{})))->toEqual(Js.Dict.empty()))
+    test("object", () => expect(dict(int, Encode.object_(list{})))->toEqual(Dict.make()))
 
     test("dict bool", () =>
-      expect(dict(bool, Js.Json.parseExn(` { "a": true, "b": false } `)))->toEqual(
+      expect(dict(bool, JSON.parseOrThrow(` { "a": true, "b": false } `)))->toEqual(
         Obj.magic({"a": true, "b": false}),
       )
     )
     test("dict float", () =>
-      expect(dict(float, Js.Json.parseExn(` { "a": 1.2, "b": 2.3 } `)))->toEqual(
+      expect(dict(float, JSON.parseOrThrow(` { "a": 1.2, "b": 2.3 } `)))->toEqual(
         Obj.magic({"a": 1.2, "b": 2.3}),
       )
     )
     test("dict int", () =>
-      expect(dict(int, Js.Json.parseExn(` { "a": 1, "b": 2 } `)))->toEqual(
+      expect(dict(int, JSON.parseOrThrow(` { "a": 1, "b": 2 } `)))->toEqual(
         Obj.magic({"a": 1, "b": 2}),
       )
     )
     test("dict string", () =>
-      expect(dict(string, Js.Json.parseExn(` { "a": "x", "b": "y" } `)))->toEqual(
+      expect(dict(string, JSON.parseOrThrow(` { "a": "x", "b": "y" } `)))->toEqual(
         Obj.magic({"a": "x", "b": "y"}),
       )
     )
     test("dict nullAs", () =>
-      expect(
-        dict(x => nullAs(Js.null, x), Js.Json.parseExn(` { "a": null, "b": null } `)),
-      )->toEqual(Obj.magic({"a": Js.null, "b": Js.null}))
+      expect(dict(x => nullAs(null, x), JSON.parseOrThrow(` { "a": null, "b": null } `)))->toEqual(
+        Obj.magic({"a": null, "b": null}),
+      )
     )
     test("dict null -> dict string", () =>
-      toThrow(expectFn(x => dict(string, x), Js.Json.parseExn(` { "a": null, "b": null } `)))
+      toThrow(expectFn(x => dict(string, x), JSON.parseOrThrow(` { "a": null, "b": null } `)))
     )
 
     Test.throws(x => dict(int, x), list{Bool, Float, Int, String, Null, Array})
@@ -588,24 +590,24 @@ let () = {
     open! Decode
 
     test("field bool", () =>
-      expect(field("b", bool, Js.Json.parseExn(` { "a": true, "b": false } `)))->toEqual(false)
+      expect(field("b", bool, JSON.parseOrThrow(` { "a": true, "b": false } `)))->toEqual(false)
     )
     test("field float", () =>
-      expect(field("b", float, Js.Json.parseExn(` { "a": 1.2, "b": 2.3 } `)))->toEqual(2.3)
+      expect(field("b", float, JSON.parseOrThrow(` { "a": 1.2, "b": 2.3 } `)))->toEqual(2.3)
     )
     test("field int", () =>
-      expect(field("b", int, Js.Json.parseExn(` { "a": 1, "b": 2 } `)))->toEqual(2)
+      expect(field("b", int, JSON.parseOrThrow(` { "a": 1, "b": 2 } `)))->toEqual(2)
     )
     test("field string", () =>
-      expect(field("b", string, Js.Json.parseExn(` { "a": "x", "b": "y" } `)))->toEqual("y")
+      expect(field("b", string, JSON.parseOrThrow(` { "a": "x", "b": "y" } `)))->toEqual("y")
     )
     test("field nullAs", () =>
       expect(
-        field("b", x => nullAs(Js.null, x), Js.Json.parseExn(` { "a": null, "b": null } `)),
-      )->toEqual(Js.null)
+        field("b", x => nullAs(null, x), JSON.parseOrThrow(` { "a": null, "b": null } `)),
+      )->toEqual(null)
     )
     test("field null -> field string", () =>
-      toThrow(expectFn(x => field("b", string, x), Js.Json.parseExn(` { "a": null, "b": null } `)))
+      toThrow(expectFn(x => field("b", string, x), JSON.parseOrThrow(` { "a": null, "b": null } `)))
     )
 
     Test.throws(x => field("foo", int, x), list{Bool, Float, Int, String, Null, Array, Object})
@@ -620,7 +622,7 @@ let () = {
         at(
           list{"a", "x", "y"},
           bool,
-          Js.Json.parseExn(` {
+          JSON.parseOrThrow(` {
         "a": { "x" : { "y" : false } }, 
         "b": false 
       } `),
@@ -631,13 +633,13 @@ let () = {
       expect(
         at(
           list{"a", "x"},
-          x => nullAs(Js.null, x),
-          Js.Json.parseExn(` {
+          x => nullAs(null, x),
+          JSON.parseOrThrow(` {
         "a": { "x" : null },
         "b": null
       } `),
         ),
-      )->toEqual(Js.null)
+      )->toEqual(null)
     )
 
     Test.throws(
@@ -665,28 +667,28 @@ let () = {
       expect(optional(string, Encode.string("test")))->toEqual(Some("test"))
     )
     test("null -> null", () =>
-      expect(optional(x => nullAs(Js.null, x), Encode.null))->toEqual(Some(Js.null))
+      expect(optional(x => nullAs(null, x), Encode.null))->toEqual(Some(null))
     )
     test("int -> bool", () => expect(optional(bool, Encode.int(1)))->toEqual(None))
 
     test("optional field", () =>
-      expect(optional(x => field("x", int, x), Js.Json.parseExn(` { "x": 2} `)))->toEqual(Some(2))
+      expect(optional(x => field("x", int, x), JSON.parseOrThrow(` { "x": 2} `)))->toEqual(Some(2))
     )
     test("optional field - incorrect type", () =>
-      expect(optional(x => field("x", int, x), Js.Json.parseExn(` { "x": 2.3} `)))->toEqual(None)
+      expect(optional(x => field("x", int, x), JSON.parseOrThrow(` { "x": 2.3} `)))->toEqual(None)
     )
     test("optional field - no such field", () =>
-      expect(optional(x => field("y", int, x), Js.Json.parseExn(` { "x": 2} `)))->toEqual(None)
+      expect(optional(x => field("y", int, x), JSON.parseOrThrow(` { "x": 2} `)))->toEqual(None)
     )
     test("field optional", () =>
-      expect(field("x", x => optional(int, x), Js.Json.parseExn(` { "x": 2} `)))->toEqual(Some(2))
+      expect(field("x", x => optional(int, x), JSON.parseOrThrow(` { "x": 2} `)))->toEqual(Some(2))
     )
     test("field optional - incorrect type", () =>
-      expect(field("x", x => optional(int, x), Js.Json.parseExn(` { "x": 2.3} `)))->toEqual(None)
+      expect(field("x", x => optional(int, x), JSON.parseOrThrow(` { "x": 2.3} `)))->toEqual(None)
     )
     test("field optional - no such field", () =>
       toThrow(
-        expectFn(json => field("y", x => optional(int, x), json), Js.Json.parseExn(` { "x": 2} `)),
+        expectFn(json => field("y", x => optional(int, x), json), JSON.parseOrThrow(` { "x": 2} `)),
       )
     )
   })
@@ -696,23 +698,23 @@ let () = {
     open! Decode
 
     test("optionalField", () =>
-      expect(optionalField("x", int, Js.Json.parseExn(` { "x": 2} `)))->toEqual(Some(2))
+      expect(optionalField("x", int, JSON.parseOrThrow(` { "x": 2} `)))->toEqual(Some(2))
     )
 
     test("optionalField - null returns None", () =>
-      expect(optionalField("x", int, Js.Json.parseExn(` { "x": null} `)))->toEqual(None)
+      expect(optionalField("x", int, JSON.parseOrThrow(` { "x": null} `)))->toEqual(None)
     )
 
     test("optionalField - null returns None", () =>
-      expect(optionalField("x", string, Js.Json.parseExn(` { "x": null} `)))->toEqual(None)
+      expect(optionalField("x", string, JSON.parseOrThrow(` { "x": null} `)))->toEqual(None)
     )
 
     test("optionalField - field does not exist", () =>
-      expect(optionalField("y", int, Js.Json.parseExn(` { "x": 2} `)))->toEqual(None)
+      expect(optionalField("y", int, JSON.parseOrThrow(` { "x": 2} `)))->toEqual(None)
     )
 
     test("field optional - no such field", () =>
-      toThrow(expectFn(x => optionalField("x", string, x), Js.Json.parseExn(` { "x": 2} `)))
+      toThrow(expectFn(x => optionalField("x", string, x), JSON.parseOrThrow(` { "x": 2} `)))
     )
   })
 
@@ -721,7 +723,9 @@ let () = {
     open! Decode
 
     test("object with field", () =>
-      expect(oneOf(list{int, x => field("x", int, x)}, Js.Json.parseExn(` { "x": 2} `)))->toEqual(2)
+      expect(oneOf(list{int, x => field("x", int, x)}, JSON.parseOrThrow(` { "x": 2} `)))->toEqual(
+        2,
+      )
     )
     test("int", () =>
       expect(oneOf(list{int, x => field("x", int, x)}, Encode.int(23)))->toEqual(23)
@@ -738,11 +742,13 @@ let () = {
     open! Decode
 
     test("Ok", () =>
-      expect(result(int, string, Js.Json.parseExn(` {"Error": "hello"} `)))->toEqual(Error("hello"))
+      expect(result(int, string, JSON.parseOrThrow(` {"Error": "hello"} `)))->toEqual(
+        Error("hello"),
+      )
     )
 
     test("Error", () =>
-      expect(result(int, string, Js.Json.parseExn(` {"Ok": 2} `)))->toEqual(Ok(2))
+      expect(result(int, string, JSON.parseOrThrow(` {"Ok": 2} `)))->toEqual(Ok(2))
     )
   })
 
@@ -751,13 +757,13 @@ let () = {
     open! Decode
 
     test("Right", () =>
-      expect(either(int, string, Js.Json.parseExn(` {"Right": "hello"} `)))->toEqual(
+      expect(either(int, string, JSON.parseOrThrow(` {"Right": "hello"} `)))->toEqual(
         Compatibility.Either.Right("hello"),
       )
     )
 
     test("Left", () =>
-      expect(either(int, string, Js.Json.parseExn(` {"Left": 2} `)))->toEqual(
+      expect(either(int, string, JSON.parseOrThrow(` {"Left": 2} `)))->toEqual(
         Compatibility.Either.Left(2),
       )
     )
@@ -768,7 +774,7 @@ let () = {
     open! Decode
 
     test("object with field", () =>
-      expect(tryEither(int, x => field("x", int, x), Js.Json.parseExn(` { "x": 2} `)))->toEqual(2)
+      expect(tryEither(int, x => field("x", int, x), JSON.parseOrThrow(` { "x": 2} `)))->toEqual(2)
     )
     test("int", () => expect(tryEither(int, x => field("x", int, x), Encode.int(23)))->toEqual(23))
 
@@ -834,7 +840,7 @@ let () = {
       expect(
         dict(
           x => array(y => array(int, y), x),
-          Js.Json.parseExn(` { "a": [[1, 2], [3]], "b": [[4], [5, 6]] } `),
+          JSON.parseOrThrow(` { "a": [[1, 2], [3]], "b": [[4], [5, 6]] } `),
         ),
       )->toEqual(Obj.magic({"a": [[1, 2], [3]], "b": [[4], [5, 6]]}))
     )
@@ -842,7 +848,7 @@ let () = {
       toThrow(
         expectFn(
           x => array(y => array(int, y), x),
-          Js.Json.parseExn(` { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } `),
+          JSON.parseOrThrow(` { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } `),
         ),
       )
     )
@@ -850,12 +856,12 @@ let () = {
       toThrow(
         expectFn(
           x => array(y => array(int, y), x),
-          Js.Json.parseExn(` { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } `),
+          JSON.parseOrThrow(` { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } `),
         ),
       )
     )
     test("field", () => {
-      let json = Js.Json.parseExn(` { "foo": [1, 2, 3], "bar": "baz" } `)
+      let json = JSON.parseOrThrow(` { "foo": [1, 2, 3], "bar": "baz" } `)
       expect((field("foo", x => array(int, x), json), field("bar", string, json)))->toEqual((
         [1, 2, 3],
         "baz",
