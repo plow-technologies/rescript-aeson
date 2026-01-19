@@ -178,7 +178,7 @@ let () = {
     open! Decode
 
     test("int -> int", () => expect(nullable(int, Encode.int(23)))->toEqual(Null.make(23)))
-    test("null -> int", () => expect(nullable(int, Encode.null))->toEqual(null))
+    test("null -> int", () => expect(nullable(int, Encode.null))->toEqual(Null.null))
 
     test("bool -> bool", () => expect(nullable(bool, Encode.bool(true)))->toEqual(Null.make(true)))
     test("float -> float", () =>

@@ -62,7 +62,7 @@ module Either = {
     either(v => "Left (" ++ (l(v) ++ ")"), v => "Right (" ++ (r(v) ++ ")"), e)
 
   @ocaml.doc(" Extract a value of raise an exception ")
-  let error = v => either(e => throw(e), id, v)
+  let error = v => either(e => Pervasives.throw(e), id, v)
 
   @ocaml.doc(" Silence into an option ")
   let hush = v => either(x => const(None, x), v' => Some(v'), v)

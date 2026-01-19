@@ -19,16 +19,16 @@ let wrapResult = (decoder, json) =>
   }
 
 let bool = json =>
-  if typeof(json) == "boolean" {
+  if Type.typeof(json) == #boolean {
     (Obj.magic((json: JSON.t)): bool)
   } else {
     DecodeError("Expected boolean, got " ++ JSON.stringify(json))->throw
   }
 
 let float = json =>
-  if typeof(json) == "number" {
+  if Type.typeof(json) == #number {
     (Obj.magic((json: JSON.t)): float)
-  } else if typeof(json) == "string" {
+  } else if Type.typeof(json) == #string {
     switch (Obj.magic((json: JSON.t)): string) {
     | "+inf" => Float.parseFloat("Infinity")
     | "-inf" => Float.parseFloat("-Infinity")
@@ -51,14 +51,14 @@ let int = (json: JSON.t): int => {
 }
 
 let string = json =>
-  if typeof(json) == "string" {
+  if Type.typeof(json) == #string {
     (Obj.magic((json: JSON.t)): string)
   } else {
     DecodeError("Expected string, got " ++ JSON.stringify(json))->throw
   }
 
 let bigint = json =>
-  if typeof(json) == "string" {
+  if Type.typeof(json) == #string {
     let source: string = Obj.magic((json: JSON.t))
 
     try {
@@ -71,7 +71,7 @@ let bigint = json =>
   }
 
 let date = json =>
-  if typeof(json) == "string" {
+  if Type.typeof(json) == #string {
     let source: string = Obj.magic((json: JSON.t))
     let encodedDate = Date.fromString(source)
     if Float.isNaN(Date.getTime(encodedDate)) {
@@ -84,14 +84,14 @@ let date = json =>
   }
 
 let nullable = (decode, json) =>
-  if (Obj.magic(json): Null.t<'a>) === null {
-    null
+  if (Obj.magic(json): Null.t<'a>) === Null.null {
+    Null.null
   } else {
     Null.make(decode(json))
   }
 
 let nullAs = (value, json) => {
-  if (Obj.magic(json): Null.t<'a>) === null {
+  if (Obj.magic(json): Null.t<'a>) === Null.null {
     value
   } else {
     DecodeError("Expected null, got " ++ JSON.stringify(json))->throw
@@ -317,7 +317,7 @@ let singleEnumerator = (a, json) =>
 
 let dict = (decode, json) =>
   if (
-    typeof(json) == "object" && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === null))
+    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let source: dict<JSON.t> = Obj.magic((json: JSON.t))
     let keys = Dict.keysToArray(source)
@@ -398,7 +398,7 @@ let beltMapString = (decodeValue, json) =>
 
 let field = (key, decode, json) =>
   if (
-    typeof(json) == "object" && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === null))
+    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let dict: dict<JSON.t> = Obj.magic((json: JSON.t))
     switch Dict.get(dict, key) {
@@ -411,7 +411,7 @@ let field = (key, decode, json) =>
 
 let optionalField = (key, decode, json) =>
   if (
-    typeof(json) == "object" && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === null))
+    Type.typeof(json) == #object && (!Array.isArray(json) && !((Obj.magic(json): Null.t<'a>) === Null.null))
   ) {
     let dict: dict<JSON.t> = Obj.magic((json: JSON.t))
     switch Dict.get(dict, key) {
