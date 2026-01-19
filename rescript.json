@@ -3,6 +3,9 @@
   "compiler-flags": [
     "-bs-no-version-header"
   ],
+  "package-specs": {
+    "module": "commonjs"
+  },
   "sources": [
     "src",
     {
@@ -14,7 +17,7 @@
       "type": "dev"
     }
   ],
-  "dependencies": [
+  "dev-dependencies": [
     "@glennsl/rescript-jest"
   ]
 }
