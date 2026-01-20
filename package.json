@@ -4,6 +4,7 @@
   "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node postinstall.js",
     "build": "yarn clean && yarn run re:build",
     "build-dirty": "yarn run re:build",
     "clean": "rescript clean",
