@@ -1,9 +1,10 @@
 {
   "name": "@plowtech/rescript-aeson",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "ReScript JSON serializations that match Haskell aeson",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node postinstall.js",
     "build": "yarn clean && yarn run re:build",
     "build-dirty": "yarn run re:build",
     "clean": "rescript clean",
@@ -29,11 +30,8 @@
     "url": "https://github.com/plow-technologies/rescript-aeson/issues"
   },
   "homepage": "https://github.com/plow-technologies/rescript-aeson#readme",
-  "dependencies": {
-    "@rescript/core": "^1.2.0"
-  },
   "devDependencies": {
-    "@glennsl/rescript-jest": "^0.11.0",
-    "rescript": "^11.1.4"
+    "@glennsl/rescript-jest": "^0.13.1",
+    "rescript": "^12.1.0"
   }
 }

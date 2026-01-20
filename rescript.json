@@ -1,10 +1,11 @@
 {
   "name": "@plowtech/rescript-aeson",
-  "bsc-flags": [
-    "-bs-no-version-header",
-    "-bs-super-errors",
-    "-open RescriptCore"
+  "compiler-flags": [
+    "-bs-no-version-header"
   ],
+  "package-specs": {
+    "module": "commonjs"
+  },
   "sources": [
     "src",
     {
@@ -16,10 +17,7 @@
       "type": "dev"
     }
   ],
-  "bs-dependencies": [
-    "@rescript/core"
-  ],
-  "bs-dev-dependencies": [
+  "dev-dependencies": [
     "@glennsl/rescript-jest"
   ]
 }

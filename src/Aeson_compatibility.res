@@ -15,14 +15,14 @@ module Either = {
   @ocaml.doc(" Conversion functions ")
   let to_result = e =>
     switch e {
-    | Left(l) => Belt.Result.Error(l)
-    | Right(r) => Belt.Result.Ok(r)
+    | Left(l) => Error(l)
+    | Right(r) => Ok(r)
     }
 
   let of_result = r =>
     switch r {
-    | Belt.Result.Ok(r) => Right(r)
-    | Belt.Result.Error(l) => Left(l)
+    | Ok(r) => Right(r)
+    | Error(l) => Left(l)
     }
 
   @ocaml.doc(" Bifunctor interface ")
@@ -62,7 +62,7 @@ module Either = {
     either(v => "Left (" ++ (l(v) ++ ")"), v => "Right (" ++ (r(v) ++ ")"), e)
 
   @ocaml.doc(" Extract a value of raise an exception ")
-  let error = v => either(e => raise(e), id, v)
+  let error = v => either(e => Pervasives.throw(e), id, v)
 
   @ocaml.doc(" Silence into an option ")
   let hush = v => either(x => const(None, x), v' => Some(v'), v)

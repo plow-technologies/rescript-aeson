@@ -1,17 +1,17 @@
-type encoder<'a> = 'a => Js.Json.t
+type encoder<'a> = 'a => JSON.t
 
-@val external null: Js.Json.t = "null"
-external string: string => Js.Json.t = "%identity"
-external int: int => Js.Json.t = "%identity"
-external bool: bool => Js.Json.t = "%identity"
-external dict: Js_dict.t<Js.Json.t> => Js.Json.t = "%identity"
+@val external null: JSON.t = "null"
+external string: string => JSON.t = "%identity"
+external int: int => JSON.t = "%identity"
+external bool: bool => JSON.t = "%identity"
+external dict: dict<JSON.t> => JSON.t = "%identity"
 let bigint = (x: bigint) => BigInt.toString(x)->string
 
-let float = (f: float): Js.Json.t => {
-  switch Js.Float.toString(f) {
-  | "Infinity" => Js.Json.string("+inf")
-  | "-Infinity" => Js.Json.string("-inf")
-  | _ => Js.Json.number(f)
+let float = (f: float): JSON.t => {
+  switch Float.toString(f) {
+  | "Infinity" => JSON.Encode.string("+inf")
+  | "-Infinity" => JSON.Encode.string("-inf")
+  | _ => JSON.Encode.float(f)
   }
 }
 
@@ -40,14 +40,13 @@ let optionalField = (fieldName, encode, optionalValue) =>
   }
 
 /* Haskell aeson renders .000Z as Z */
-let date = (d): Js.Json.t => string(Js.String.replace(".000Z", "Z", Js_date.toISOString(d)))
+let date = (d): JSON.t => string(Js.String.replace(".000Z", "Z", Date.toISOString(d)))
 
-let object_ = (props): Js.Json.t => dict(Js.Dict.fromList(props))
+let object_ = (props): JSON.t => dict(Dict.fromArray(List.toArray(props)))
 
-external jsonArray: array<Js.Json.t> => Js.Json.t = "%identity"
+external jsonArray: array<JSON.t> => JSON.t = "%identity"
 
-let array = (encode, a) =>
-  jsonArray(Array.map(a, x => encode(x)))
+let array = (encode, a) => jsonArray(Array.map(a, x => encode(x)))
 
 let list = (encode, l) => jsonArray(List.toArray(List.map(l, x => encode(x))))
 
@@ -64,9 +63,9 @@ let beltMap = (encodeKey, encodeValue, obj) =>
 let beltMap1 = (encodeKey, encodeValue, obj) => {
   let xs = Belt.Map.toArray(obj)
   let encodeKey1 = key =>
-    switch Js.Json.classify(encodeKey(key)) {
-    | JSONString(str) => str
-    | _ => Js.Json.stringify(encodeKey(key))
+    switch JSON.Decode.string(encodeKey(key)) {
+    | Some(str) => str
+    | None => JSON.stringify(encodeKey(key))
     }
   let xs = Array.map(xs, ((k, v)) => (encodeKey1(k), encodeValue(v)))
   object_(List.fromArray(xs))
@@ -75,7 +74,7 @@ let beltMap1 = (encodeKey, encodeValue, obj) => {
 let beltMapInt = (encodeValue, obj) =>
   object_(
     List.map(List.fromArray(Belt.Map.Int.toArray(obj)), ((k, v)) => (
-      string_of_int(k),
+      Int.toString(k),
       encodeValue(v),
     )),
   )
@@ -196,8 +195,8 @@ let tuple10 = (
 
 let result = (encodeA, encodeB, e) =>
   switch e {
-  | Belt.Result.Ok(a) => object_(list{("Ok", encodeA(a))})
-  | Belt.Result.Error(b) => object_(list{("Error", encodeB(b))})
+  | Ok(a) => object_(list{("Ok", encodeA(a))})
+  | Error(b) => object_(list{("Error", encodeB(b))})
   }
 
 let either = (encodeL, encodeR, e) =>
@@ -208,6 +207,6 @@ let either = (encodeL, encodeR, e) =>
 
 let singleEnumerator = _x => jsonArray([])
 
-external stringArray: array<string> => Js.Json.t = "%identity"
-external numberArray: array<float> => Js.Json.t = "%identity"
-external boolArray: array<bool> => Js.Json.t = "%identity"
+external stringArray: array<string> => JSON.t = "%identity"
+external numberArray: array<float> => JSON.t = "%identity"
+external boolArray: array<bool> => JSON.t = "%identity"
